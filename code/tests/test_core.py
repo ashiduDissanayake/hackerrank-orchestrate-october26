@@ -155,7 +155,9 @@ class RealIdentity(unittest.TestCase):
 
 
 class NoBypass(unittest.TestCase):
-    ALLOWED = {"caseview.py", "observations.py", "pipeline.py", "coverage.py"}
+    # build-time modules only. extract/pdf.py reads the catalog rows while BUILDING the store (a document that prints a catalog
+    # label gets its resource id from the catalog); the time gating is applied through available_at, see CatalogLabelJoin.
+    ALLOWED = {"caseview.py", "observations.py", "pipeline.py", "coverage.py", "pdf.py"}
 
     def test_case_logic_never_touches_raw_store(self):
         # raw attribute access only; cv.catalog_links() / cv.activity() are the sanctioned CaseView METHODS

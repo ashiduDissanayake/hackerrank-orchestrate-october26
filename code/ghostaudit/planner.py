@@ -21,7 +21,7 @@ def plan(obligations, status):
     for ob in obligations:
         if ob.verdict == "UNKNOWN" or ob.resource_id is None or ob.system_id is None:
             continue
-        if ob.detail.get("no_obligation"):
+        if ob.detail.get("no_obligation") or ob.detail.get("no_step"):
             continue
         key = ob.action
         if status == "COMPLETE":

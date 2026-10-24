@@ -15,15 +15,30 @@ FORMAT = {".sql": "sql", ".json": "json", ".log": "log", ".txt": "txt", ".pdf": 
 
 
 class CatalogLink:
-    __slots__ = ("activity_id", "event_time", "system_id", "resource_id", "email", "user_ref", "exclusive")
+    __slots__ = ("activity_id", "event_time", "system_id", "resource_id", "label", "email", "user_ref", "exclusive")
 
     def __init__(self, **kw):
         for k, v in kw.items():
             setattr(self, k, v)
 
 
+def catalog_links_from_activity(ds):
+    out = []
+    for a in ds.activity:
+        if a.event_type != "LINK_RESOURCE_IDENTITY":
+            continue
+        mm = CATALOG_EXCL_RE.search(a.details)
+        excl = bool(mm)
+        mm = mm or CATALOG_RE.search(a.details)
+        if mm:
+            out.append(CatalogLink(activity_id=a.activity_id, event_time=a.event_time, system_id=a.target_system, resource_id=mm.group("res"),
+                                   label=mm.group("label"), email=mm.group("email").lower(), user_ref=mm.group("user"), exclusive=excl))
+    return out
+
+
 def build_store(ds):
     store = Store()
+    store.catalog_links = catalog_links_from_activity(ds)   # needed by extractors that join documents to catalog labels
     for m in ds.manifest:
         ext = os.path.splitext(m.file_path)[1].lower()
         rep = ArtifactReport(m.file_id, m.file_path, FORMAT.get(ext, ext), m.captured_at)
@@ -40,16 +55,6 @@ def build_store(ds):
             rep.status = "failed"
             rep.failures.append(f"{type(e).__name__}: {e}")
     store.activity = list(ds.activity)
-    for a in ds.activity:
-        if a.event_type != "LINK_RESOURCE_IDENTITY":
-            continue
-        mm = CATALOG_EXCL_RE.search(a.details)
-        excl = bool(mm)
-        mm = mm or CATALOG_RE.search(a.details)
-        if mm:
-            store.catalog_links.append(CatalogLink(activity_id=a.activity_id, event_time=a.event_time, system_id=a.target_system,
-                                                   resource_id=mm.group("res"), email=mm.group("email").lower(),
-                                                   user_ref=mm.group("user"), exclusive=excl))
     return store.finalize()
 
 

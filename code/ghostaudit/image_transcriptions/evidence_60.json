@@ -1,0 +1,31 @@
+{
+ "evidence_id": "evidence_60",
+ "header_time": null,
+ "manifest_captured_at": "2026-09-16T07:20:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "records": [
+  {
+   "fields": {
+    "audience": "Returning customers - East Asia",
+    "email": "sj.park@naver.com",
+    "email_opt_in": "true",
+    "last_refreshed": "2026-09-15T23:40:00Z",
+    "market": "South Korea",
+    "name": "Soo-jin Park",
+    "phone": "+82 10-5837-9451",
+    "sms_opt_in": "false"
+   },
+   "kind": "ui_record",
+   "note": "CONFLICT: the data catalog (activity_4008) says marketing_001 belongs to kwame-mensah@proton.me / user_09; this screen shows a different person",
+   "observed_at": "2026-09-16T07:20:00Z",
+   "present": true,
+   "resource_id": "marketing_001",
+   "system_id": "marketing_platform"
+  }
+ ],
+ "screen": "audience operations: marketing profile",
+ "source_path": "evidence/images/marketing_profile_console.png",
+ "source_sha256": "51fa0e6a38f8fa3629ba1b0d0b90b4ed139715956b97bfd09a6f1a6232c15df5",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

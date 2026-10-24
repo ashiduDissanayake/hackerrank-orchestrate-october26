@@ -36,8 +36,11 @@ def manifest_commands(a):
         same_code = ex.code_hash() == m["code_sha256"]
         print(f"output reproduces byte-for-byte: {same_out}\ninputs unchanged: {same_in}\ncode unchanged: {same_code}")
         return 0 if (same_out and same_in and same_code) else 1
-    cfg = {"data": os.path.relpath(a.data, REPO), "requests": a.requests, "unknown_policy": a.unknown_policy, "png_extraction": "pending"}
     ds, store, results = runner.run_dataset(a.data, a.requests, a.unknown_policy)
+    pngs = [r for r in store.artifacts.values() if r.fmt == "png"]
+    cfg = {"data": os.path.relpath(a.data, REPO), "requests": a.requests, "unknown_policy": a.unknown_policy,
+           "png_extraction": "complete" if all(r.status == "ok" for r in pngs) else "pending",
+           "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)"}
     out = a.out if a.cmd == "run" else os.path.join(REPO, "runs", "export_candidate", "output.csv")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     runner.write_output(results, out)

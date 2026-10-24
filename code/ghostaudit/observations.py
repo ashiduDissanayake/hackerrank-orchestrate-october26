@@ -121,6 +121,9 @@ class Store:
             tk = o.f("trace_lookup_key")
             if tk:
                 self._by_ident.setdefault(("trace", tk.strip().lower()), []).append(o)
+            for tok in (o.f("ids_phonetxt") or "").split("|"):
+                if tok:
+                    self._by_ident.setdefault(("phonekey", tok.lstrip("0")[-9:]), []).append(o)
             for kind in ("email", "hash", "user", "phone"):
                 for v in (o.f(f"ids_{kind}") or "").split("|"):
                     if v:

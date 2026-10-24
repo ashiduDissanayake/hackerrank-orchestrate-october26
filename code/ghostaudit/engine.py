@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from .caseview import CaseView
 from .intent import classify
 from .linking import link_subject, window_candidates
-from .obligations import account_gap, action_table, evaluate
+from .obligations import account_from_tombstone, account_gap, action_table, evaluate
 from .planner import plan
 
 
@@ -53,7 +53,7 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified"):
             obs.append(ob)
     cands = window_candidates(cv, req, set(lr.links))
     if not any(o.category == "USER_PROFILE" for o in obs):
-        obs.append(account_gap([c for c in cands if c[2] == "account_service"]))
+        obs.append(account_from_tombstone(cv, obs) or account_gap([c for c in cands if c[2] == "account_service"]))
     res = CaseResult(req.case_id, "", "", [], intent, subj, lr.links, lr.rejected, obs,
                      [o for o in obs if o.verdict == "UNKNOWN"], list(subj.conditions), cands)
     violations = [o for o in obs if o.verdict == "VIOLATION"]

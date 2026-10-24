@@ -1,0 +1,50 @@
+{
+ "evidence_id": "evidence_04",
+ "header_time": null,
+ "manifest_captured_at": "2026-09-26T11:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "ocr_recheck_boxes": {
+  "account_5762": [
+   240,
+   132,
+   420,
+   156
+  ]
+ },
+ "omitted": "order rows ORD-20265762 and ORD-20265518 (not resources)",
+ "records": [
+  {
+   "fields": {
+    "customer_reference": "user_11",
+    "default_address": "2-18-4 Kichijoji, Musashino, Tokyo 180-0004",
+    "email": "haruka.s1838@zoho.com",
+    "loyalty_tier": "Silver",
+    "member_since": "12 Jan 2024",
+    "name": "Haruka Sato",
+    "phone": "+81 90 7610 2507"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-09-26T11:00:00Z",
+   "present": true,
+   "resource_id": "account_5762",
+   "system_id": "account_service"
+  },
+  {
+   "fields": {
+    "customer_reference": "user_11",
+    "ticket_id": "CS-8538"
+   },
+   "kind": "ui_reference",
+   "note": "listed under the customer's details as 'CS-8538 · support_9538'; a reference, the record itself is not shown",
+   "observed_at": "2026-09-26T11:00:00Z",
+   "present": null,
+   "resource_id": "support_9538",
+   "system_id": "support_platform"
+  }
+ ],
+ "screen": "account admin console: customer overview",
+ "source_path": "evidence/images/account_admin_console_20260926.png",
+ "source_sha256": "d5c32ca5b6e1a2b4bbe9f5d41835ef1fd5d4f7061dab9067a4f9f88cea3c1861",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

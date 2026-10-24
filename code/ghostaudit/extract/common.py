@@ -24,11 +24,7 @@ def norm_email(v):
     return v.strip().lower() if isinstance(v, str) and v.strip() else None
 
 
-def norm_phone(v):
-    if not isinstance(v, str):
-        return None
-    d = re.sub(r"\D", "", v)
-    return d or None
+from ..normalize import PROVENANCE_PREFIXES, norm_phone, phone_tokens, text_fields  # noqa: E402,F401  (single definition of phone handling)
 
 
 def norm_hash(v):
@@ -50,9 +46,9 @@ def normalize_fields(raw, flatten=("document",)):
             flat[f"{k}_json"] = json.dumps(v, sort_keys=True, ensure_ascii=False)
         else:
             flat.setdefault(k, v)
-    ids = {"email": {}, "hash": {}, "user": {}, "phone": {}}
+    ids = {"email": {}, "hash": {}, "user": {}, "phone": {}, "phonetxt": {}}
     for k, v in flat.items():
-        if not isinstance(v, str) or not v:
+        if not isinstance(v, str) or not v or k.startswith(PROVENANCE_PREFIXES):
             continue
         for m in EMAIL_RE.findall(v):
             ids["email"].setdefault(m.lower(), set()).add(k)
@@ -64,6 +60,9 @@ def normalize_fields(raw, flatten=("document",)):
             d = norm_phone(v)
             if d:
                 ids["phone"].setdefault(d, set()).add(k)
+    for k, v in text_fields(tuple((k, v) for k, v in flat.items() if isinstance(v, str))):
+        for d in phone_tokens(v):
+            ids["phonetxt"].setdefault(d, set()).add(k)
     out = {}
     for k, v in flat.items():
         name = _ALIAS_OF.get(k, k)

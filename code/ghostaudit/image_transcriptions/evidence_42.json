@@ -1,0 +1,33 @@
+{
+ "evidence_id": "evidence_42",
+ "header_time": null,
+ "manifest_captured_at": "2026-03-10T06:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "omitted": "linked records ORD-20263245, CS-3245, CS-3378, FIN-7742 (order/support/finance references, not resources)",
+ "records": [
+  {
+   "available_at_override": "2026-03-10T06:07:01Z",
+   "fields": {
+    "collection": "deleted_customer_references",
+    "created": "2024-01-11T08:42:00Z",
+    "customer_reference": "user_17",
+    "most_recent_update": "2026-03-10T07:18:00Z",
+    "owner_team": "Account Platform",
+    "reference_type": "Customer key",
+    "status": "Retained reference"
+   },
+   "kind": "ui_record",
+   "note": "no name, email, phone or hash is shown: only the stable reference. Most recent update 07:18 is later than the capture time; kept",
+   "observed_at": "2026-03-10T07:18:00Z",
+   "present": true,
+   "resource_id": "tombstone_17",
+   "resource_id_source": "activity_4011 (data catalog, 2026-03-10T06:07:01Z): 'tombstone_17 (user_17)'; the screen shows only the customer key user_17",
+   "system_id": "identity_service"
+  }
+ ],
+ "screen": "customer reference registry: user_17 retained reference",
+ "source_path": "evidence/images/deleted_account_reference_20260310.png",
+ "source_sha256": "68c28a72afd6ed184d5990d15c543f8a516face204f0360f732755a8a63c28be",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

@@ -1,0 +1,30 @@
+{
+ "evidence_id": "evidence_28",
+ "header_time": null,
+ "manifest_captured_at": "2026-05-24T07:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "records": [
+  {
+   "fields": {
+    "assigned_agent": "Maya Chen",
+    "email": "kagyeman8947@fastmail.com",
+    "message_text": "Could you let me know where my order is and when it is expected to arrive? | We received your message and are checking the order details. | The parcel reached the regional hub and is on track for delivery on 26 May. | Thanks for the update.",
+    "name": "Kofi Agyeman",
+    "order": "ORD-20265034",
+    "subject": "Where is my delivery?",
+    "ticket_id": "CS-5034"
+   },
+   "kind": "ui_record",
+   "note": "conversation times 09:12-09:35 carry no date, so observed_at is the capture time",
+   "observed_at": "2026-05-24T07:00:00Z",
+   "present": true,
+   "resource_id": "support_1034",
+   "system_id": "support_platform"
+  }
+ ],
+ "screen": "helpline console: ticket conversation CS-5034",
+ "source_path": "evidence/images/support_ticket_console_20260524.png",
+ "source_sha256": "542b7aec17e6b2f38827896e7eb52c70e4bfaaca22433621be1f80f54884e944",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

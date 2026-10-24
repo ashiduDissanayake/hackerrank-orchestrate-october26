@@ -28,3 +28,12 @@ def extract(evidence_id, path, available_at, store, report):
         store.add_obs(make_obs(evidence_id, "doc", available_at, None, None, None, "pdf", "document", None, base))
     for rid in rids:
         store.add_obs(make_obs(evidence_id, f"doc:{rid}", available_at, None, None, rid, "pdf", "document", True, dict(base)))
+    # Documents that print a catalog LABEL (e.g. a statement number) instead of the resource id: the data-catalog row
+    # supplies the id. The id is not usable before that row existed, so availability is raised to its event_time.
+    for c in store.catalog_links:
+        if c.resource_id in rids or not c.label or c.label == c.resource_id or len(c.label) < 8 or c.label not in text:
+            continue
+        f = dict(base)
+        f["provenance_resource_id_source"] = f"{c.activity_id} (data catalog, {c.event_time}): label {c.label!r} printed in this document"
+        store.add_obs(make_obs(evidence_id, f"doc:{c.resource_id}", max(available_at, c.event_time), None, c.system_id, c.resource_id, "pdf", "document", True, f))
+        report.notes.append(f"{c.resource_id} joined to this document through catalog label {c.label}")

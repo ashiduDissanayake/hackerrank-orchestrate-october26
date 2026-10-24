@@ -1,0 +1,47 @@
+{
+ "evidence_id": "evidence_14",
+ "header_time": "2026-08-07T08:00:00Z",
+ "manifest_captured_at": "2026-08-07T08:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "omitted": "rows 'Order notifications' and 'Delivery tracking' (no resource id, no personal identifier)",
+ "records": [
+  {
+   "fields": {
+    "destination": "customer_analytics_warehouse",
+    "enabled": "true",
+    "enabled_basis": "Status Healthy, Sync mode Continuous sync, 1,284 events/hour, last contact 18 s before capture",
+    "events_per_hour": "1284",
+    "last_contact": "2026-08-07T07:59:42Z",
+    "mode": "continuous_sync",
+    "status": "Healthy",
+    "subject_selector": "jain.aditi@gmail.com"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-08-07T08:00:00Z",
+   "present": true,
+   "resource_id": "data_flow_1121",
+   "system_id": "integration_service"
+  },
+  {
+   "fields": {
+    "destination": "customer_analytics_warehouse",
+    "enabled": "true",
+    "enabled_basis": "row shows Continuous mode, 842 events/hour, last contact 24 s before capture (status shown only for data_flow_1121)",
+    "events_per_hour": "842",
+    "last_contact": "2026-08-07T07:59:36Z",
+    "mode": "continuous_sync",
+    "subject_selector": "lucia-torres@gmail.com"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-08-07T08:00:00Z",
+   "present": true,
+   "resource_id": "data_flow_9846",
+   "system_id": "integration_service"
+  }
+ ],
+ "screen": "connector management console: topology",
+ "source_path": "evidence/images/connector_management_console_20260807.png",
+ "source_sha256": "e81fabc93ea1b5f4c918d934cdb2bea05d61737adfcc29f281494f5d8ec46355",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

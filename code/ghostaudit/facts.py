@@ -5,6 +5,8 @@ Everything here reads one observation; reasoning across observations lives in st
 import re
 from dataclasses import dataclass, field
 
+from .normalize import name_in_text, phone_matches, phone_tokens, text_fields
+
 RECORD_TYPE_CATEGORY = {  # explicit record_type values found in handover / ledger / history records
     "USER_PROFILE": "USER_PROFILE", "SEARCH_INDEX_ENTRY": "SEARCH_INDEX_ENTRY", "ANALYTICS_PROFILE": "ANALYTICS_PROFILE",
     "SUPPORT_MESSAGE": "SUPPORT_MESSAGE", "SUPPORT_ATTACHMENT": "SUPPORT_ATTACHMENT", "USER_EXPORT": "USER_EXPORT",
@@ -89,34 +91,18 @@ def _flag(v):
     return None
 
 
-PHONE_TOKEN = re.compile(r"(?<![\w.])\+?\d[\d\s().\-]{6,}\d(?![\w])")
-SKIP_FIELDS = ("ids_", "ids_src", "resource_id", "locator", "trace", "alt_")
-
-
-def _phone_variants_match(token_digits, subject_digits):
-    """Token written in international, 00-prefixed or national form of the subject's number (>= 9 digits, so short
-    numeric strings such as order numbers cannot collide)."""
-    t = token_digits.lstrip("0")
-    return len(t) >= 9 and (t == subject_digits or subject_digits.endswith(t))
-
-
 def subject_text_exposure(o, subj):
-    """Subject identifiers found inside ANY text field of the record: phone (any common written form) and name."""
+    """Subject identifiers found inside ANY text field of the record: phone (any common written form, via
+    normalize.phone_matches) and full name (whole phrase). Used only on records already linked to the subject."""
     found = set()
     if subj is None:
         return found
     phones = {i.value for i in subj.identifiers if i.field == "phone"}
-    names = [n for n in subj.names if n and len(n.strip()) >= 5 and " " in n.strip()]
-    for k, v in o.fields:
-        if not v or k.startswith(SKIP_FIELDS) or k.endswith("_raw"):
-            continue
-        if phones:
-            for tok in PHONE_TOKEN.findall(v):
-                d = re.sub(r"\D", "", tok)
-                if any(_phone_variants_match(d, p) for p in phones):
-                    found.add("text:phone")
-        low = v.lower()
-        if any(n.strip().lower() in low for n in names):
+    names = [n for n in subj.names if n]
+    for k, v in text_fields(o.fields):
+        if phones and any(phone_matches(d, p) for d in phone_tokens(v) for p in phones):
+            found.add("text:phone")
+        if any(name_in_text(n, v) for n in names):
             found.add("text:name")
     return found
 

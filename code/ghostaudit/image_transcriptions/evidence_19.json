@@ -1,0 +1,29 @@
+{
+ "evidence_id": "evidence_19",
+ "header_time": null,
+ "manifest_captured_at": "2026-07-13T10:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "records": [
+  {
+   "fields": {
+    "audience": "Returning shopper",
+    "customer_reference": "user_20",
+    "email": "darwish.omar@icloud.com",
+    "last_activity": "2026-07-13T14:22:00Z",
+    "market": "AE",
+    "name": "Omar Darwish"
+   },
+   "kind": "ui_record",
+   "note": "Last activity 14:22 UTC is LATER than the manifest capture time 10:00Z; observed_at keeps the later time",
+   "observed_at": "2026-07-13T14:22:00Z",
+   "present": true,
+   "resource_id": "analytics_7438",
+   "system_id": "analytics_platform"
+  }
+ ],
+ "screen": "analytics profile view: event timeline",
+ "source_path": "evidence/images/analytics_profile_view_20260713.png",
+ "source_sha256": "4e4cb259bc2010b622b0c53fe5872258f994fefc23452a83bb27473758693484",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

@@ -1,0 +1,70 @@
+{
+ "evidence_id": "evidence_23",
+ "header_time": null,
+ "manifest_captured_at": "2026-06-18T12:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "records": [
+  {
+   "fields": {
+    "created": "2026-06-20T14:18:00Z",
+    "file_name": "customer_export_1261.zip",
+    "owner_email": "marcus.lee@northstar.shop",
+    "status": "Collecting"
+   },
+   "kind": "ui_record",
+   "note": "created 20 Jun 14:18 is after the capture time; kept",
+   "observed_at": "2026-06-20T14:18:00Z",
+   "present": true,
+   "resource_id": "export_1261",
+   "system_id": "export_service"
+  },
+  {
+   "fields": {
+    "created": "2026-06-18T06:42:00Z",
+    "download_count": "0",
+    "expires": "2026-06-25T06:42:00Z",
+    "file_name": "customer_export_1260.zip",
+    "included": "Profile · Orders · Saved addresses",
+    "owner_email": "ingrid.dahl@outlook.com",
+    "size": "18.4 MB",
+    "status": "Ready"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-06-18T12:00:00Z",
+   "present": true,
+   "resource_id": "export_1260",
+   "system_id": "export_service"
+  },
+  {
+   "fields": {
+    "created": "2026-06-17T11:03:00Z",
+    "file_name": "customer_export_1259.zip",
+    "owner_email": "sara.kim@northstar.shop",
+    "status": "Packaging"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-06-18T12:00:00Z",
+   "present": true,
+   "resource_id": "export_1259",
+   "system_id": "export_service"
+  },
+  {
+   "fields": {
+    "created": "2026-06-16T09:27:00Z",
+    "file_name": "customer_export_1258.zip",
+    "owner_email": "daniel.park@northstar.shop",
+    "status": "Ready"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-06-18T12:00:00Z",
+   "present": true,
+   "resource_id": "export_1258",
+   "system_id": "export_service"
+  }
+ ],
+ "screen": "customer download center: data exports",
+ "source_path": "evidence/images/customer_export_console_20260618.png",
+ "source_sha256": "18b95c1bd8b8956e40216df935498a9f3c181ea2a69b5cd6d3c0841a816d5557",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

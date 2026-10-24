@@ -83,6 +83,10 @@ def evaluate(cv, subj, link, actions):
     act = EXTRA_ACTIONS.get(cat) or actions.get(cat)  # data flows / backups: the obligation is DISABLE / BLOCK_RESTORE, not the table's RETAIN
     o_ = lambda verdict, reason, ev="", **d: Obligation(sysid, rid, cat, act or "NONE", verdict, reason, ev, d)  # noqa: E731
 
+    if link.conflict:
+        return o_("UNKNOWN", "conflicting_identity_evidence", "", conflict=link.conflict,
+                  chains=[(c.kind, c.evidence_id) for c in link.chains])
+
     if cat == "DATA_FLOW":
         val, o = latest_fact(cv, rid, "enabled")
         if val is None:
@@ -134,6 +138,33 @@ def evaluate(cv, subj, link, actions):
     return o_("UNKNOWN", f"no_rule_for_category:{cat}")
 
 
+def account_from_tombstone(cv, obligations):
+    """Subject-level evidence that the account profile is deleted: a linked ACCOUNT_TOMBSTONE whose own record says
+    account_status == DELETED (rule_15's condition is "Account is deleted"). It establishes the STATE of the
+    subject's profile without naming a profile resource, so the obligation carries no resource id and the planner
+    emits no step for it (a step needs a resource id, and none is evidenced)."""
+    best = None
+    for ob in obligations:
+        if ob.category != "ACCOUNT_TOMBSTONE" or ob.resource_id is None:
+            continue
+        for o in cv.for_resource(ob.resource_id):
+            if o.present and o.f("account_status") == "DELETED":
+                if best is None or (o.observed_at, o.evidence_id) > (best[0].observed_at, best[0].evidence_id):
+                    best = (o, ob)
+    if best is None:
+        return None
+    o, ob = best
+    return Obligation("account_service", None, "USER_PROFILE", DELETE, "COMPLIANT", "account_deleted_per_tombstone", o.evidence_id,
+                      {"no_step": True, "tombstone": ob.resource_id, "locator": o.locator})
+
+
 def account_gap(cands):
+    """No profile resource is linked and no tombstone evidences deletion. The obligation exists because rule_01 applies
+    to every authorized deletion ("USER_PROFILE ... Always"); its STATE is unknown. gap_class says what is known:
+      resource_candidates  deletion-worker activity in the window names account resources (claims; unlinked, shared by
+                           concurrent requests, so never accepted as links)
+      no_evidence          nothing in the dataset points at an account for this subject"""
     return Obligation("account_service", None, "USER_PROFILE", DELETE, "UNKNOWN", "unresolved_link", "",
-                      {"missing": "no evidence chain links any account_service resource to the subject", "window_candidates": cands})
+                      {"gap_class": "resource_candidates" if cands else "no_evidence",
+                       "missing": "no evidence chain links any account_service resource to the subject",
+                       "window_candidates": cands})

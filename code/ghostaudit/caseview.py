@@ -41,6 +41,20 @@ class CaseView:
         """Observations whose fields contain the exact identifier token (kind: email|hash|user|phone)."""
         return [o for o in self._filter(self._s._by_ident.get((kind, value), ()), system, None, None) if self._ok(o)]
 
+    def for_phone(self, subject_digits):
+        """Observations containing a phone token that matches the subject's number (normalize.phone_matches), found
+        through the last-9-digit key index and then verified token by token. Returns [(obs, token_digits)]."""
+        from .normalize import phone_matches
+        out = []
+        for o in self._s._by_ident.get(("phonekey", subject_digits.lstrip("0")[-9:]), ()):
+            if not self._ok(o):
+                continue
+            for tok in (o.f("ids_phonetxt") or "").split("|"):
+                if tok and phone_matches(tok, subject_digits):
+                    out.append((o, tok))
+                    break
+        return out
+
     def for_trace_key(self, value):
         """Observations reached through a lookup whose key (from the same trace) equals `value`."""
         return [o for o in self._s._by_ident.get(("trace", value.strip().lower()), ()) if self._ok(o)]

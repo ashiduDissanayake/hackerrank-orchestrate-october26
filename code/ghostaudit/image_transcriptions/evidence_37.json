@@ -1,0 +1,104 @@
+{
+ "evidence_id": "evidence_37",
+ "header_time": null,
+ "manifest_captured_at": "2026-09-05T07:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "omitted": "detail panel for audit_record_003: fingerprint 8f0c...31ad, signature Valid, journal 2026-Q3 (not identifiers); no retention_until is shown",
+ "records": [
+  {
+   "fields": {
+    "actor_type": "Automated workflow",
+    "category": "Account lifecycle",
+    "event_name": "Account closure recorded",
+    "integrity": "Valid",
+    "recorded_at": "2026-08-25T04:03:00Z",
+    "subject_reference": "user_03"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-09-05T07:00:00Z",
+   "present": true,
+   "resource_id": "audit_record_003",
+   "system_id": "security_service"
+  },
+  {
+   "fields": {
+    "actor_type": "Security system",
+    "category": "Session management",
+    "event_name": "Session revoked",
+    "integrity": "Valid",
+    "recorded_at": "2026-08-25T03:21:00Z",
+    "subject_reference": "user_03"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-09-05T07:00:00Z",
+   "present": true,
+   "resource_id": "audit_record_002",
+   "system_id": "security_service"
+  },
+  {
+   "fields": {
+    "actor_type": "User (self)",
+    "category": "Authentication",
+    "event_name": "Recovery challenge completed",
+    "integrity": "Valid",
+    "recorded_at": "2026-08-24T16:14:00Z",
+    "subject_reference": "user_03"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-09-05T07:00:00Z",
+   "present": true,
+   "resource_id": "audit_record_001",
+   "system_id": "security_service"
+  },
+  {
+   "fields": {
+    "actor_type": "User (self)",
+    "category": "Profile update",
+    "event_name": "Email change confirmed",
+    "integrity": "Valid",
+    "recorded_at": "2026-08-22T11:27:00Z",
+    "subject_reference": "user_03"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-09-05T07:00:00Z",
+   "present": true,
+   "resource_id": "audit_record_006",
+   "system_id": "security_service"
+  },
+  {
+   "fields": {
+    "actor_type": "User (self)",
+    "category": "Authentication",
+    "event_name": "Login from new device",
+    "integrity": "Valid",
+    "recorded_at": "2026-08-20T09:42:00Z",
+    "subject_reference": "user_03"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-09-05T07:00:00Z",
+   "present": true,
+   "resource_id": "audit_record_005",
+   "system_id": "security_service"
+  },
+  {
+   "fields": {
+    "actor_type": "User (self)",
+    "category": "Authentication",
+    "event_name": "Password changed",
+    "integrity": "Valid",
+    "recorded_at": "2026-08-18T14:05:00Z",
+    "subject_reference": "user_03"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-09-05T07:00:00Z",
+   "present": true,
+   "resource_id": "audit_record_004",
+   "system_id": "security_service"
+  }
+ ],
+ "screen": "security audit explorer: account events for subject user_03",
+ "source_path": "evidence/images/security_audit_explorer_20260905.png",
+ "source_sha256": "ca59f693f4e7002466b3fdeaf1bb6763618770963dd811b60003772d07b4b03b",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

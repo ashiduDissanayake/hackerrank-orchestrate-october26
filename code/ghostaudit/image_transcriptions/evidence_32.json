@@ -1,0 +1,79 @@
+{
+ "evidence_id": "evidence_32",
+ "header_time": null,
+ "manifest_captured_at": "2026-04-29T09:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "omitted": "activity entries about backup_9286 and backup_9281 restores (completed events, not records)",
+ "omitted_identifiers": [
+  "backup_9281"
+ ],
+ "records": [
+  {
+   "fields": {
+    "created": "2026-04-26T02:00:00Z",
+    "customer_email": "bluepeakco@outlook.com",
+    "region": "ap-southeast-1",
+    "size": "102.3 GB",
+    "tier": "Archive"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-04-29T09:00:00Z",
+   "present": true,
+   "resource_id": "backup_9291",
+   "system_id": "backup_service"
+  },
+  {
+   "fields": {
+    "created": "2026-04-26T02:00:00Z",
+    "customer_email": "miller.logistics@company.com",
+    "region": "us-west-2",
+    "size": "67.1 GB",
+    "tier": "Archive"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-04-29T09:00:00Z",
+   "present": true,
+   "resource_id": "backup_9288",
+   "system_id": "backup_service"
+  },
+  {
+   "fields": {
+    "archive_path": "s3://northstar-backups/customer-platform/weekly/segment-42-20260426.tar.zst",
+    "checksum": "Verified",
+    "created": "2026-04-26T02:00:00Z",
+    "customer_email": "areed1433@gmail.com",
+    "encryption": "AES-256",
+    "last_drill": "2026-03-29",
+    "region": "eu-west-1",
+    "retention_end": "2026-07-26",
+    "size": "84.7 GB",
+    "tier": "Archive"
+   },
+   "kind": "ui_record",
+   "note": "no restore-allowed / restore-blocked state is shown for any archive",
+   "observed_at": "2026-04-29T09:00:00Z",
+   "present": true,
+   "resource_id": "backup_9287",
+   "system_id": "backup_service"
+  },
+  {
+   "fields": {
+    "created": "2026-04-26T02:00:00Z",
+    "customer_email": "summit-retail@company.com",
+    "region": "us-east-1",
+    "size": "91.4 GB",
+    "tier": "Archive"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-04-29T09:00:00Z",
+   "present": true,
+   "resource_id": "backup_9286",
+   "system_id": "backup_service"
+  }
+ ],
+ "screen": "vault recovery manager: customer-platform archives",
+ "source_path": "evidence/images/backup_restore_console_20260429.png",
+ "source_sha256": "2c246aa5843bec609b9ddfdf1154cd81e0fd61996f83954735e9856e48c18bf3",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}

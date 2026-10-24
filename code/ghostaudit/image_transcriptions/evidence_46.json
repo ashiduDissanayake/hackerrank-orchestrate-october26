@@ -1,0 +1,33 @@
+{
+ "evidence_id": "evidence_46",
+ "header_time": "2026-02-13T08:00:00Z",
+ "manifest_captured_at": "2026-02-13T08:00:00Z",
+ "method": "agent_visual_transcription (hand-authored; see scripts/build_image_transcriptions.py)",
+ "omitted": "7 other objects (return labels, invoice, parcel photo, two customer exports): file names only, no resource ids or personal identifiers",
+ "records": [
+  {
+   "available_at_override": "2026-02-13T08:07:01Z",
+   "fields": {
+    "content_type": "application/pdf",
+    "file_name": "delivery_confirmation_19.pdf",
+    "modified": "2026-02-12T18:42:00Z",
+    "path": "eu-west-1/support-attachments/2026/02",
+    "record_type": "SUPPORT_ATTACHMENT",
+    "size": "684 KB",
+    "uploader": "support-service",
+    "version": "v3"
+   },
+   "kind": "ui_record",
+   "observed_at": "2026-02-13T08:00:00Z",
+   "present": true,
+   "resource_id": "object_19",
+   "resource_id_source": "activity_4007 (data catalog, 2026-02-13T08:07:01Z): 'object_19 (delivery_confirmation_19.pdf)'; the screen shows the file name only",
+   "system_id": "object_storage"
+  }
+ ],
+ "screen": "object storage browser: northstar-customer-data / support-attachments / 2026 / 02",
+ "source_path": "evidence/images/object_storage_browser_20260213.png",
+ "source_sha256": "96e9a191380c29b9e0ab997007268c4cd6353cb6721ebd1ed4a32599d8d37e04",
+ "transcribed_on": "2026-10-24",
+ "transcriber": "claude-sonnet-5-5 via Claude Code image viewer"
+}
