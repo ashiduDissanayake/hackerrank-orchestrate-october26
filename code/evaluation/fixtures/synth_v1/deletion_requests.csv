@@ -1,0 +1,17 @@
+case_id,email,requested_at,reported_status,reported_at,audit_at,request_text
+fx_case_01,ilse.varga@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,I need a copy of last year's invoices for my records. Please leave my profile and purchase history in place.
+fx_case_02,marta.quiroga@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Quiero actualizar mi correo electrónico; por favor no elimine nada de mi cuenta.
+fx_case_03,haruto.sawada@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,注文履歴のデータをエクスポートしてください。アカウントは削除しないでください。
+fx_case_04,jonas.weber@example.org,2026-06-01T09:00:00Z,COMPLETE,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Bitte löschen Sie mein Konto und alle damit verbundenen persönlichen Daten.
+fx_case_05,nirmala.pereira@example.org,2026-06-01T09:00:00Z,COMPLETE,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_06,oskar.lind@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_07,tamsin.okoro@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_08,bela.horvat@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_09,rui.carvalho@example.org,2026-06-01T09:00:00Z,COMPLETE,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_11,selma.aydin@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_12,dara.fenwick@example.org,2026-06-01T09:00:00Z,COMPLETE,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_13,yusuf.marek.old@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_14,petra.novotny@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_15,lorcan.brady@example.org,2026-06-01T09:00:00Z,COMPLETE,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_16,anouk.visser@example.org,2026-06-01T09:00:00Z,NOT_STARTED,2026-06-02T09:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.
+fx_case_17,emeka.obi@example.org,2026-06-01T10:00:00Z,NOT_STARTED,2026-06-02T08:00:00Z,2026-06-15T12:00:00Z,Please erase the account linked to this email address and the personal data attached to it.

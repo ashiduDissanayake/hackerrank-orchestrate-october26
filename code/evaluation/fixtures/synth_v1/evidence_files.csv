@@ -1,0 +1,8 @@
+file_id,file_path,origin,captured_at
+evidence_f01,evidence/databases/customer_data_inventory_20260601.sql,customer_data_inventory_capture,2026-06-01T08:00:00Z
+evidence_f02,evidence/databases/customer_data_inventory_20260614.sql,customer_data_inventory_capture,2026-06-14T10:00:00Z
+evidence_f03,evidence/databases/customer_accounts_failover_replica_20260614.sql,customer_account_failover_replica_capture,2026-06-14T11:00:00Z
+evidence_f04,evidence/records/customer_data_snapshot_bundle_20260614.json,records_assurance_snapshot_bundle,2026-06-14T09:30:00Z
+evidence_f05,evidence/databases/customer_data_regional_replicas_20260614.sql,customer_data_regional_replicas_capture,2026-06-14T08:30:00Z
+evidence_f06,evidence/databases/customer_data_inventory_20260620.sql,customer_data_inventory_capture,2026-06-20T10:00:00Z
+evidence_f07,evidence/records/service_resource_export_20260614.json,service_resource_export,2026-06-14T10:00:00Z

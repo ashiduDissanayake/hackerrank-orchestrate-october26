@@ -1,0 +1,17 @@
+{
+  "exported_at": "2026-06-14T10:00:00Z",
+  "region": "global",
+  "service_exports": {
+    "search_service": {
+      "index_queries": [
+        {
+          "hits": 1,
+          "observed_at": "2026-06-16T00:00:00Z",
+          "query": "nirmala.pereira@example.org",
+          "resource_id": "search_f05b"
+        }
+      ]
+    }
+  },
+  "source": "records_assurance_gateway"
+}
