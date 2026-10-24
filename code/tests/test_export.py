@@ -149,6 +149,8 @@ class ExportGate(unittest.TestCase):
 
     def test_git_state_keeps_the_first_dirty_file_name_intact(self):
         """Regression: stripping the whole porcelain output chopped the first path ("EADME.md")."""
+        if ex.git_state()["commit"] is None:
+            self.skipTest("not inside a git checkout (for example an extracted code.zip)")
         probe = os.path.join(REPO, "scripts", "_probe_dirty.txt")   # an untracked file under a non-ignored prefix
         with open(probe, "w") as f:
             f.write("x")
