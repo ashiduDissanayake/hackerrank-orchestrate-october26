@@ -505,3 +505,254 @@ branch=dev/baseline
 repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T22:20:37Z] Second independent review: relationships, absence standards, labels, episodes, readiness
+
+User Prompt (verbatim, secrets redacted):
+Continue implementing our Ghost Data Still Exists solution. Own the repairs, investigation, validation and release preparation through completion.
+
+Read the current AGENTS.md and inspect HEAD first. Preserve newer and unrelated work. Maintain authentic logs with authoritative harness/model identifiers and verbatim user prompts.
+
+This is an implementation task. Reproduce the findings below, fix their general causes, investigate the remaining differences and produce reproducible artifacts. Do not finish with another plan or repeatedly request routine implementation, local-commit or best-effort-artifact approval.
+
+Our goal is the strongest evidence-grounded submission possible. Improve correctness and answer completeness without inventing ownership links, resource IDs or evidence.
+
+**1. Establish the baseline**
+
+The independently reviewed commit is `485f6848843e318b1fb6a10bbfd5c023de6caf64` on `dev/baseline`. Confirm your current checkout before using these figures.
+
+At that commit:
+
+- All 13 automated suites and 24 frozen v3 fixtures pass.
+- Public samples: 32/32 correct statuses, but only 8/32 exact full answers.
+- Of 193 expected sample steps: 158 match, 35 are missing and 4 predictions are extra.
+- Strict step precision/recall/F1: 0.9753 / 0.8187 / 0.8901.
+- Matched steps have no state or citation errors.
+- Full output: 147 COMPLETE, 361 INCOMPLETE, 10 NOT_APPLICABLE.
+- Internally, 353 cases have established violations and 8 are UNDETERMINED.
+- **26 cases contain UNKNOWN obligations:** eight have uncertain status; another eighteen already have a proven violation but retain investigation or plan gaps.
+- Eight rows fail the current validator. No certified root `output.csv` exists.
+
+The reproduced output SHA256 is:
+
+`443edff06205bd66d95f9f4f2c3c87e055804474764825170db0f21c0e1326c7`
+
+Public samples are development data, not an untouched holdout. The 518-case figures are diagnostics, not accuracy.
+
+**2. Fix the recoverable link in case_06**
+
+The earlier diagnosis that every missing sample step lacks usable linking evidence was incorrect.
+
+Participant `evidence_57`, the search SQL snapshot, explicitly contains:
+
+```json
+{
+  "resource_id": "search_001",
+  "email": "jonas.berg@outlook.com",
+  "source_resource_id": "account_006"
+}
+```
+
+This establishes the subject-to-search-to-account relationship.
+
+The linker already discovers `account_006` through this source reference but creates `Link(src, None)`. No direct account observation supplies its system, so policy evaluation returns `None` and silently drops the account. A subject-level absence obligation without a resource ID is emitted instead.
+
+Inspect `linking.py`, `obligations.py`, `engine.py`, `state.py` and `planner.py` together. Fix the general cause:
+
+- Preserve explicit, semantically justified source relationships.
+- Resolve the resource’s system/category from authoritative context or the existing justified namespace mappings.
+- Every relevant discovered resource must reach policy evaluation or an explicit unresolved diagnostic.
+- Follow justified relationships to a fixed point, with cycle protection and provenance.
+- Keep linkage separate from current state.
+- Do not treat general co-occurrence, file membership or shared-record participation as exclusive ownership.
+
+Review `Link.since()`. Learning an ID through a later reference does not prove that the referenced account was present or created then. A stale search document can reference an already-deleted account.
+
+For case_06:
+
+- `requested_at`: `2026-08-29T06:51:00Z`
+- `audit_at`: `2026-09-10T09:15:00Z`
+- Existing account proof returns ABSENT using primary `evidence_90`, captured `2026-09-05T07:18:01Z`, and failover `evidence_54`, captured `2026-09-02T23:00:00Z`.
+
+Combine the supported account ID with properly justified absence evidence. Preserve copy, coverage and contradiction checks.
+
+The missing step is `VERIFY_RECORD_ABSENT` for `account_006`. Since the case is INCOMPLETE, this future verification uses an empty `evidence_id`; canonical ordering supplies its step number.
+
+An isolated general-rule experiment recovered this step and improved exact samples from 8/32 to 9/32. It reused the current snapshot-coverage assumptions and was not committed. Reproduce and critically validate it rather than treating it as a golden patch.
+
+Also repair the M2b diagnostic: it misses this incoming source-reference chain and incorrectly calls the resource unreachable. Diagnostics must reflect the actual production relationship graph.
+
+**3. Apply consistent standards to absence evidence**
+
+The stricter `account_proof.py` safeguards do not consistently apply to already-linked resources.
+
+In `state.py`, `copy_states()` can append scope-based ABSENT events without checking `ScopeDecl.complete`, the captured collection/table or justified source coverage.
+
+Reproduce these synthetic counterexamples using the existing `World` helpers or equivalent end-to-end fixtures:
+
+- A linked profile is present after the request. A later `account_service` scope captures only `notification_preferences`.
+- A linked profile is present. A later profile export is explicitly incomplete.
+- A linked profile is present. A weakly scoped export omits it without establishing relevant completeness.
+
+With an independently supported retained audit record, the reviewed engine calls these COMPLETE, emits `VERIFY_RECORD_ABSENT` and passes row validation. Its stricter account-proof function still reports PRESENT.
+
+Unify the standards across both reasoning paths. Unsupported omission must not erase established presence. Check collection/schema, physical copy, source scope, completeness, time and contradictory observations.
+
+Preserve valid explicit 404s and authoritative complete snapshots. A genuine empty profile table can establish absence; do not require a positive-control row everywhere. Conversely, COMMIT or a matching export row count alone does not prove that the export is unfiltered or authoritative for every subject.
+
+A conservative sensitivity experiment flagged `case_34/support_9538`, currently considered absent using weak `evidence_05`. The case remained INCOMPLETE, but its plan changed. Inspect the actual source before deciding; this experiment is not a hidden-label correction.
+
+**4. Stop treatment labels overriding contradictory payloads**
+
+In `facts.py`, `read()` clears all detected exposure for certain observations whose result is REDACTED or ANONYMIZED.
+
+A synthetic counterexample supplies a linked tombstone with:
+
+- `record_type: ACCOUNT_TOMBSTONE`
+- the subject’s stable `user_id`
+- actual returned email and full-name fields
+- `account_status: DELETED`
+- `result: REDACTED`
+- `kind: record_lookup`
+
+The reviewed engine returns COMPLETE and verifies redaction despite the returned identifiers. Changing only the result label to IDENTIFIABLE correctly produces an exposed-PII finding.
+
+Distinguish query metadata from actual returned contents. A lookup key is not automatically retained PII in the returned record, but a treatment label must not suppress contradictory payload identifiers.
+
+Add both negative and positive controls, including valid redacted/anonymized lookups retaining only query metadata.
+
+The independent review found no equivalent direct-field contradiction among the dataset’s 17 relevant treatment-result observations. Report the actual effect rather than claiming an unmeasured accuracy improvement.
+
+**5. Investigate every sample difference**
+
+Regenerate the current diff against `dataset/sample_output.csv`. Use this checklist for diagnosis only—never as prediction rules.
+
+Missing account entries mean `VERIFY_RECORD_ABSENT`; analytics entries mean `VERIFY_RECORD_ANONYMIZED`; audit-record entries mean `VERIFY_RECORD_PRESENT`.
+
+| Case | Missing resources | Extra predictions |
+|---|---|---|
+| case_01 | account_001 | — |
+| case_02 | account_002 | — |
+| case_03 | analytics_9406 | — |
+| case_04 | account_004, analytics_901 | — |
+| case_06 | account_006 | — |
+| case_07 | account_007 | object_19 finding, deletion and absence verification |
+| case_08 | account_008 | — |
+| case_09 | account_3960, audit_record_4902 | — |
+| case_10 | account_010 | — |
+| case_17 | — | account_6523 absence verification |
+| case_18 | account_5521, audit_record_6645 | — |
+| case_20 | account_5037, audit_record_5569 | — |
+| case_21 | account_6440, analytics_5335 | — |
+| case_22 | account_4990 | — |
+| case_23 | account_410, audit_record_4128 | — |
+| case_24 | audit_record_7095 | — |
+| case_25 | account_3136, analytics_1895 | — |
+| case_26 | account_5684, analytics_4566 | — |
+| case_27 | account_3866, analytics_4574 | — |
+| case_28 | account_5482, analytics_6077 | — |
+| case_29 | account_7012, audit_record_3954 | — |
+| case_30 | account_4163, audit_record_1707 | — |
+| case_31 | account_4857 | — |
+| case_32 | account_8858 | — |
+
+For each difference, document:
+
+- The ownership chain and separate state proof.
+- Exact participant source IDs, locations and both timestamps.
+- Whether extraction, propagation, system resolution, policy or planning loses available evidence.
+- Whether request/episode scoping is supported.
+- Or precisely what provenance is missing or ambiguous.
+
+Do not assume every missing link is impossible: case_06 disproved that diagnosis. Equally, do not claim every canonical ID is recoverable.
+
+The independent search found `account_004`, `audit_record_5569` and `audit_record_6645` nowhere in searched participant text or extracted evidence outside public answers. Recheck, but never copy those IDs from labels into runtime logic.
+
+Investigate case scoping:
+
+- `case_07/object_19` is linked through February evidence; this sample request is in August.
+- `case_17/account_6523` comes from a March lookup; this request is in August.
+
+Old data can remain relevant to a later deletion. Do not discard it merely because it predates the request. The same person can also have several separate requests. Derive exclusions from evidence and policy, rather than a blanket first-request rule.
+
+Inspect historical identifiers, hashes, raw SQL/JSON structure, trace/request/job keys, explicit relationships, catalog aliases and actual media. Preserve temporal filtering throughout linkage and state reconstruction.
+
+Temporal context can support retrieval or a documented inference. Proximity alone must not be relabeled as an explicit ownership chain. Preserve the existing decision against timing-only accepted links unless the user changes it. Alternative inference methods may be measured separately without making them the default.
+
+Use public answers for evaluation and debugging only. No competitor predictions or caches as truth or prediction inputs. No organizer-only files, generator internals, case-number allocation, story-family rules, guessed IDs, arbitrary citation fallbacks or future evidence.
+
+**6. Review all uncertainty and plan completeness**
+
+Review all 26 cases with UNKNOWN obligations, not only the eight UNDETERMINED statuses.
+
+A proven violation establishes INCOMPLETE. It does not establish a complete investigation or remediation plan. The existing unresolved register already distinguishes these situations; ensure readiness checks and reporting do too.
+
+Resolve each gap through evidence, repair a missed link or justify why the proposed obligation is inapplicable. Do not merely broaden the gate and stop, or relabel UNKNOWN as a proven violation.
+
+The eight status-undetermined cases at the reviewed commit are:
+
+- Missing usable post-request profile coverage: `case_183`, `case_343`, `case_345`, `case_524`, `case_530`, `case_532`, `case_55`.
+- `case_55` additionally lacks admissible restore-state evidence for `backup_9287`.
+- `case_63` has conflicting screenshot/catalog identity evidence for `marketing_001`.
+
+Recheck these diagnoses after fixes. Do not impose universal catalog precedence or infer a target backup’s restore setting from other backups.
+
+Keep excluding `evidence_49` when its capture is after `audit_at`. An earlier inner snapshot time does not override the explicit contract prohibition.
+
+Official issue #11 was withdrawn without an organizer reply. It supplies no clarification. Read any new official clarification, but do not post messages without authorization.
+
+**7. Validate and finish the release**
+
+Write meaningful failing regressions before substantive fixes. Include unrelated identities, ambiguous ownership, legitimate empty snapshots, replica drift, both time cutoffs, repeated requests and contradictory treatment claims.
+
+Preserve frozen fixture versions. Disclose justified expectation changes rather than changing labels to pass tests.
+
+After final code changes:
+
+- Run targeted regressions and the complete required suite.
+- Run and validate sample predictions separately from the 518 evaluation predictions.
+- Report status accuracy, strict step TP/FP/FN and P/R/F1, aligned-field accuracy, exact full-answer count, sequence metrics and validation failures.
+- Reproduce output byte-for-byte and verify the extracted package with the dataset supplied separately.
+- Refresh README instructions and required evaluation/usage reports from the actual producing run.
+- Include at least three fully described synthetic evaluation cases and the failures/improvements.
+- Hash all prediction-affecting source, configuration and transcription assets.
+- Keep provided data, secrets, environments, dependency caches and nested archives out of `code.zip`.
+- Keep required transcript and trace artifacts separate.
+
+Export root `output.csv` only when evidence and the output contract justify it.
+
+If genuinely unavailable information still blocks export, finish all unblocked work and regenerate `output_best_effort.csv`, its unresolved register and manifest, explicitly `certified=false`. Preserve uncertainty and disclose all remaining validation and material completeness limitations. This fallback is already authorized; do not ask again or describe it as certified.
+
+Local tested fixes and release commits are authorized. Preserve unrelated work. This prompt alone does not authorize remote pushes, external messages, publication or contest submission; preserve any separate prior authorization.
+
+No new paid provider API calls are authorized. Continue local tooling and the existing coding harness. The deferred intent pilot, a GUI and a broad rewrite are not prerequisites.
+
+Maintain authentic logs. Separate actual runtime usage from development/preprocessing and coding-session usage; never fabricate unavailable token counts. If native trace files are inaccessible, give the remaining user-side export instructions at handoff. Verify the official live deadline before quoting remaining time.
+
+Finish with:
+
+1. Branch and commit IDs, identifying the producing code.
+2. Each confirmed finding, its general fix and regression evidence.
+3. Before/after sample metrics and remaining per-case differences.
+4. Counts of status-undetermined cases and cases with material unresolved obligations.
+5. Exact artifact paths and hashes; explicitly state whether certified root `output.csv` exists.
+6. Any genuine external blocker and the exact missing evidence needed.
+
+Do the implementation, investigation and release work now. Complete everything possible before returning the final handoff.
+
+Agent Response Summary:
+Reproduced each finding with failing regressions first, then fixed the general causes. Source references now propagate to a fixed point with system resolution, provenance and an explicit UNKNOWN for unresolvable categories (case_06/account_006 recovered); scope-based absence for linked resources now uses the same coverage standard as the account proof (category-holding table, complete source, strong or per-source promoted scope; the collection-membership rule was kept after a measured relaxation broke 5 samples); treatment labels discount only query metadata; and request-episode scoping from the subject's own request history carries over evidence that belongs to an earlier request (sample object_19/account_6523, eval export_1260). Readiness now separates 8 status-undetermined cases from 18 plan-gap cases (26 with unknown obligations). Public samples: strict TP/FP/FN 158/4/35 -> 159/0/34, exact 8 -> 10 of 32, status 32/32; eval differs from the reviewed output in two rows (case_33, case_34). All 34 remaining sample gaps are documented with participant occurrences and the missing provenance; none is a pipeline loss. No certified root output.csv exists; best-effort artifacts were regenerated (certified=false). No paid API call; nothing posted.
+
+Actions:
+* Created: code/tests/{test_link_propagation,test_state_absence,test_treatment_labels,test_episode_scope}.py; code/ghostaudit/{coverage_rules,copies}.py; fixtures v4 (builder, synth_v4, manifest); scripts/{diagnose_sample_differences,measure_prerequest_state,measure_record_time_rule,sabotage_v4,diff_outputs}.py; code/docs/SAMPLE_DIFFERENCES.md
+* Edited: linking, obligations, engine, state, facts, account_proof, export, run, data, caseview, observations; main.py; evaluation main/labeled/frozen guard; m2b probe and sensitivity scripts; README, DECISIONS, evaluation and usage reports
+* Ran: all 17 suites under Python 3.12 (with OCR) and 3.14, provisional run (identical hash under both), sample run and validation, best-effort, verify (byte-identical), export gate (refused), report regeneration, scripts/package.py --verify (extracted package passes); read-only GitHub issue metadata checks (issue #11 still withdrawn; an open participant issue #19 independently notes the same missing sample ids; no organizer reply)
+* Commits: 6b1a92a, e2e991e, b2907a4 (producing code), then the docs/artifacts commit (focused local commits; nothing pushed)
+
+Context:
+tool=Claude Code (VSCode extension)
+model=claude-sonnet-5-5
+branch=dev/baseline
+repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
