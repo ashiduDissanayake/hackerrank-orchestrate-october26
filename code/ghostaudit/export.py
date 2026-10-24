@@ -81,14 +81,14 @@ def dirty_code_paths(dirty_files, code_rel):
 def git_state():
     def git(*a):
         r = subprocess.run(["git", "-C", REPO, *a], capture_output=True, text=True)
-        return r.stdout.strip() if r.returncode == 0 else None
+        return r.stdout.rstrip("\n") if r.returncode == 0 else None   # keep leading spaces: porcelain lines start with a status column
     status = git("status", "--porcelain")
     dirty_files = [l[3:] for l in (status or "").splitlines() if not l[3:].startswith(("runs/", "output"))]
     # Producing-code provenance: what matters for reproducing the output is whether a PREDICTION-AFFECTING file differs from the
     # commit. Reports, docs, tests and packaging scripts may change in later commits without changing the output, so they are
     # recorded (dirty_files) but do not make the producing commit ambiguous; code_sha256 identifies the exact code either way.
     dirty_code = dirty_code_paths(dirty_files, set(code_files()))
-    return {"commit": git("rev-parse", "HEAD"), "dirty": bool(dirty_files), "dirty_files": dirty_files[:20], "dirty_code_files": dirty_code[:20]}
+    return {"commit": (git("rev-parse", "HEAD") or "").strip() or None, "dirty": bool(dirty_files), "dirty_files": dirty_files[:20], "dirty_code_files": dirty_code[:20]}
 
 
 def evidence_time_resolver(ds):

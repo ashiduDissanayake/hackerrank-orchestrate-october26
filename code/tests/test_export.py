@@ -147,6 +147,18 @@ class ExportGate(unittest.TestCase):
         finally:
             shutil.rmtree(tmp)
 
+    def test_git_state_keeps_the_first_dirty_file_name_intact(self):
+        """Regression: stripping the whole porcelain output chopped the first path ("EADME.md")."""
+        probe = os.path.join(REPO, "scripts", "_probe_dirty.txt")   # an untracked file under a non-ignored prefix
+        with open(probe, "w") as f:
+            f.write("x")
+        try:
+            names = ex.git_state()["dirty_files"]
+            self.assertIn("scripts/_probe_dirty.txt", names)
+            self.assertTrue(all(len(n) > 3 and not n.startswith(("EADME", "M ", "??")) for n in names), names)
+        finally:
+            os.remove(probe)
+
     def test_dirty_paths_are_classified_as_code_or_documentation(self):
         code = {"code/ghostaudit/engine.py", "code/ghostaudit/image_transcriptions/evidence_09.json", "code/main.py"}
         dirty = ["README.md", "code/ghostaudit/engine.py", "code/evaluation/evaluation_report.md", "code/ghostaudit/image_transcriptions/",
