@@ -1,5 +1,61 @@
 {
+ "carried_over_to_earlier_requests": [
+  {
+   "case_id": "case_33",
+   "category": "USER_EXPORT",
+   "chains": [
+    [
+     "direct",
+     "evidence_23",
+     "2026-06-18T12:00:00Z"
+    ],
+    [
+     "catalog",
+     "activity_4004",
+     "2026-06-18T12:07:01Z"
+    ]
+   ],
+   "earlier_requests": [
+    "case_52"
+   ],
+   "evidence_id": "evidence_81",
+   "reason": "record_absent",
+   "resource_id": "export_1260",
+   "system_id": "export_service",
+   "verdict": "COMPLIANT"
+  }
+ ],
  "certified": false,
+ "plan_gap_cases": [
+  "case_33",
+  "case_34",
+  "case_35",
+  "case_39",
+  "case_50",
+  "case_102",
+  "case_143",
+  "case_144",
+  "case_184",
+  "case_185",
+  "case_186",
+  "case_282",
+  "case_344",
+  "case_526",
+  "case_527",
+  "case_528",
+  "case_529",
+  "case_531"
+ ],
+ "status_undetermined_cases": [
+  "case_55",
+  "case_63",
+  "case_183",
+  "case_343",
+  "case_345",
+  "case_524",
+  "case_530",
+  "case_532"
+ ],
  "unresolved_cases": [
   {
    "case_id": "case_33",
@@ -16,13 +72,6 @@
      "operation": "DELETE_RECORD",
      "phase": "REMEDIATION",
      "resource_id": "export_1842",
-     "system_id": "export_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "export_1260",
      "system_id": "export_service"
     },
     {
@@ -58,11 +107,25 @@
      "system_id": "account_service"
     },
     {
+     "evidence_id": "evidence_01",
+     "operation": "REPORT_REMAINING_RECORD",
+     "phase": "FINDING",
+     "resource_id": "support_9538",
+     "system_id": "support_platform"
+    },
+    {
      "evidence_id": "",
      "operation": "DELETE_RECORD",
      "phase": "REMEDIATION",
      "resource_id": "account_5762",
      "system_id": "account_service"
+    },
+    {
+     "evidence_id": "",
+     "operation": "DELETE_RECORD",
+     "phase": "REMEDIATION",
+     "resource_id": "support_9538",
+     "system_id": "support_platform"
     },
     {
      "evidence_id": "",

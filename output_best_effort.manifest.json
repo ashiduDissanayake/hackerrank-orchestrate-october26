@@ -1,15 +1,23 @@
 {
+ "carried_over_resources": {
+  "case_33": [
+   "export_1260"
+  ]
+ },
+ "cases_with_unresolved_obligations": 26,
  "certified": false,
- "code_files": 41,
+ "code_files": 43,
  "code_files_sha256": {
   "code/ghostaudit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "code/ghostaudit/account_proof.py": "79dc77ee3586cb9bddd95f584251a4bf79677d52e4246e702180b902e553bc91",
-  "code/ghostaudit/caseview.py": "ed546d9d5f54d56c874e26e9f29c27402438722d575cdffad3e3d59d478436d9",
+  "code/ghostaudit/account_proof.py": "a5530daf2d4c9958b5fdf9094c38025679165fe22e1772506def8f2a4711789a",
+  "code/ghostaudit/caseview.py": "2aa4b6cac1f66846f01171c36f8b740563e6a195c8b6d676a813a2292b34359e",
   "code/ghostaudit/contract.py": "6d96ec5d218c2e8346861aa96311db6c5e6b0837f68e2860d83163a414e77452",
+  "code/ghostaudit/copies.py": "c75d778dac2029b19c4841f9d54c48cba883f49bdd15ae882f7455c199d2d09c",
   "code/ghostaudit/coverage.py": "6d482df52a96c05ce13b32081ceddd077315c78859d875664f6b851f03f0f44e",
-  "code/ghostaudit/data.py": "eb0ecf131ed3bbefc3f41beb19a1cb22f7738d638331efb1d8564c4b1dae2922",
-  "code/ghostaudit/engine.py": "27c8ead1dc081c3bbf909fbd1628845846af6649929c10b60c0690640771b1d7",
-  "code/ghostaudit/export.py": "eb4d712f467280e99be4df2989c6b787def8d10a47a439b7c14c5432ec29dc61",
+  "code/ghostaudit/coverage_rules.py": "2c59e417b29f8338ac53b38f52f0865de45e1aa653a40a473dd2dfb953829b38",
+  "code/ghostaudit/data.py": "e7cf70d736a38ad43449a3b742ff2f9c9a365b29f563a4441c5f88da157fd490",
+  "code/ghostaudit/engine.py": "9bd5721db462c1886c6b9586a42c08929205810bf65ed0d7ee973272cac21315",
+  "code/ghostaudit/export.py": "c7ffe393d99177f48fd11fec3d51a4a1f8ed43a89c85cf30874524c8192124d6",
   "code/ghostaudit/extract/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/extract/common.py": "0c2be447605b1e4b4e836ed7698eb8d038c1e93106cc81bdd8fa252a559a145d",
   "code/ghostaudit/extract/handover.py": "94cc12179fd4e5777f60ea40f379e839cd7f60cd6b6f1652fa6313641f0a043b",
@@ -18,7 +26,7 @@
   "code/ghostaudit/extract/logs.py": "5b7e6edb5152e14fe89331d5d133e51f7c3f16f6ac644b163fd33182d4fa6870",
   "code/ghostaudit/extract/pdf.py": "99a456a57cda3da8dd99b6e9608e4e620ecc228e1f60ad36209bfe48f70bf79d",
   "code/ghostaudit/extract/sql_snapshots.py": "c78a846f049bbb0c90488265fe098987987ab8e16a93174ef48581cd9b5d7168",
-  "code/ghostaudit/facts.py": "81d75110aa9a93f807bc48320faf3fd2c1ef755c5f7334198494d63f545c88f0",
+  "code/ghostaudit/facts.py": "a2c61df1d50e5fbef1bb2c39f98c119ca4581b365559ea762f98b89dca7979be",
   "code/ghostaudit/identity.py": "357d0235cec72252b34912c8c173b9677252ec6235b3c17ab54b6aec10c6af28",
   "code/ghostaudit/image_transcriptions/evidence_04.json": "be192c91794e7a87e13a8b5abf10dc13fbaad126c1514e61b561848bbe84cb74",
   "code/ghostaudit/image_transcriptions/evidence_09.json": "b8c939d1f88ca03e4987708574fa51dee44d1f4752ff9ea8a239d244ad339b60",
@@ -32,19 +40,19 @@
   "code/ghostaudit/image_transcriptions/evidence_46.json": "6fd29811c55f1ceaea21af99d6fb95ac2027d0e39a8047567f9e8bd7528ea03a",
   "code/ghostaudit/image_transcriptions/evidence_60.json": "5d5f8a76e472f4d54a51b71057135469e9903630c95192d20778c4dc750dccc0",
   "code/ghostaudit/intent.py": "c8d9df8b4c70bfc2e8804c1bc2d826213dcebf4d0b099bb73f6acd75bc505c4b",
-  "code/ghostaudit/linking.py": "53e656f20248f539063f91fe29abd1b77e92ddbabbbfcea3668bade3e0633ab7",
+  "code/ghostaudit/linking.py": "e6adae9cf1b219e88f4568c5303cc08ed892b1f986308d399465ff0df3633a64",
   "code/ghostaudit/normalize.py": "bb3b9d61967861c5d5bea00e23ef48505a612ad7646db9430d100652c8a6aae3",
-  "code/ghostaudit/obligations.py": "2a468ce3cdb13b82a0de80002f4b7350ce1fbfea74ae4bc21e45877e2fe11b9c",
+  "code/ghostaudit/obligations.py": "f4ebb9d5d45b4b658c77d00e6a70fc0233f3edcf5243586dbb07edc7cb467f40",
   "code/ghostaudit/observations.py": "e8515ccc49b50d89595870004c3fad48906a6ad5121ed3e03bb3f8c71c6bbd7b",
   "code/ghostaudit/pipeline.py": "eda03418e258db492c8cf97ed6ac01c0237c97d5464eeeda58c2c972d613a013",
   "code/ghostaudit/planner.py": "d09eac353ba81fc146a485c5efc2c6189bd78a90ca217d358f72aa2ce49bdb72",
-  "code/ghostaudit/run.py": "68d042a086c2c3191dae29341588743a31847d80e6ed2fbca3da37083f3eaee1",
-  "code/ghostaudit/state.py": "02c02bb491506932848dd3936099ebb05da425a3198a98d21de041641c3a569d",
+  "code/ghostaudit/run.py": "b1b1786a0ca55234f021562bf883a7eeb60a512c6f5c4ac065adb441c60b1b9a",
+  "code/ghostaudit/state.py": "9e299b66d28ecde76b762c287d0d8742f879028d5d43eae162f99c13a6b72185",
   "code/ghostaudit/validate.py": "674a4a05d7b5ade8102e79b2f308e6dc1d488f0a37468b754c0ef0fd4ba537b7",
-  "code/main.py": "1aec94611ec48ad08a992ca2047cc4226b9dc654383568cdce16376027b7bbbf",
+  "code/main.py": "f916f15487d96f67e47a41d80952990d1c8d7d35169d84c5dd72216086ca5f81",
   "code/requirements.txt": "79ed88acaf42c1382d794ba1fc1e23fc4b9f21a513d7b6cbc40380378f5862f5"
  },
- "code_sha256": "2873569cd86556001e37244ed6909b03dae3d458e348a5254ec501ab211eb621",
+ "code_sha256": "e4558d455cbff166117e345ea5182d0187915390705bf5bf6b3111890bd9cd15",
  "command": [
   "python3",
   "code/main.py",
@@ -53,6 +61,7 @@
  "config": {
   "account_proof": {
    "allow_weak": false,
+   "episode_scoping": true,
    "pre_request_exclusion": true,
    "require_row": false,
    "weak_promotion": true
@@ -67,15 +76,14 @@
  "disclosure": "Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation.",
  "final": false,
  "git": {
-  "commit": "a71487808a0f4b26f2d0a188b198d349b250a233",
+  "commit": "b2907a44c35d1c3060aed00cb33c7a70be316a1e",
   "dirty": true,
   "dirty_code_files": [],
   "dirty_files": [
    "README.md",
    "code/docs/DECISIONS.md",
-   "code/docs/SAMPLE_REGRESSION_DIAGNOSIS.md",
    "code/evaluation/evaluation_report.md",
-   "code/evaluation/usage_report.md"
+   "code/docs/SAMPLE_DIFFERENCES.md"
   ]
  },
  "inputs_sha256": {
@@ -184,10 +192,31 @@
   "user_identities.csv": "63940e0fdc74a85e44463de3a6f18e3b27ff144f08e9981c732dfcfdadece9e6"
  },
  "kind": "best_effort",
- "output_sha256": "443edff06205bd66d95f9f4f2c3c87e055804474764825170db0f21c0e1326c7",
+ "output_sha256": "b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf",
+ "plan_gap_cases": [
+  "case_33",
+  "case_34",
+  "case_35",
+  "case_39",
+  "case_50",
+  "case_102",
+  "case_143",
+  "case_144",
+  "case_184",
+  "case_185",
+  "case_186",
+  "case_282",
+  "case_344",
+  "case_526",
+  "case_527",
+  "case_528",
+  "case_529",
+  "case_531"
+ ],
+ "plan_gaps_accepted": false,
  "prompts": [],
  "python": "3.12.8",
- "register_sha256": "eaf724592d3552a0608d4b061203efcba42a36fce8ab479253bd1f877b513728",
+ "register_sha256": "9cd4f2ad80799376a9842e42537905d4fa59cd06868c8188906f7e7708c53a0b",
  "rows": 518,
  "runtime_model_calls": 0,
  "status_counts": {

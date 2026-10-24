@@ -7,7 +7,7 @@ Numeric blocks between `AUTO` markers are regenerated from the actual evaluation
 
 | data | labels | what it supports |
 |---|---|---|
-| frozen synthetic fixtures (`code/evaluation/fixtures/synth_v3`; v1 and v2 kept unchanged as history) | yes, written by the author from the contract before the engine ran against them | accuracy, precision/recall, field, evidence and sequence metrics |
+| frozen synthetic fixtures (`code/evaluation/fixtures/synth_v4`; v1 to v3 kept unchanged as history) | yes, written by the author from the contract before the engine ran against them | accuracy, precision/recall, field, evidence and sequence metrics |
 | 32 public samples (`dataset/sample_*.csv`) | yes (public answers) | **development / regression data only**. Several cases were inspected while building rules and guards, so this is *not* an untouched holdout |
 | 518 evaluation requests | **none** | diagnostics only: status distribution, unresolved counts, evidence coverage. Never reported as accuracy |
 
@@ -30,12 +30,12 @@ The scorer itself is tested with a corruption suite (`code/evaluation/test_scori
 ### 2.1 Frozen fixtures
 
 <!--AUTO:fixtures-->
-Fixture set `synth_v3` (frozen, hash-guarded): 24/24 cases pass all checks (18 have a complete labeled answer scored below; the rest are labeled by internal expectations because their correct output is an UNKNOWN state).
+Fixture set `synth_v4` (frozen, hash-guarded): 31/31 cases pass all checks (25 have a complete labeled answer scored below; the rest are labeled by internal expectations because their correct output is an UNKNOWN state).
 
 | metric | value |
 |---|---|
-| cases | 18 |
-| status accuracy | 1.0000 (18/18) |
+| cases | 25 |
+| status accuracy | 1.0000 (25/25) |
 | step precision / recall / F1 (strict: all six fields incl. evidence_id) | 1.0000 / 1.0000 / 1.0000 |
 | step precision / recall / F1 (lenient: ignores evidence_id) | 1.0000 / 1.0000 / 1.0000 |
 | alignment coverage (gold steps with a prediction on the same phase/system/resource/operation) | 1.0000 |
@@ -43,7 +43,7 @@ Fixture set `synth_v3` (frozen, hash-guarded): 24/24 cases pass all checks (18 h
 | evidence accuracy (gold steps that cite evidence and got the same citation) | 1.0000 |
 | sequence: exact-array match rate | 1.0000 |
 | sequence: mean normalized LCS | 1.0000 |
-| status confusion (gold->predicted) | COMPLETE->COMPLETE: 9, INCOMPLETE->INCOMPLETE: 6, NOT_APPLICABLE->NOT_APPLICABLE: 3 |
+| status confusion (gold->predicted) | COMPLETE->COMPLETE: 11, INCOMPLETE->INCOMPLETE: 11, NOT_APPLICABLE->NOT_APPLICABLE: 3 |
 <!--/AUTO:fixtures-->
 
 ### 2.2 Public samples (development data, not a holdout)
@@ -55,16 +55,16 @@ Default policy `not_certified` (an unresolved obligation can never become COMPLE
 |---|---|
 | cases | 32 |
 | status accuracy | 1.0000 (32/32) |
-| step precision / recall / F1 (strict: all six fields incl. evidence_id) | 0.9753 / 0.8187 / 0.8901 |
-| step precision / recall / F1 (lenient: ignores evidence_id) | 0.9753 / 0.8187 / 0.8901 |
-| alignment coverage (gold steps with a prediction on the same phase/system/resource/operation) | 0.8187 |
+| step precision / recall / F1 (strict: all six fields incl. evidence_id) | 1.0000 / 0.8238 / 0.9034 |
+| step precision / recall / F1 (lenient: ignores evidence_id) | 1.0000 / 0.8238 / 0.9034 |
+| alignment coverage (gold steps with a prediction on the same phase/system/resource/operation) | 0.8238 |
 | field accuracy on aligned steps: state / evidence_id | 1.0000 / 1.0000 |
 | evidence accuracy (gold steps that cite evidence and got the same citation) | 0.7867 |
-| sequence: exact-array match rate | 0.2500 |
-| sequence: mean normalized LCS | 0.7831 |
+| sequence: exact-array match rate | 0.3125 |
+| sequence: mean normalized LCS | 0.7984 |
 | status confusion (gold->predicted) | COMPLETE->COMPLETE: 10, INCOMPLETE->INCOMPLETE: 22 |
 
-Opt-in ablation `certify_established` (NOT exportable; shown only to quantify what refusing to certify costs): status accuracy 1.0000, strict step F1 0.8901. With the subject-level account proof in place the two policies coincide on the public samples, because no public-sample case is left unresolved.
+Opt-in ablation `certify_established` (NOT exportable; shown only to quantify what refusing to certify costs): status accuracy 1.0000, strict step F1 0.9034. With the subject-level account proof in place the two policies coincide on the public samples, because no public-sample case is left unresolved.
 <!--/AUTO:samples-->
 
 How to read the sample numbers: the lenient and strict scores coincide because every emitted step carries the right citation. Recall is below 1 because the gold answers contain steps for resource ids that no admissible evidence ties to the subject (an old account id that appears only in an activity *claim*, an anonymized analytics record with every identifier null). The engine proves the subject-level *state* (no profile remains) but, by design, never invents or guesses the resource id, so those steps are missing.
@@ -87,12 +87,12 @@ Obligation verdicts by reason (counts of obligations, all cases):
 
 | reason | count |
 |---|---|
-| record_present | 367 |
+| record_present | 368 |
 | retained_record_present | 311 |
 | no_profile_for_subject_in_snapshot | 310 |
 | identifiers_exposed | 214 |
-| record_absent | 114 |
 | data_flow_active | 113 |
+| record_absent | 112 |
 | treated_record_present | 38 |
 | restore_blocked | 33 |
 | data_flow_disabled | 33 |
@@ -116,7 +116,7 @@ The UNDETERMINED cases are exactly the rows the contract validator rejects (an I
 
 ## 3. Additional evaluation cases (independent, fully described)
 
-The cases below are synthetic and fictional. They live in `code/evaluation/fixtures/synth_v3` (v3 = v2 + four proof-boundary scenarios; v2 = v1 + revised labels + four scenarios; every version is hash-frozen; `code/evaluation/test_fixtures_frozen.py` fails if any file changes). Their labels were written from the contract reasoning before the engine was run against them. Each also has an internal expectation file (accepted/rejected links, obligation verdicts, forbidden citations).
+The cases below are synthetic and fictional. They live in `code/evaluation/fixtures/synth_v4` (v4 = v3 + seven scenarios for relationships, absence, labels and request episodes; v3 = v2 + four proof-boundary scenarios; v2 = v1 + revised labels + four scenarios; every version is hash-frozen; `code/evaluation/test_fixtures_frozen.py` fails if any file changes). Their labels were written from the contract reasoning before the engine was run against them. Each also has an internal expectation file (accepted/rejected links, obligation verdicts, forbidden citations).
 
 **Case A: `fx_case_05` temporal leakage (both halves of the cutoff).** Subject Nirmala Pereira (`user_f05`) asks for deletion; request 2026-06-01, `audit_at` 2026-06-15T12:00Z.
 Evidence: `evidence_f01` (inventory, captured 06-01) lists her search entry `search_f05` under her email, so the resource is linked; `evidence_f02` (inventory, 06-14T10:00, scope covers search and security) no longer lists it; `evidence_f03` (account primary+failover snapshot, 06-14T11:00) has no row for her. Two traps: `evidence_f06` is captured on **06-20, after the audit**, and still contains the old `search_f05` row (its *record* time is 06-05); `evidence_f07` is captured **before** the audit but holds a record `search_f05b` observed on **06-16, after** the audit. An engine that filtered only on record time would cite `evidence_f06`; one that filtered only on artifact time would see `search_f05b`.
@@ -135,9 +135,17 @@ Evidence: `evidence_f02` holds `search_f16` under the old email (linked: that ad
 
 **Case G: `fx_case_28` a replica last seen before the request with a row nobody can attribute.** Kofi Boateng, request 2026-11-10, audit 2026-11-25. A clean post-request primary snapshot exists, but the failover replica was last captured on 11-05 with an account row that carries no identifier. It could be his, and nothing shows the replica afterwards. Expected UNDETERMINED, never COMPLETE, and no step may name that row. Result: passes; ignoring pre-request captures (the earlier behaviour) flips it to COMPLETE. This scenario sits in the last month on purpose: an unattributable row is correctly visible to every later case, so it must not leak into the others.
 
+**Case H: `fx_case_29` a source reference reaches an account that nothing else observes.** Astrid Lindqvist, request 2026-01-05, audit 2026-01-25. A search SQL snapshot (`evidence_i01`, 01-10) holds `search_f29` with her email and `source_resource_id = account_f29`; no artifact contains an account row named `account_f29`. A declared inventory (`evidence_i02`, 01-08) with another person's profile row shows the account gone, and it is *older* than the document's indexing time (01-09T22:00): a reference proves neither existence nor creation time. A second document names `account_f29z` and belongs to someone else. Expected INCOMPLETE: finding/remediation/verification for `search_f29`, plus a future `VERIFY_RECORD_ABSENT account_f29` with an empty citation and the audit-record check. This is the public-sample `case_06` pattern. Result: passes; if a referenced resource gets no system, it is silently dropped and the account step disappears (`scripts/sabotage_v4.py`).
+
+**Case I: `fx_case_31` and `fx_case_30` one person, two requests.** Rhea Kapoor asked twice: `fx_case_31` (Dec 1-5, 2025) and `fx_case_30` (Feb 10-25, 2026). The December inventory (`evidence_i03`, 12-03) lists `search_f31` and `audit_record_f31`; the February inventory (`evidence_i04`, 02-15) lists `search_f30` and `audit_record_f30` and not the December records. For the later request the December records are linked only by evidence captured inside the earlier request's window, so they are carried over (no step; `search_f31` is absent in the February snapshot anyway): expected INCOMPLETE with steps for `search_f30` and `audit_record_f30` only, and no citation of `evidence_i03`. The earlier request keeps its own evidence. Result: passes; with episode scoping off, `fx_case_30` gains steps for the earlier episode's resources.
+
+**Case J: `fx_case_32` / `fx_case_33` a treatment label is not a payload.** Both subjects have a tombstone lookup in a ledger with `result: REDACTED`. In `fx_case_32` (Teodor Marin) the returned record carries his email and full name next to the stable user id: expected INCOMPLETE with `REPORT_EXPOSED_PII`, `REDACT_RECORD`, `VERIFY_RECORD_REDACTED`. In `fx_case_33` (Sana Qureshi) the email appears only as the lookup key (`lookup_value`) and the record returns the stable user id only: expected COMPLETE with a redaction verification citing the ledger. Result: both pass; letting the label clear every exposure flips `fx_case_32` to COMPLETE.
+
+**Case K: `fx_case_34` / `fx_case_35` what a later empty capture may and may not erase.** Both subjects have a profile returned with HTTP 200 after the request. In `fx_case_34` (Bruno Teixeira) a later declared-empty `notification_preferences` bundle and a later inventory that names account_service but has no profile table follow: neither captured a profile collection, so the profile stays present (expected INCOMPLETE with finding, `DELETE_RECORD`, absence check). In `fx_case_35` (Mina Abe) the later evidence is an explicit lookup returning 404: valid absence, expected COMPLETE citing that lookup. Result: both pass; accepting any scope as absence evidence flips `fx_case_34`. *Authoring correction before the freeze:* `fx_case_35` was first labeled with a later declared-empty `customer_profiles` bundle as the valid absence; the public sample `case_24` (profile lookup, later declared-empty bundle, answer: present) contradicted that label, and the engine's membership rule was right, so the label, not the engine, was changed.
+
 Further synthetic cases in the same set: a tombstone that still exposes email/hash versus one holding only the stable user id (`fx_case_08`, `fx_case_09`), a historical email_hash link (`fx_case_13`), a near-miss lookalike email (`fx_case_12`), a legal hold present in a replica (`fx_case_15`), a snapshot that predates the request (`fx_case_24`), a scope that excludes the system so absence is not evidenced (`fx_case_07`), and non-deletion requests in English, Spanish and Japanese (`fx_case_01..03`).
 
-Expected outputs and expectations for the cases above (A, B, C, D, E, F, G), regenerated from the frozen files:
+Expected outputs and expectations for the cases above (A to K, a representative subset below), regenerated from the frozen files:
 
 <!--AUTO:fixture_cases-->
 **fx_case_05** expected: `COMPLETE`
@@ -347,6 +355,187 @@ Expected outputs and expectations for the cases above (A, B, C, D, E, F, G), reg
 }
 ```
 
+**fx_case_29** expected: `INCOMPLETE`
+
+```json
+[
+ {
+  "evidence_id": "evidence_i01",
+  "operation": "REPORT_REMAINING_RECORD",
+  "phase": "FINDING",
+  "resource_id": "search_f29",
+  "state": "PRESENT",
+  "step_no": 1,
+  "system_id": "search_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "DELETE_RECORD",
+  "phase": "REMEDIATION",
+  "resource_id": "search_f29",
+  "state": "ABSENT",
+  "step_no": 2,
+  "system_id": "search_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_ABSENT",
+  "phase": "VERIFICATION",
+  "resource_id": "account_f29",
+  "state": "ABSENT",
+  "step_no": 3,
+  "system_id": "account_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_ABSENT",
+  "phase": "VERIFICATION",
+  "resource_id": "search_f29",
+  "state": "ABSENT",
+  "step_no": 4,
+  "system_id": "search_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_PRESENT",
+  "phase": "VERIFICATION",
+  "resource_id": "audit_record_f29",
+  "state": "PRESENT",
+  "step_no": 5,
+  "system_id": "security_service"
+ }
+]
+```
+
+**fx_case_30** expected: `INCOMPLETE`
+
+```json
+[
+ {
+  "evidence_id": "evidence_i04",
+  "operation": "REPORT_REMAINING_RECORD",
+  "phase": "FINDING",
+  "resource_id": "search_f30",
+  "state": "PRESENT",
+  "step_no": 1,
+  "system_id": "search_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "DELETE_RECORD",
+  "phase": "REMEDIATION",
+  "resource_id": "search_f30",
+  "state": "ABSENT",
+  "step_no": 2,
+  "system_id": "search_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_ABSENT",
+  "phase": "VERIFICATION",
+  "resource_id": "search_f30",
+  "state": "ABSENT",
+  "step_no": 3,
+  "system_id": "search_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_PRESENT",
+  "phase": "VERIFICATION",
+  "resource_id": "audit_record_f30",
+  "state": "PRESENT",
+  "step_no": 4,
+  "system_id": "security_service"
+ }
+]
+```
+
+**fx_case_32** expected: `INCOMPLETE`
+
+```json
+[
+ {
+  "evidence_id": "evidence_i05",
+  "operation": "REPORT_EXPOSED_PII",
+  "phase": "FINDING",
+  "resource_id": "tombstone_f32",
+  "state": "PRESENT",
+  "step_no": 1,
+  "system_id": "identity_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "REDACT_RECORD",
+  "phase": "REMEDIATION",
+  "resource_id": "tombstone_f32",
+  "state": "REDACTED",
+  "step_no": 2,
+  "system_id": "identity_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_PRESENT",
+  "phase": "VERIFICATION",
+  "resource_id": "audit_record_f32",
+  "state": "PRESENT",
+  "step_no": 3,
+  "system_id": "security_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_REDACTED",
+  "phase": "VERIFICATION",
+  "resource_id": "tombstone_f32",
+  "state": "REDACTED",
+  "step_no": 4,
+  "system_id": "identity_service"
+ }
+]
+```
+
+**fx_case_34** expected: `INCOMPLETE`
+
+```json
+[
+ {
+  "evidence_id": "evidence_i09",
+  "operation": "REPORT_REMAINING_RECORD",
+  "phase": "FINDING",
+  "resource_id": "account_f34",
+  "state": "PRESENT",
+  "step_no": 1,
+  "system_id": "account_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "DELETE_RECORD",
+  "phase": "REMEDIATION",
+  "resource_id": "account_f34",
+  "state": "ABSENT",
+  "step_no": 2,
+  "system_id": "account_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_ABSENT",
+  "phase": "VERIFICATION",
+  "resource_id": "account_f34",
+  "state": "ABSENT",
+  "step_no": 3,
+  "system_id": "account_service"
+ },
+ {
+  "evidence_id": "",
+  "operation": "VERIFY_RECORD_PRESENT",
+  "phase": "VERIFICATION",
+  "resource_id": "audit_record_f34",
+  "state": "PRESENT",
+  "step_no": 4,
+  "system_id": "security_service"
+ }
+]
+```
+
 <!--/AUTO:fixture_cases-->
 
 ## 4. Failures found and improvements made
@@ -369,6 +558,12 @@ Every row was found by a test, a measurement or a review, and has a regression t
 | Phones written in free text could be checked but not linked | review follow-up | one normalization module used by indexing, linking and exposure, with guards against order numbers and names |
 | Subject-level account proof: row matching compared phones by exact equality and counted superseded snapshot rows as direct presence | the proof's own regression tests | shared phone rule; only evidence after the request and outside evaluated snapshots counts as direct presence |
 | Two public samples showed the proof could claim absence while the account existed | validation against known account states | weak scope may never support absence but never hides presence; direct profile evidence outranks a population-level snapshot; the proof is consulted only when no account resource is linked |
+| A resource named only by a linked record's `source_resource_id` (sample case_06 / `account_006`) was linked with no system, so policy evaluation returned nothing and the account was silently dropped; the M2b diagnostic made the same mistake and called it unreachable | independent review, reproduced with failing regressions | source references followed to a fixed point (cycle-safe, provenance kept); system from observations then the id namespace (`Link.system_basis`); `Link.since()` ignores source references; an unresolvable category is an explicit UNKNOWN; the diagnostic runs the production linker |
+| Scope-based absence of an already linked resource ignored the completeness, collection and coverage checks that the account proof applies (a later empty `notification_preferences` scope, an incomplete export or a weak export could erase a present linked profile and the case came out COMPLETE) | independent review, reproduced | one shared standard (`coverage_rules.py`) for both paths: category-holding table, complete source, strong or per-source promoted scope. Inventory `support_records` holds messages only (all 33 rows), so it no longer erases an attachment (eval `case_34` / `support_9538`) |
+| A REDACTED / ANONYMIZED label cleared every detected exposure, including identifiers in the returned payload | independent review, reproduced | the label discounts query metadata only (`QUERY_FIELDS`); real-data effect: none of the 17 treatment-result observations changes (stated, not claimed as an accuracy gain) |
+| Evidence of an earlier request leaked into a later request by the same person (sample `object_19`, `account_6523`; eval `export_1260`) | sample diagnosis, repeated-request structure | request-episode scoping from the subject's own request history; a present carried-over record becomes UNKNOWN, never hidden |
+| A relaxation of the collection-membership rule (to let a declared-empty profile bundle erase a looked-up profile) | tried and measured | rejected: 5 public-sample COMPLETE cases became INCOMPLETE and `case_24`'s profile was erased; the fixture label that assumed it was corrected before the freeze |
+| Readiness conflated status with completeness: 18 cases are INCOMPLETE on proven violations yet carry unresolved obligations | independent review | manifest `plan_gap_cases` / `cases_with_unresolved_obligations`; `export` refuses plan gaps unless `--accept-plan-gaps`; the register lists both groups |
 | `fx_case_14/17` labels encoded "unlinkable id means unresolved obligation" | closeout review | v2 fixtures with revised labels written before running the engine; v1 retained |
 | A declared-EMPTY non-profile collection (`notification_preferences`) discharged the profile obligation, so a retained audit record then yielded COMPLETE | independent review, reproduced as unit and file-level fixtures | a snapshot supports absence only if it evidences a profile collection (`ScopeDecl.captured`), a strong scope and a complete source; non-profile rows neither prove nor disprove anything |
 | A clean post-request primary hid a failover replica last captured with an unattributable row (COMPLETE with the replica listed as "uncovered") | independent review, reproduced | every capture of every copy contributes an event; a copy whose latest evidence is an unattributable row, a pre-request presence, or a lagging absence is unaccounted and blocks the proof; a copy with attributable rows and no subject is excluded with a stated basis |
@@ -385,6 +580,8 @@ The proof answers "does an authoritative account snapshot, queried by the subjec
 
 **Per-copy accounting.** Every capture of every copy contributes an event; the latest event of a copy decides it. The proof is ABSENT only if the primary's latest event is a supporting post-request absence, no copy's latest event is a post-request presence, and no copy is *unaccounted*: a copy is unaccounted if its latest evidence is an unattributable row, a presence before the request that was never captured again, or an absence that lags a peer (another copy of the same capture, or an earlier sighting, shows the subject while this copy does not, so replication may still land). A copy whose latest capture shows attributable rows and none for the subject is *excluded* with that stated basis ("never evidenced to hold the subject"). Copies seen only in other cases' captures contribute nothing about this subject: they are listed as `uncovered` for transparency and never asserted. That is a modelling assumption (a replica that was never captured for the subject is not known to hold anything), recorded as such.
 
+**One standard for both reasoning paths (2026-10-25).** The state of an already linked resource and the subject-level proof now use the same absence rule (`coverage_rules.absence_support`). Valid explicit 404s and authoritative complete snapshots are preserved (an empty profile *table* is valid absence; no positive-control row is required). COMMIT or a matching row count prove only that a file is whole, not that it is unfiltered or authoritative for every subject, so they gate nothing beyond completeness. Collection-scoped bundles are per-batch extracts and apply only to records known to belong to them; that membership rule was measured against its relaxation (see section 4).
+
 **Per-source promotion of weak document exports.** A document-table export declares no collection list; its scope is inferred from the systems seen in its rows, so it is a weak claim. It is promoted to a supporting capture for *this subject* only when (a) the export demonstrably includes profile rows (the collection is part of what it exports) and (b) the same copy holds records about the subject in other collections (the subject's data was included in the extract, so a missing profile row is an omission by the datastore, not by the extract), and the source is complete. An export that never mentions the subject proves nothing about them (`fx_case_27`). The switch is never enabled globally: the optional global "weak scopes" setting remains off.
 
 Measured effect of the 2026-10-25 boundary fixes, comparing the full 518-row output of the previously reviewed commit (it reproduces `97993dfc…`) with the current code, row by row:
@@ -394,6 +591,12 @@ Measured effect of the 2026-10-25 boundary fixes, comparing the full 518-row out
 * every other row is byte-identical.
 
 **Inspected cases.** `case_45` and `case_64` list a failover replica whose last capture (`evidence_54`, 2026-09-02T23:00Z) predates their requests. That capture has four attributable rows, none for the subject, and the subject was never evidenced in any copy before it, so the replica is excluded with the stated basis rather than blocking. This is the one judgment call that the data cannot settle: if pre-request captures were never allowed to exclude a replica, `case_45` and `case_64` would become unresolved, and so would one *public sample* (`case_21`) whose public answer is COMPLETE with exactly this pattern. That sample is development data, not independent proof, but it agrees with the default.
+
+**Effect of the relationship, absence, label and episode fixes**, comparing the full 518-row output of the previously reviewed commit `485f684` (hash `443edff0…`) with the current code, row by row:
+
+* two rows change, both in a stated direction: `case_33` loses the `export_1260` absence verification (carried over to the earlier request `case_52`), and `case_34` gains a finding and remediation for the attachment `support_9538` (an inventory that only captures messages no longer erases it; the latest evidence is a PII scan hit on 2026-09-15 and a UI reference listing it on 2026-09-26);
+* no status changes; all 8 undetermined statuses are unchanged, and the REDACTED/ANONYMIZED-label fix changes no real row (none of the 17 treatment-result observations carries a contradicting payload);
+* public samples: strict steps TP/FP/FN 158/4/35 -> 159/0/34, exact answers 8 -> 10 of 32, status 32/32 (the case_06 link and the episode scoping were found through the sample diagnosis, so this is development evidence).
 
 <!--AUTO:proof_stats-->
 Subject-level discharges in the real run: 310 of 518 requests (plus 8 by a DELETED tombstone).
@@ -407,12 +610,13 @@ Optional switches, measured (sample counts are development data; eval counts are
 <!--AUTO:sensitivity-->
 ```text
 == samples (development data)
-   default (strong scopes, empty tables allowed)    {'COMPLETE': 10, 'INCOMPLETE': 22}  false-absence vs gold: 0
-   + weak scopes (inferred_from_rows)               {'COMPLETE': 10, 'INCOMPLETE': 22}  false-absence vs gold: 0
-   + require an account row in the artifact         {'COMPLETE': 4, 'INCOMPLETE': 22, 'UNDETERMINED': 6}  false-absence vs gold: 0
-   weak + require_row                               {'COMPLETE': 4, 'INCOMPLETE': 22, 'UNDETERMINED': 6}  false-absence vs gold: 0
-   no exclusion on pre-request-only copy captures   {'COMPLETE': 9, 'INCOMPLETE': 22, 'UNDETERMINED': 1}  false-absence vs gold: 0
-   no per-source promotion of weak document exports {'COMPLETE': 10, 'INCOMPLETE': 22}  false-absence vs gold: 0
+   default (strong scopes, empty tables allowed)    {'COMPLETE': 10, 'INCOMPLETE': 22}  false-absence vs gold: 0; strict TP/FP/FN 159/0/34, exact 10/32
+   + weak scopes (inferred_from_rows)               {'COMPLETE': 10, 'INCOMPLETE': 22}  false-absence vs gold: 0; strict TP/FP/FN 159/0/34, exact 10/32
+   + require an account row in the artifact         {'COMPLETE': 4, 'INCOMPLETE': 22, 'UNDETERMINED': 6}  false-absence vs gold: 0; strict TP/FP/FN 145/14/48, exact 10/32
+   weak + require_row                               {'COMPLETE': 4, 'INCOMPLETE': 22, 'UNDETERMINED': 6}  false-absence vs gold: 0; strict TP/FP/FN 145/14/48, exact 10/32
+   no exclusion on pre-request-only copy captures   {'COMPLETE': 9, 'INCOMPLETE': 22, 'UNDETERMINED': 1}  false-absence vs gold: 0; strict TP/FP/FN 158/1/35, exact 10/32
+   no per-source promotion of weak document exports {'COMPLETE': 10, 'INCOMPLETE': 22}  false-absence vs gold: 0; strict TP/FP/FN 159/0/34, exact 10/32
+   no request-episode scoping (carried-over evidence stays in scope) {'COMPLETE': 10, 'INCOMPLETE': 22}  false-absence vs gold: 0; strict TP/FP/FN 159/4/34, exact 9/32
 == eval (unlabeled diagnostics)
    default (strong scopes, empty tables allowed)    {'COMPLETE': 147, 'INCOMPLETE': 353, 'NOT_APPLICABLE': 10, 'UNDETERMINED': 8}
    + weak scopes (inferred_from_rows)               {'COMPLETE': 150, 'INCOMPLETE': 353, 'NOT_APPLICABLE': 10, 'UNDETERMINED': 5}
@@ -420,6 +624,7 @@ Optional switches, measured (sample counts are development data; eval counts are
    weak + require_row                               {'COMPLETE': 128, 'INCOMPLETE': 353, 'NOT_APPLICABLE': 10, 'UNDETERMINED': 27}
    no exclusion on pre-request-only copy captures   {'COMPLETE': 145, 'INCOMPLETE': 353, 'NOT_APPLICABLE': 10, 'UNDETERMINED': 10}
    no per-source promotion of weak document exports {'COMPLETE': 146, 'INCOMPLETE': 353, 'NOT_APPLICABLE': 10, 'UNDETERMINED': 9}
+   no request-episode scoping (carried-over evidence stays in scope) {'COMPLETE': 147, 'INCOMPLETE': 353, 'NOT_APPLICABLE': 10, 'UNDETERMINED': 8}
 ```
 <!--/AUTO:sensitivity-->
 
@@ -427,7 +632,7 @@ The default keeps strong or per-source promoted scopes only and allows declared-
 
 ## 6. Remaining unresolved cases and limitations
 
-The cases below are *internal* UNDETERMINED states; the output has no status for them. There is **no certified root `output.csv`**: the strict export refuses while any remain. Each is a documented, reproducible gap in the supplied evidence, not an implementation gap; every one was re-investigated from the original evidence after the boundary fixes (`python3 code/main.py explain case_524`, and the register below).
+Eight cases have an undetermined *status* (internal UNDETERMINED; the output has no status for them) and 18 more are INCOMPLETE on proven violations but carry unresolved obligations, so their investigation or plan has gaps; the register below lists both groups apart. There is **no certified root `output.csv`**: the strict export refuses while any remain. Each is a documented, reproducible gap in the supplied evidence, not an implementation gap; every one was re-investigated from the original evidence after the boundary fixes (`python3 code/main.py explain case_524`, and the register below).
 
 * **No profile-table capture after the request** (`case_183`, `case_343`, `case_345`; the latest supporting capture predates the request by hours to days, and the later document exports in the window contain nothing about the subject): a capture before the request cannot show the post-request state, and an export that never mentions the subject says nothing about them. `case_524`, `case_530`, `case_532` (audit 2026-01-29T12:00Z) have no admissible capture of any copy at the cutoff. The one bundle that covers that period (`evidence_49`) is captured and exported on 2026-01-31T15:00Z according to both the manifest and its own header, two days after the audit, although the snapshot times inside it equal the audit time. The contract excludes evidence captured after `audit_at`, and the strict dual-time rule (user decision U11) treats the artifact time as binding, so it is not used; reading the inner record time instead would be a relaxation of that rule and is recorded as an open decision, not adopted. `case_55` has no profile-table capture after its request either (the latest, `evidence_35`, is from 2026-04-16, before the 2026-04-27 request).
 * **Restore state not shown** (`case_55`, `backup_9287`): the only admissible evidence is the recovery-console screenshot (`evidence_32`, 2026-04-29), which shows the archive, its account email, path, checksum, retention and last drill, and no restore-allowed or restore-blocked state for any archive. A log line stating that the archive is restore-eligible and an activity row for a later restore both post-date the audit cutoff, and a restore of another archive says nothing about this one. Inferring restorability from the console would be an interpretation, so the obligation stays UNKNOWN.
@@ -474,12 +679,12 @@ The run these numbers describe:
 | field | value |
 |---|---|
 | command | `python3 code/main.py run` |
-| configuration | `{"account_proof": {"allow_weak": false, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
-| producing commit (HEAD when the run was made) | `a71487808a0f` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
+| producing commit (HEAD when the run was made) | `b2907a44c35d` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 5 |
-| output.csv sha256 | `443edff06205bd66d95f9f4f2c3c87e055804474764825170db0f21c0e1326c7` |
-| code sha256 (41 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `2873569cd86556001e37244ed6909b03dae3d458e348a5254ec501ab211eb621` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 4 |
+| output.csv sha256 | `b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf` |
+| code sha256 (43 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `e4558d455cbff166117e345ea5182d0187915390705bf5bf6b3111890bd9cd15` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 147, 'INCOMPLETE': 361, 'NOT_APPLICABLE': 10} |

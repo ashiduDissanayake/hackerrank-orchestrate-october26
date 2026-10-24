@@ -10,12 +10,12 @@ The pipeline that produces `output.csv` is deterministic code (Python standard l
 | field | value |
 |---|---|
 | command | `python3 code/main.py run` |
-| configuration | `{"account_proof": {"allow_weak": false, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
-| producing commit (HEAD when the run was made) | `a71487808a0f` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
+| producing commit (HEAD when the run was made) | `b2907a44c35d` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 5 |
-| output.csv sha256 | `443edff06205bd66d95f9f4f2c3c87e055804474764825170db0f21c0e1326c7` |
-| code sha256 (41 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `2873569cd86556001e37244ed6909b03dae3d458e348a5254ec501ab211eb621` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 4 |
+| output.csv sha256 | `b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf` |
+| code sha256 (43 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `e4558d455cbff166117e345ea5182d0187915390705bf5bf6b3111890bd9cd15` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 147, 'INCOMPLETE': 361, 'NOT_APPLICABLE': 10} |
