@@ -1,0 +1,12 @@
+{
+  "exported_at": "2025-09-15T09:00:00Z",
+  "snapshots": [
+    {
+      "captured_at": "2025-09-15T09:00:00Z",
+      "collection": "notification_preferences",
+      "data_store": "account_service",
+      "records": []
+    }
+  ],
+  "source": "records_assurance_service"
+}

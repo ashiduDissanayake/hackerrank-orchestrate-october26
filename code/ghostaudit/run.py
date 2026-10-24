@@ -23,11 +23,11 @@ def earlier_requests_by_case(ds, ident):
     return out
 
 
-def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="not_certified"):
+def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="not_certified", **audit_kwargs):
     ds, store = build(root, requests_file)
     ident = IdentityIndex(ds.identities, ds.audit_log)
     earlier = earlier_requests_by_case(ds, ident)
-    results = [audit_case(r, store, ident, ds.rules, unknown_policy, earlier_requests=earlier[r.case_id]) for r in ds.requests]
+    results = [audit_case(r, store, ident, ds.rules, unknown_policy, earlier_requests=earlier[r.case_id], **audit_kwargs) for r in ds.requests]
     results.sort(key=lambda r: case_sort_key(r.case_id))
     return ds, store, results
 

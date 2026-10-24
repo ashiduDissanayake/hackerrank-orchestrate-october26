@@ -1,0 +1,23 @@
+PRAGMA foreign_keys=ON;
+BEGIN TRANSACTION;
+CREATE TABLE snapshot_scope (origin_system TEXT PRIMARY KEY, captured_at TEXT NOT NULL);
+CREATE TABLE customer_profiles (resource_id TEXT PRIMARY KEY, customer_reference TEXT, full_name TEXT, email TEXT, phone TEXT, email_hash TEXT, account_status TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE customer_search_documents (resource_id TEXT PRIMARY KEY, customer_reference TEXT, display_name TEXT, email TEXT, phone TEXT, email_hash TEXT, index_name TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE customer_analytics_profiles (resource_id TEXT PRIMARY KEY, customer_reference TEXT, email TEXT, phone TEXT, email_hash TEXT, audience_cohort TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE support_records (resource_id TEXT PRIMARY KEY, customer_reference TEXT, requester_name TEXT, requester_email TEXT, requester_phone TEXT, message_excerpt TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE customer_exports (resource_id TEXT PRIMARY KEY, customer_reference TEXT, owner_email TEXT, owner_phone TEXT, object_key TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE connector_subscriptions (resource_id TEXT PRIMARY KEY, customer_reference TEXT, customer_email TEXT, connector_name TEXT NOT NULL, enabled INTEGER NOT NULL CHECK (enabled IN (0,1)), last_delivery_status TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE backup_restore_entries (resource_id TEXT PRIMARY KEY, customer_reference TEXT, customer_email TEXT, archive_key TEXT NOT NULL, restore_allowed INTEGER NOT NULL CHECK (restore_allowed IN (0,1)), updated_at TEXT NOT NULL);
+CREATE TABLE security_audit_records (resource_id TEXT PRIMARY KEY, subject_reference TEXT NOT NULL, event_code TEXT NOT NULL, retention_until TEXT NOT NULL, updated_at TEXT NOT NULL);
+INSERT INTO snapshot_scope VALUES ('account_service', '2026-02-15T10:00:00Z');
+INSERT INTO snapshot_scope VALUES ('analytics_platform', '2026-02-15T10:00:00Z');
+INSERT INTO snapshot_scope VALUES ('backup_service', '2026-02-15T10:00:00Z');
+INSERT INTO snapshot_scope VALUES ('integration_service', '2026-02-15T10:00:00Z');
+INSERT INTO snapshot_scope VALUES ('search_service', '2026-02-15T10:00:00Z');
+INSERT INTO snapshot_scope VALUES ('security_service', '2026-02-15T10:00:00Z');
+INSERT INTO snapshot_scope VALUES ('support_platform', '2026-02-15T10:00:00Z');
+INSERT INTO security_audit_records VALUES ('audit_record_f30', 'user_f30', 'ACCOUNT_DELETION_RECORDED', '2031-12-31T23:59:59Z', '2026-02-15T10:00:00Z');
+INSERT INTO customer_search_documents VALUES ('search_f30', NULL, NULL, 'rhea.kapoor@example.org', NULL, NULL, 'customer_directory_v3', '2026-02-15T10:00:00Z');
+INSERT INTO customer_profiles VALUES ('account_9130', 'user_9130', 'Unrelated Person 30', 'unrelated.30@example.org', NULL, '230559bb7033dcb6578fc71d89134ae69eb1ceb3b10031b4d826c8be694c5537', 'ACTIVE', '2026-02-15T10:00:00Z');
+COMMIT;
+-- snapshot_completed_at=2026-02-15T10:00:00Z

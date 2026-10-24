@@ -1,0 +1,23 @@
+{
+  "exported_at": "2025-09-10T08:30:00Z",
+  "region": "global",
+  "service_exports": {
+    "account_service": {
+      "profile_lookups": [
+        {
+          "observed_at": "2025-09-10T08:30:00Z",
+          "profile": {
+            "customer_reference": "user_f34",
+            "email": "bruno.teixeira@example.org",
+            "email_hash": null,
+            "full_name": "Bruno Teixeira",
+            "phone": null
+          },
+          "resource_id": "account_f34",
+          "status_code": 200
+        }
+      ]
+    }
+  },
+  "source": "records_assurance_gateway"
+}

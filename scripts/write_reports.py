@@ -171,7 +171,7 @@ def block_fixture_cases():
     exp = {r["case_id"]: r for r in csv.DictReader(open(os.path.join(FX, "expected_output.csv"), encoding="utf-8"))}
     internal = json.load(open(os.path.join(FX, "expected_internal.json"), encoding="utf-8"))
     out = []
-    for cid in ("fx_case_05", "fx_case_16", "fx_case_22", "fx_case_23", "fx_case_25", "fx_case_26", "fx_case_28"):
+    for cid in ("fx_case_05", "fx_case_16", "fx_case_22", "fx_case_23", "fx_case_25", "fx_case_26", "fx_case_28", "fx_case_29", "fx_case_30", "fx_case_32", "fx_case_34"):
         out.append(f"**{cid}** expected: `{exp[cid]['deletion_status'] if cid in exp else 'UNDETERMINED (internal expectation only)'}`")
         if cid in exp:
             out += ["", "```json", json.dumps(json.loads(exp[cid]["steps_json"]), indent=1, sort_keys=True), "```"]

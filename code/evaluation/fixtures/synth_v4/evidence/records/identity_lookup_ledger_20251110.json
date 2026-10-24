@@ -1,0 +1,19 @@
+{
+  "exported_at": "2025-11-10T09:30:00Z",
+  "origin": "identity_service",
+  "record_count": 1,
+  "records": [
+    {
+      "account_status": "DELETED",
+      "email": "teodor.marin@example.org",
+      "full_name": "Teodor Marin",
+      "record_type": "ACCOUNT_TOMBSTONE",
+      "recorded_at": "2025-11-10T09:30:00Z",
+      "resource_id": "tombstone_f32",
+      "result": "REDACTED",
+      "subject_reference": "user_f32",
+      "system": "identity_service",
+      "user_id": "user_f32"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "exported_at": "2025-08-15T09:00:00Z",
+  "region": "global",
+  "service_exports": {
+    "account_service": {
+      "profile_lookups": [
+        {
+          "observed_at": "2025-08-15T09:00:00Z",
+          "profile": null,
+          "resource_id": "account_f35",
+          "status_code": 404
+        }
+      ]
+    }
+  },
+  "source": "records_assurance_gateway"
+}

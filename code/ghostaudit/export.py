@@ -101,6 +101,10 @@ def evidence_time_resolver(ds):
 
 def build_manifest(argv, config, ds, results, out_path, validation_errors):
     und = [r.case_id for r in results if r.internal == "UNDETERMINED"]
+    # Material completeness is a SECOND question from status: a proven violation makes a case INCOMPLETE, but an unresolved obligation
+    # still leaves part of its investigation or plan open. Kept apart so neither can be mistaken for the other.
+    plan_gaps = [r.case_id for r in results if r.internal == "INCOMPLETE" and any(o.verdict == "UNKNOWN" for o in r.obligations)]
+    carried = {r.case_id: [c["resource_id"] for c in r.carried_over] for r in results if r.carried_over}
     counts = {}
     for r in results:
         counts[r.status] = counts.get(r.status, 0) + 1
@@ -119,6 +123,10 @@ def build_manifest(argv, config, ds, results, out_path, validation_errors):
         "rows": len(results),
         "status_counts": dict(sorted(counts.items())),
         "undetermined_cases": und,
+        "plan_gap_cases": plan_gaps,
+        "cases_with_unresolved_obligations": len(und) + len(plan_gaps),
+        "carried_over_resources": carried,
+        "plan_gaps_accepted": False,
         "contract_valid": not validation_errors,
         "validation_error_count": len(validation_errors),
         "final": False,
@@ -131,7 +139,7 @@ def validate_output(ds, out_path):
                          evidence_time=evidence_time_resolver(ds))
 
 
-def gate(ds, results, out_path, manifest, allow_dirty=False, run_tests=True):
+def gate(ds, results, out_path, manifest, allow_dirty=False, run_tests=True, allow_plan_gaps=False):
     """Return the list of reasons the output must NOT be exported (empty list = exportable)."""
     reasons = []
     errs = validate_output(ds, out_path)
@@ -140,6 +148,10 @@ def gate(ds, results, out_path, manifest, allow_dirty=False, run_tests=True):
     if manifest["undetermined_cases"]:
         reasons.append(f"{len(manifest['undetermined_cases'])} UNDETERMINED cases: the output cannot represent an unresolved obligation "
                        "(open decision P3); first: " + ", ".join(manifest["undetermined_cases"][:5]))
+    if manifest.get("plan_gap_cases") and not allow_plan_gaps:
+        reasons.append(f"{len(manifest['plan_gap_cases'])} cases are INCOMPLETE on proven violations but carry unresolved obligations, so their investigation/plan is "
+                       "materially incomplete (status is not in doubt, completeness is); first: " + ", ".join(manifest["plan_gap_cases"][:5]) +
+                       ". Pass --accept-plan-gaps to export anyway; the manifest then records plan_gaps_accepted=true")
     if manifest["config"].get("unknown_policy") != "not_certified":
         reasons.append(f"unknown_policy is {manifest['config'].get('unknown_policy')!r}; only 'not_certified' may be exported")
     pending = [a for a in ds.manifest if a.file_path.endswith(".png")]
@@ -189,6 +201,11 @@ def _gap_text(res, ob, req):
     if ob.reason == "retained_record_not_found":
         return f"the latest admissible evidence does not show the retained record {ob.resource_id} present at audit_at {req.audit_at}"
     rid = ob.resource_id or ob.category
+    if ob.reason == "carried_over_present":
+        return (f"{rid} was last evidenced PRESENT ({d.get('underlying', '')}) only inside the investigation window of this subject's earlier request(s) {d.get('earlier_requests')}; "
+                "this request's own trail has no evidence of it, so its state after this request is not shown (no step is emitted, and it blocks certification)")
+    if ob.reason == "category_unresolved":
+        return f"{rid} is tied to the subject (chains: {d.get('chains')}) but nothing identifies what kind of record it is, so no rule can be applied"
     if ob.reason == "no_enabled_flag_in_admissible_evidence":
         return f"whether the data flow {rid} is enabled at audit_at {req.audit_at} is not shown by any admissible evidence (no record of its enabled flag at or before the cutoff)"
     if ob.reason == "no_admissible_evidence":
@@ -226,6 +243,11 @@ def unresolved_register(ds, results, errors):
     return out
 
 
+def carried_over_register(results):
+    """Resources scoped to an earlier request of the same subject: not unresolved, but listed so that nothing is dropped silently."""
+    return [{"case_id": r.case_id, **c} for r in results for c in r.carried_over]
+
+
 def write_best_effort(ds, results, errors, manifest, out_dir):
     """Writes the three best-effort files into out_dir and returns their paths. Marks the manifest certified=false."""
     from . import run as runner
@@ -233,7 +255,10 @@ def write_best_effort(ds, results, errors, manifest, out_dir):
     runner.write_output(results, paths[BEST_EFFORT_NAMES[0]])
     reg = unresolved_register(ds, results, errors)
     with open(paths[BEST_EFFORT_NAMES[1]], "w", encoding="utf-8") as f:
-        json.dump({"certified": False, "unresolved_cases": reg}, f, indent=1, sort_keys=True, ensure_ascii=False)
+        json.dump({"certified": False,
+                   "status_undetermined_cases": [e["case_id"] for e in reg if not e["status_determined"]],
+                   "plan_gap_cases": [e["case_id"] for e in reg if e["status_determined"]],
+                   "unresolved_cases": reg, "carried_over_to_earlier_requests": carried_over_register(results)}, f, indent=1, sort_keys=True, ensure_ascii=False)
         f.write("\n")
     manifest = dict(manifest)
     manifest.update({

@@ -94,6 +94,16 @@ class ValidAbsenceIsStillAccepted(unittest.TestCase):
     def test_genuinely_empty_profile_table_needs_no_positive_control(self):
         self.assertAbsent(linked_profile(World().snap("evidence_1", LATER, "primary", [])))
 
+    def test_declared_empty_profile_bundle_does_not_erase_a_profile_known_only_from_a_lookup(self):
+        """Public-sample pattern (case_24): a profile lookup returns the account, a declared-empty customer_profiles bundle is captured later.
+        The bundle is a per-batch extract, so it applies only to records known to be members of that collection."""
+        res = run(linked_profile(World().snap("evidence_1", LATER, "primary", [], collection="customer_profiles")))
+        self.assertEqual(profile_ob(res).verdict, "VIOLATION")
+
+    def test_declared_non_profile_bundle_still_does_not_cover_it(self):
+        res = run(linked_profile(World().snap("evidence_1", LATER, "primary", [], collection="support_conversations")))
+        self.assertEqual(profile_ob(res).verdict, "VIOLATION")
+
     def test_explicit_404_lookup(self):
         w = linked_profile(World())
         w.st.add_obs(make_obs("evidence_n", "/n", LATER, LATER, "account_service", "account_77", "export", "lookup", False, normalize_fields({"status_code": "404"})))

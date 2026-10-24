@@ -1,7 +1,7 @@
 """Ghost Data audit CLI (M2 stage: extraction + coverage; the audit pipeline lands in M3).
 
   python3 code/main.py run [--data dataset] [--requests deletion_requests.csv] [--out runs/provisional/output.csv]   (provisional, never the submission path)
-  python3 code/main.py export [--data dataset] [--allow-dirty]    (the ONLY writer of repo-root output.csv; refuses unless every gate passes)
+  python3 code/main.py export [--data dataset] [--allow-dirty] [--accept-plan-gaps]    (the ONLY writer of repo-root output.csv; refuses unless every gate passes)
   python3 code/main.py best-effort [--data dataset]               (review artifact output_best_effort.* at the repo root; certified=false; never writes output.csv)
   python3 code/main.py verify MANIFEST.json                       (regenerates from a manifest and compares the output hash)
   python3 code/main.py explain CASE_ID [--data dataset] [--requests deletion_requests.csv]
@@ -70,7 +70,7 @@ def manifest_commands(a):
         for k, v in runner.diagnostics(results).items():
             print(f"  {k}: {v}")
         return 0
-    reasons = ex.gate(ds, results, out, manifest, a.allow_dirty, run_tests=not a.skip_tests)
+    reasons = ex.gate(ds, results, out, manifest, a.allow_dirty, run_tests=not a.skip_tests, allow_plan_gaps=a.accept_plan_gaps)
     if reasons:
         print("EXPORT REFUSED. output.csv was NOT written.")
         for r in reasons:
@@ -78,6 +78,7 @@ def manifest_commands(a):
         return 1
     final = os.path.join(REPO, "output.csv")
     manifest["final"] = True
+    manifest["plan_gaps_accepted"] = bool(a.accept_plan_gaps and manifest["plan_gap_cases"])
     import shutil
     shutil.copyfile(out, final)
     ex.write_manifest(manifest, os.path.join(REPO, "output.manifest.json"))
@@ -98,6 +99,7 @@ def main():
     r.add_argument("--diagnostics", default=os.path.join(REPO, "runs", "provisional", "diagnostics.json"))
     ex = sub.choices["export"]
     ex.add_argument("--allow-dirty", action="store_true")
+    ex.add_argument("--accept-plan-gaps", action="store_true", help="export although some INCOMPLETE cases carry unresolved obligations (disclosed in the manifest)")
     ex.add_argument("--skip-tests", action="store_true", help="NOT allowed for a final export; for debugging the gate only")
     sub.choices["verify"].add_argument("manifest")
     sub.choices["explain"].add_argument("case_id")

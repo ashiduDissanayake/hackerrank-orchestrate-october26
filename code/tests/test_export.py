@@ -137,6 +137,36 @@ class ExportGate(unittest.TestCase):
         finally:
             shutil.rmtree(tmp)
 
+    def test_plan_gaps_block_by_default_and_are_disclosed_when_accepted(self):
+        tmp, data = self._subset(drop={"fx_case_07", "fx_case_14", "fx_case_17"})
+        try:
+            with mock.patch.object(ex, "git_state", return_value={"commit": "abc", "dirty": False, "dirty_files": [], "dirty_code_files": []}):
+                ds, store, results = runner.run_dataset(data)
+                out = os.path.join(tmp, "o.csv")
+                runner.write_output(results, out)
+                m = ex.build_manifest(["t"], {"unknown_policy": "not_certified", "png_extraction": "complete"}, ds, results, out, [])
+                self.assertEqual(m["plan_gap_cases"], [])
+                m["plan_gap_cases"] = ["fx_case_99"]               # a case that is INCOMPLETE on a proven violation but has an unresolved obligation
+                reasons = ex.gate(ds, results, out, m, run_tests=False)
+                self.assertTrue(any("materially incomplete" in r for r in reasons), reasons)
+                self.assertEqual(ex.gate(ds, results, out, m, run_tests=False, allow_plan_gaps=True), [])
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_plan_gap_cases_are_computed_apart_from_undetermined_ones(self):
+        from types import SimpleNamespace as NS
+        ob = lambda v: NS(verdict=v)  # noqa: E731
+        res = [NS(case_id="a", internal="INCOMPLETE", status="INCOMPLETE", obligations=[ob("VIOLATION"), ob("UNKNOWN")], carried_over=[]),
+               NS(case_id="b", internal="UNDETERMINED", status="INCOMPLETE", obligations=[ob("UNKNOWN")], carried_over=[]),
+               NS(case_id="c", internal="INCOMPLETE", status="INCOMPLETE", obligations=[ob("VIOLATION")], carried_over=[{"resource_id": "x"}])]
+        with tempfile.TemporaryDirectory() as t:
+            p = os.path.join(t, "o.csv")
+            open(p, "w").write("x")
+            ds = NS(root=FX)
+            m = ex.build_manifest(["t"], {}, ds, res, p, [])
+        self.assertEqual((m["undetermined_cases"], m["plan_gap_cases"], m["cases_with_unresolved_obligations"]), (["b"], ["a"], 2))
+        self.assertEqual(m["carried_over_resources"], {"c": ["x"]})
+
     def test_documentation_only_changes_do_not_block_an_export(self):
         tmp, data = self._subset(drop={"fx_case_07", "fx_case_14", "fx_case_17"})
         try:

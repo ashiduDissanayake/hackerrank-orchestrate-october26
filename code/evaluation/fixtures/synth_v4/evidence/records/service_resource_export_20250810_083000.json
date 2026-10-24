@@ -1,0 +1,23 @@
+{
+  "exported_at": "2025-08-10T08:30:00Z",
+  "region": "global",
+  "service_exports": {
+    "account_service": {
+      "profile_lookups": [
+        {
+          "observed_at": "2025-08-10T08:30:00Z",
+          "profile": {
+            "customer_reference": "user_f35",
+            "email": "mina.abe@example.org",
+            "email_hash": null,
+            "full_name": "Mina Abe",
+            "phone": null
+          },
+          "resource_id": "account_f35",
+          "status_code": 200
+        }
+      ]
+    }
+  },
+  "source": "records_assurance_gateway"
+}

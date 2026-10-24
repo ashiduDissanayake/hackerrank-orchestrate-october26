@@ -77,12 +77,12 @@ def carried_over_from(ln, req, earlier):
 
 
 def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False, pre_request_exclusion=True, weak_promotion=True,
-               earlier_requests=(), episode_scoping=True):
+               earlier_requests=(), episode_scoping=True, view_cls=CaseView):
     intent = classify(req.request_text)
     if not intent.deletion:
         return CaseResult(req.case_id, "NOT_APPLICABLE", "NOT_APPLICABLE", [], intent)
     subj = ident.resolve(req.email, req.audit_at)
-    cv = CaseView(store, req.audit_at)
+    cv = view_cls(store, req.audit_at)     # production: CaseView. Only measurement scripts pass a relaxed view (never the CLI)
     lr = link_subject(cv, subj)
     actions = action_table(rules)
     obs, carried = [], []

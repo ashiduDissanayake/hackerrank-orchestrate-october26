@@ -1,0 +1,4 @@
+activity_id,event_time,event_type,source_system,target_system,resource_id,reported_result,details
+fxact_001,2026-06-02T07:45:00Z,DELETE_RECORD,deletion_worker,account_service,account_f14x,SUCCESS,Deletion worker submitted primary profile account_f14x to account_service.
+fxact_002,2026-06-02T07:30:00Z,LINK_RESOURCE_IDENTITY,data_catalog,export_service,export_f07,SUCCESS,Data catalog linked export_f07 (export_f07) to tamsin.okoro@example.org and user_f07.
+fxact_003,2026-06-01T12:00:00Z,DELETE_RECORD,deletion_worker,account_service,account_f04,FAILED,Deletion worker submitted primary profile account_f04 to account_service.

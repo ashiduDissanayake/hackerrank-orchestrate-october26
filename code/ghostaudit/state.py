@@ -63,9 +63,13 @@ def copy_states(cv, resource_id, system_id, since=None, subj=None, category=None
         basis = "explicit_lookup" if (kind == "absent") else "observation"
         cs.events.append(Event(o.observed_at, copy_of(o.store), kind, o.evidence_id, o.locator, basis, o))
     for sc in cv.scopes(system_id):
-        if sc.collection and collections and sc.collection not in collections:
-            continue
-        if sc.collection and not collections:
+        # A collection-scoped capture (a bundle of one collection) is a per-batch extract of a few records (security_audit_events lists 10,
+        # support_conversations 4, customer_profiles 1-2): omission from it says nothing about a record never seen in that collection, so it
+        # applies only to records KNOWN to be members. Measured on the public samples, relaxing this (a) turns 5 COMPLETE cases INCOMPLETE
+        # through retained audit records "not found", and (b) erases the account that sample case_24 still shows present through a profile
+        # lookup, because a declared-empty bundle captured after the lookup does not make that account absent. Typed inventories and
+        # replica tables have no collection and are judged by coverage_rules (captured table, complete source, strong scope).
+        if sc.collection and (not collections or sc.collection not in collections):
             continue
         if cv.artifact_mentions(resource_id, sc.evidence_id):
             continue

@@ -1,0 +1,18 @@
+{
+  "exported_at": "2025-10-10T09:30:00Z",
+  "origin": "identity_service",
+  "record_count": 1,
+  "records": [
+    {
+      "account_status": "DELETED",
+      "lookup_value": "sana.qureshi@example.org",
+      "record_type": "ACCOUNT_TOMBSTONE",
+      "recorded_at": "2025-10-10T09:30:00Z",
+      "resource_id": "tombstone_f33",
+      "result": "REDACTED",
+      "subject_reference": "user_f33",
+      "system": "identity_service",
+      "user_id": "user_f33"
+    }
+  ]
+}
