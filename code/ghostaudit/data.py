@@ -85,3 +85,21 @@ def load_dataset(root, requests_file="deletion_requests.csv"):
         rules=_read(p("deletion_rules.csv")),
         manifest=[ManifestEntry(**r) for r in _read(p("evidence_files.csv"))],
     )
+
+
+REQUEST_FILES = ("deletion_requests.csv", "sample_deletion_requests.csv")
+
+
+def load_request_history(root):
+    """Every request in the data root's request files (the evaluation and the public sample files when present), deduplicated by
+    case_id. It is the subject's REQUEST HISTORY: context about other requests by the same person, never labels."""
+    seen, out = set(), []
+    for fn in REQUEST_FILES:
+        path = os.path.join(root, fn)
+        if not os.path.exists(path):
+            continue
+        for r in _read(path):
+            if r["case_id"] not in seen:
+                seen.add(r["case_id"])
+                out.append(Request(**r))
+    return out

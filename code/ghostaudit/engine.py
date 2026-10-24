@@ -43,7 +43,7 @@ def proof_summary(p):
 
 # The account-proof switches the engine uses by default (each measured in evaluation_report.md section 5); recorded in every run
 # manifest so the configuration that produced an output is explicit rather than implied by code defaults.
-PROOF_DEFAULTS = {"allow_weak": False, "require_row": False, "pre_request_exclusion": True, "weak_promotion": True}
+PROOF_DEFAULTS = {"allow_weak": False, "require_row": False, "pre_request_exclusion": True, "weak_promotion": True, "episode_scoping": True}
 
 
 @dataclass
@@ -60,9 +60,24 @@ class CaseResult:
     unresolved: list = field(default_factory=list)
     conditions: list = field(default_factory=list)
     candidates: list = field(default_factory=list)
+    carried_over: list = field(default_factory=list)    # resources scoped to an EARLIER request of the same subject (never silently dropped)
 
 
-def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False, pre_request_exclusion=True, weak_promotion=True):
+def carried_over_from(ln, req, earlier):
+    """Earlier requests of the same subject whose investigation window explains ALL of this link's ownership evidence: every chain was
+    captured (and observed) before this request was made and no later than that earlier request's audit. A resource with any chain at
+    or after requested_at is part of this request's trail and is never carried over; neither is evidence that falls between the two
+    requests, or any evidence of a subject with no earlier request."""
+    if not ln.chains:
+        return []
+    last = max(max(c.time or "", c.available or "") for c in ln.chains)
+    if last >= req.requested_at:
+        return []
+    return [e.case_id for e in earlier if e.audit_at <= req.requested_at and last <= e.audit_at]
+
+
+def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False, pre_request_exclusion=True, weak_promotion=True,
+               earlier_requests=(), episode_scoping=True):
     intent = classify(req.request_text)
     if not intent.deletion:
         return CaseResult(req.case_id, "NOT_APPLICABLE", "NOT_APPLICABLE", [], intent)
@@ -70,11 +85,26 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_w
     cv = CaseView(store, req.audit_at)
     lr = link_subject(cv, subj)
     actions = action_table(rules)
-    obs = []
+    obs, carried = [], []
     for rid in sorted(lr.links):
-        ob = evaluate(cv, subj, lr.links[rid], actions)
-        if ob is not None:
-            obs.append(ob)
+        ln = lr.links[rid]
+        ob = evaluate(cv, subj, ln, actions)
+        if ob is None:
+            continue
+        co = carried_over_from(ln, req, earlier_requests) if episode_scoping else []
+        if co:
+            # Evidence that only serves an earlier request's window. Resolved or unresolved items are scoped out with a record; a PRESENT
+            # record is never hidden: it becomes an UNKNOWN (no step, no finding) that blocks certification.
+            carried.append({"resource_id": rid, "system_id": ln.system_id, "category": ob.category, "earlier_requests": co,
+                            "verdict": ob.verdict, "reason": ob.reason, "evidence_id": ob.evidence_id,
+                            "chains": [(c.kind, c.evidence_id, c.time) for c in ln.chains]})
+            if ob.verdict == "VIOLATION":
+                obs.append(type(ob)(ob.system_id, rid, ob.category, ob.action, "UNKNOWN", "carried_over_present", "",
+                                    {"earlier_requests": co, "underlying": f"{ob.reason}:{ob.evidence_id}",
+                                     "missing": "this request's own trail contains no evidence of the record; its only ownership evidence belongs to an earlier request, "
+                                                "so its state after this request is not evidenced"}))
+            continue
+        obs.append(ob)
     cands = window_candidates(cv, req, set(lr.links))
     if not any(o.category == "USER_PROFILE" for o in obs):
         ob, proof = account_from_tombstone(cv, obs), None
@@ -87,7 +117,7 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_w
                 ob.detail["proof"] = proof_summary(proof)
         obs.append(ob)
     res = CaseResult(req.case_id, "", "", [], intent, subj, lr.links, lr.rejected, obs,
-                     [o for o in obs if o.verdict == "UNKNOWN"], list(subj.conditions), cands)
+                     [o for o in obs if o.verdict == "UNKNOWN"], list(subj.conditions), cands, carried)
     violations = [o for o in obs if o.verdict == "VIOLATION"]
     if subj.user_id is None:
         res.internal, res.status, res.steps = "UNDETERMINED", "INCOMPLETE", []

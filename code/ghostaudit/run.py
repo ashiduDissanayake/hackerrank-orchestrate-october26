@@ -4,16 +4,30 @@ import json
 import os
 from collections import Counter
 
+from .data import load_request_history
 from .engine import audit_case
 from .identity import IdentityIndex
 from .pipeline import build
 from .validate import case_sort_key
 
 
+def earlier_requests_by_case(ds, ident):
+    """case_id -> the subject's EARLIER requests (same resolved user_id, audited before this request was made), taken from every
+    request file in the data root. Resolution uses only identity data valid at each request's own audit_at."""
+    history = load_request_history(ds.root)
+    subject = {r.case_id: ident.resolve(r.email, r.audit_at).user_id for r in history}
+    out = {}
+    for r in ds.requests:
+        u = subject.get(r.case_id) or ident.resolve(r.email, r.audit_at).user_id
+        out[r.case_id] = [e for e in history if e.case_id != r.case_id and u is not None and subject[e.case_id] == u and e.audit_at <= r.requested_at]
+    return out
+
+
 def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="not_certified"):
     ds, store = build(root, requests_file)
     ident = IdentityIndex(ds.identities, ds.audit_log)
-    results = [audit_case(r, store, ident, ds.rules, unknown_policy) for r in ds.requests]
+    earlier = earlier_requests_by_case(ds, ident)
+    results = [audit_case(r, store, ident, ds.rules, unknown_policy, earlier_requests=earlier[r.case_id]) for r in ds.requests]
     results.sort(key=lambda r: case_sort_key(r.case_id))
     return ds, store, results
 

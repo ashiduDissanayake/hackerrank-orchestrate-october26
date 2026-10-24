@@ -26,6 +26,7 @@ class Chain:
     field: str
     value: str
     time: str = ""       # observation time (or catalog event_time) the chain rests on
+    available: str = ""  # when the evidence artifact itself became available (capture time); the chain is evidenced no earlier than this
 
 
 # Fields that carry the QUESTION asked of a system (a lookup key), not an attribute of the record that came back.
@@ -94,32 +95,32 @@ def link_subject(cv, subj):
                 continue
             flds = _fields_for(o, kind, ident.value)
             ck = "trace" if flds and set(flds.split(",")) <= KEY_FIELDS else "direct"
-            add(o, Chain(ck, o.evidence_id, o.locator, flds, ident.value, o.observed_at))
+            add(o, Chain(ck, o.evidence_id, o.locator, flds, ident.value, o.observed_at, o.available_at))
         if ident.field == "phone":
             # phones written in free text (any common format); same rule as exposure checks and indexing
             for o, tok in cv.for_phone(ident.value):
                 if not ident.linkable_at(o.observed_at):
                     res.rejected.append((o.resource_id, "identifier_not_yet_valid", f"phone {ident.value} valid_from {ident.valid_from} > {o.observed_at}"))
                     continue
-                add(o, Chain("direct", o.evidence_id, o.locator, _fields_for(o, "phonetxt", tok), ident.value, o.observed_at))
+                add(o, Chain("direct", o.evidence_id, o.locator, _fields_for(o, "phonetxt", tok), ident.value, o.observed_at, o.available_at))
         for o in cv.for_trace_key(ident.value):
             if not ident.linkable_at(o.observed_at):
                 res.rejected.append((o.resource_id, "identifier_not_yet_valid", f"trace key {ident.value}"))
                 continue
-            add(o, Chain("trace", o.evidence_id, o.locator, o.f("trace_lookup_field") or "lookup_key", ident.value, o.observed_at))
+            add(o, Chain("trace", o.evidence_id, o.locator, o.f("trace_lookup_field") or "lookup_key", ident.value, o.observed_at, o.available_at))
     for o in cv.for_identifier("user", subj.user_id):
         flds = _fields_for(o, "user", subj.user_id)
         ck = "trace" if flds and set(flds.split(",")) <= KEY_FIELDS else "direct"
-        add(o, Chain(ck, o.evidence_id, o.locator, flds, subj.user_id, o.observed_at))
+        add(o, Chain(ck, o.evidence_id, o.locator, flds, subj.user_id, o.observed_at, o.available_at))
     for o in cv.for_trace_key(subj.user_id):
-        add(o, Chain("trace", o.evidence_id, o.locator, o.f("trace_lookup_field") or "lookup_key", subj.user_id, o.observed_at))
+        add(o, Chain("trace", o.evidence_id, o.locator, o.f("trace_lookup_field") or "lookup_key", subj.user_id, o.observed_at, o.available_at))
 
     # catalog links (activity rows): email AND user id must both match the subject
     emails = {i.value for i in subj.identifiers if i.field == "email" and i.verified}
     for c in cv.catalog_links():
         if c.user_ref == subj.user_id and c.email in emails:
             ln = res.links.setdefault(c.resource_id, Link(c.resource_id, c.system_id, system_basis="catalog" if c.system_id else None))
-            ch = Chain("catalog", c.activity_id, c.activity_id, "details", c.user_ref, c.event_time)
+            ch = Chain("catalog", c.activity_id, c.activity_id, "details", c.user_ref, c.event_time, c.event_time)
             if ch not in ln.chains:
                 ln.chains.append(ch)
 
@@ -146,7 +147,7 @@ def _follow_sources(cv, res):
                 continue
             new = src not in res.links
             ln = res.links.setdefault(src, Link(src, None))
-            ch = Chain("source", o.evidence_id, o.locator, "source_resource_id", rid, o.observed_at)
+            ch = Chain("source", o.evidence_id, o.locator, "source_resource_id", rid, o.observed_at, o.available_at)
             if ch not in ln.chains:
                 ln.chains.append(ch)
             if new:

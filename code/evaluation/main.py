@@ -39,7 +39,7 @@ def cmd_all(_):
               os.path.join(code_dir, "tests", "test_account_proof.py"),
               os.path.join(code_dir, "tests", "test_best_effort.py"),
               os.path.join(code_dir, "tests", "test_link_propagation.py"), os.path.join(code_dir, "tests", "test_state_absence.py"),
-              os.path.join(code_dir, "tests", "test_treatment_labels.py")]
+              os.path.join(code_dir, "tests", "test_treatment_labels.py"), os.path.join(code_dir, "tests", "test_episode_scope.py")]
     failed = []
     for sfile in suites:
         r = subprocess.run([sys.executable, sfile], capture_output=True, text=True)
