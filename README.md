@@ -24,9 +24,12 @@ python3 code/main.py explain case_01 --data dataset --requests sample_deletion_r
 python3 code/main.py coverage                 # per-artifact extraction coverage report
 python3 code/main.py verify runs/provisional/output.manifest.json   # regenerate and compare: byte-identical output, unchanged inputs and code
 python3 code/main.py export                   # the ONLY writer of ./output.csv (see below)
+python3 code/main.py best-effort              # review artifact when export must refuse (see below); never writes output.csv
 ```
 
-`run` never writes the submission path. `export` writes `./output.csv` and `./output.manifest.json` only if every gate passes: the output is contract-valid, no case is UNDETERMINED, the policy is the non-certifying default, all PNG evidence is transcribed, the git tree is clean (so the manifest's commit identifies the code), and the complete test suite passes. A refused export lists every reason and writes nothing.
+`run` never writes the submission path. `export` writes `./output.csv` and `./output.manifest.json` only if every gate passes: the output is contract-valid, no case is UNDETERMINED, the policy is the non-certifying default, all PNG evidence is transcribed, no prediction-affecting file differs from the commit recorded in the manifest (documentation and report changes do not matter: `code_sha256` identifies the exact code), and the complete test suite passes. A refused export lists every reason and writes nothing.
+
+**When `export` refuses.** `best-effort` writes `output_best_effort.csv` (all 518 rows), `output_best_effort.unresolved.json` (per case: the exact missing fact, the steps actually emitted, every validation error) and `output_best_effort.manifest.json` (`certified: false`, `final: false`, the full validation-error list, code/input/output hashes). It uses the same non-certifying mapping as `run`: an unresolved obligation never becomes a finding, a remediation, a verification step or a certified COMPLETE, so those rows are contract-invalid by construction. It is a disclosed review artifact, not a submission and not a claim that the contract is satisfied.
 
 The CLI requires a subcommand (`python3 code/main.py` alone prints usage).
 
@@ -34,9 +37,13 @@ The CLI requires a subcommand (`python3 code/main.py` alone prints usage).
 
 ```bash
 python3 code/evaluation/main.py all           # every test suite + labeled evaluation; non-zero exit on any failure
-python3 code/evaluation/main.py validate --pred output.csv --requests dataset/deletion_requests.csv
-python3 code/evaluation/main.py score --pred runs/provisional/output.csv --gold dataset/sample_output.csv --diff   # public samples only
-python3 scripts/write_reports.py              # refresh the numeric blocks of the two reports from the actual evaluation
+python3 code/evaluation/main.py validate --pred runs/provisional/output.csv --requests dataset/deletion_requests.csv
+
+# Scoring against the public samples needs predictions for the SAMPLE requests (the 518-case output has no labels):
+python3 code/main.py run --requests sample_deletion_requests.csv --out runs/samples/output.csv --diagnostics runs/samples/diagnostics.json
+python3 code/evaluation/main.py score --pred runs/samples/output.csv --gold dataset/sample_output.csv --diff
+
+python3 scripts/write_reports.py              # re-run the producing run and refresh the numeric blocks of the two reports
 ```
 
 Metric definitions, results, the synthetic evaluation cases, failures found and improvements made are in `code/evaluation/evaluation_report.md`; model/token/cost accounting (the final run uses no model) is in `code/evaluation/usage_report.md`; decisions, alternatives, measurements and limitations are in `code/docs/DECISIONS.md`; the diagnosis of the public-sample regressions is in `code/docs/SAMPLE_REGRESSION_DIAGNOSIS.md`.
@@ -64,9 +71,9 @@ Uncertainty is kept honest: an obligation can be COMPLIANT, a VIOLATION or UNKNO
 ## Layout
 
 ```text
-code/main.py                 CLI: run | export | verify | explain | coverage | dump
+code/main.py                 CLI: run | export | best-effort | verify | explain | coverage | dump
 code/ghostaudit/             the engine (extract/, caseview, identity, linking, state, obligations, account_proof, planner, validate, export, ...)
-code/evaluation/             scorer, labeled evaluation, frozen fixtures (synth_v1 history, synth_v2), the two reports
+code/evaluation/             scorer, labeled evaluation, frozen fixtures (synth_v1, synth_v2 history; synth_v3 current), the two reports
 code/tests/                  unit, invariance, regression and cross-check tests
 code/docs/                   DECISIONS.md and the sample-regression diagnosis
 code/requirements.txt        pinned dependencies (tests and scripts only)
@@ -75,9 +82,9 @@ scripts/                     package.py, write_reports.py, diagnosis and measure
 
 ## Known limitations
 
-* The output format cannot express "not determined". Cases that remain unresolved after all evidence is used are listed in `code/evaluation/evaluation_report.md` section 6 with the exact missing evidence, so a final `output.csv` is exported only when none remain, or when a decision on how to represent them has been made.
+* The output format cannot express "not determined". Eight cases remain unresolved after all admissible evidence is used (each a missing fact, not a code gap: no profile-table capture after the request, no restore state for one backup, one irreconcilable marketing-record conflict). They are listed with the exact missing fact in `code/evaluation/evaluation_report.md` section 6 and in `output_best_effort.unresolved.json`; **no certified `output.csv` exists** while any remain, and `best-effort` output is explicitly not certified.
 * The PNG transcriptions are hand-authored; they are hash-bound and OCR-cross-checked but not regenerated by code.
-* The subject-level account proof rests on the snapshots' own declaration of coverage (they hold only 1 to 4 rows each); it is validated against known states and never names a resource.
+* The subject-level account proof rests on the snapshots' own declaration of coverage of a *profile* collection (they hold only 1 to 4 rows each); it is validated against known states, accounts for every copy that could hold the subject, and never names a resource. A copy never captured for the subject is not known to hold anything: a stated modelling assumption.
 * The intent classifier is a deterministic heuristic.
 
 ---

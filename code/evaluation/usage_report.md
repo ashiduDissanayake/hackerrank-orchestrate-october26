@@ -10,15 +10,17 @@ The pipeline that produces `output.csv` is deterministic code (Python standard l
 | field | value |
 |---|---|
 | command | `python3 code/main.py run` |
-| configuration | `{"data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
-| git commit / working tree | `462a85fbc2fb` / DIRTY (uncommitted changes) |
-| output.csv sha256 | `97993dfc44ea55ec1b007380f0e9923e593e6019a15e8c099d3b8837b1ff9be9` |
-| code sha256 (41 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `30fd78b4b48091164d2c02c1eb25270e14f2c4be713061334daf4ee4dd83c86b` |
+| configuration | `{"account_proof": {"allow_weak": false, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
+| producing commit (HEAD when the run was made) | `a71487808a0f` |
+| prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 5 |
+| output.csv sha256 | `443edff06205bd66d95f9f4f2c3c87e055804474764825170db0f21c0e1326c7` |
+| code sha256 (41 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `2873569cd86556001e37244ed6909b03dae3d458e348a5254ec501ab211eb621` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
-| statuses | {'COMPLETE': 146, 'INCOMPLETE': 362, 'NOT_APPLICABLE': 10} |
-| contract-valid | False (9 validation errors) |
-| UNDETERMINED cases | 9: case_55, case_63, case_183, case_343, case_345, case_462, case_524, case_530, case_532 |
+| statuses | {'COMPLETE': 147, 'INCOMPLETE': 361, 'NOT_APPLICABLE': 10} |
+| contract-valid | False (8 validation errors) |
+| UNDETERMINED cases | 8: case_55, case_63, case_183, case_343, case_345, case_524, case_530, case_532 |
 | runtime model calls | 0 |
 | final (exported) | False |
 <!--/AUTO:manifest-->
