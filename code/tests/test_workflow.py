@@ -202,6 +202,19 @@ class AuditAndRelease(unittest.TestCase):
         self.assertIn("only export", p.stderr)
         self.assertEqual(target.read_bytes() if target.exists() else None, before)
 
+    def test_preview_accepts_a_bare_output_filename(self):
+        from pathlib import Path
+        repo = Path(__file__).resolve().parents[2]
+        with tempfile.TemporaryDirectory() as tmp:
+            p = subprocess.run([sys.executable, str(repo / "code/main.py"), "run", "--data",
+                                str(repo / "code/evaluation/fixtures/synth_v4"), "--workflow-mode", "joint",
+                                "--out", "preview.csv", "--diagnostics", "diagnostics.json"],
+                               cwd=tmp, capture_output=True, text=True)
+            self.assertEqual(p.returncode, 0, p.stderr)
+            self.assertTrue((Path(tmp) / "preview.csv").is_file())
+            self.assertTrue((Path(tmp) / "preview.manifest.json").is_file())
+            self.assertFalse((Path(tmp) / "output.csv").exists())
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

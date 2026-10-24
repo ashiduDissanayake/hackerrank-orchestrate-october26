@@ -60,7 +60,7 @@ def manifest_commands(a):
     out = a.out if a.cmd == "run" else os.path.join(REPO, "runs", "export_candidate", "output.csv")
     if a.cmd == "best-effort":
         out = os.path.join(REPO, "runs", "best_effort", "output.csv")
-    os.makedirs(os.path.dirname(out), exist_ok=True)
+    os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     runner.write_output(results, out)
     errs = ex.validate_output(ds, out)
     manifest = ex.build_manifest(["python3", "code/main.py"] + sys.argv[1:], cfg, ds, results, out, errs)
