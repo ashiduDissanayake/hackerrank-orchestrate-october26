@@ -105,10 +105,12 @@ def build_manifest(argv, config, ds, results, out_path, validation_errors):
     # still leaves part of its investigation or plan open. Kept apart so neither can be mistaken for the other.
     plan_gaps = [r.case_id for r in results if r.internal == "INCOMPLETE" and any(o.verdict == "UNKNOWN" for o in r.obligations)]
     carried = {r.case_id: [c["resource_id"] for c in r.carried_over] for r in results if r.carried_over}
+    inferred = {r.case_id: r.workflow_inferences for r in results if getattr(r, "workflow_inferences", ())}
     counts = {}
     for r in results:
         counts[r.status] = counts.get(r.status, 0) + 1
     return {
+        "kind": "workflow_preview" if config.get("workflow_mode") == "joint" else "provisional",
         "command": argv,
         "config": config,
         "python": sys.version.split()[0],
@@ -126,6 +128,9 @@ def build_manifest(argv, config, ds, results, out_path, validation_errors):
         "plan_gap_cases": plan_gaps,
         "cases_with_unresolved_obligations": len(und) + len(plan_gaps),
         "carried_over_resources": carried,
+        "workflow_inferences": inferred,
+        "workflow_inferred_link_count": sum(len(v) for v in inferred.values()),
+        "certified": False,
         "plan_gaps_accepted": False,
         "contract_valid": not validation_errors,
         "validation_error_count": len(validation_errors),
@@ -154,6 +159,8 @@ def gate(ds, results, out_path, manifest, allow_dirty=False, run_tests=True, all
                        ". Pass --accept-plan-gaps to export anyway; the manifest then records plan_gaps_accepted=true")
     if manifest["config"].get("unknown_policy") != "not_certified":
         reasons.append(f"unknown_policy is {manifest['config'].get('unknown_policy')!r}; only 'not_certified' may be exported")
+    if manifest["config"].get("workflow_mode", "evidence") != "evidence" or any(getattr(r, "workflow_inferences", ()) for r in results):
+        reasons.append("workflow inference is an uncertified preview; inferred ownership cannot pass the strict export gate")
     pending = [a for a in ds.manifest if a.file_path.endswith(".png")]
     if manifest["config"].get("png_extraction") != "complete" and pending:
         reasons.append(f"{len(pending)} PNG artifacts are not extracted yet (M5); the run cannot be final")
@@ -206,6 +213,8 @@ def _gap_text(res, ob, req):
                 "this request's own trail has no evidence of it, so its state after this request is not shown (no step is emitted, and it blocks certification)")
     if ob.reason == "category_unresolved":
         return f"{rid} is tied to the subject (chains: {d.get('chains')}) but nothing identifies what kind of record it is, so no rule can be applied"
+    if ob.reason == "inferred_profile_state_not_established":
+        return f"{rid} has only an inferred ownership assignment and no sufficient post-request account state: {d.get('proof_reason', '')}"
     if ob.reason == "no_enabled_flag_in_admissible_evidence":
         return f"whether the data flow {rid} is enabled at audit_at {req.audit_at} is not shown by any admissible evidence (no record of its enabled flag at or before the cutoff)"
     if ob.reason == "no_admissible_evidence":

@@ -98,6 +98,10 @@ def verify():
     if not os.path.exists(prov):
         subprocess.check_call([sys.executable, os.path.join(REPO, "code", "main.py"), "run"], cwd=REPO, stdout=subprocess.DEVNULL)
     repo_out = json.load(open(prov))["output_sha256"]
+    preview_path = os.path.join(REPO, "runs", "workflow_preview", "output.csv")
+    subprocess.check_call([sys.executable, "code/main.py", "run", "--workflow-mode", "joint", "--out", preview_path,
+                           "--diagnostics", "runs/workflow_preview/diagnostics.json"], cwd=REPO, stdout=subprocess.DEVNULL)
+    preview_sha = hashlib.sha256(open(preview_path, "rb").read()).hexdigest()
     with tempfile.TemporaryDirectory() as tmp:
         with zipfile.ZipFile(OUT) as z:
             names = z.namelist()
@@ -109,6 +113,9 @@ def verify():
         steps = [("tests + labeled evaluation", [sys.executable, "code/evaluation/main.py", "all"]),
                  ("provisional run", [sys.executable, "code/main.py", "run"]),
                  ("verify manifest", [sys.executable, "code/main.py", "verify", "runs/provisional/output.manifest.json"]),
+                 ("workflow preview", [sys.executable, "code/main.py", "run", "--workflow-mode", "joint",
+                                       "--out", "runs/workflow_preview/output.csv", "--diagnostics", "runs/workflow_preview/diagnostics.json"]),
+                 ("verify workflow manifest", [sys.executable, "code/main.py", "verify", "runs/workflow_preview/output.manifest.json"]),
                  ("best-effort review artifact", [sys.executable, "code/main.py", "best-effort"])]
         for label, cmd in steps:
             r = subprocess.run(cmd, cwd=tmp, capture_output=True, text=True, env=env)
@@ -120,6 +127,11 @@ def verify():
         print(f"  output sha256 in the extracted package {got[:16]}... == repository run {repo_out[:16]}...: {got == repo_out}")
         if got != repo_out:
             sys.exit(1)
+        preview = json.load(open(os.path.join(tmp, "runs", "workflow_preview", "output.manifest.json")))
+        assert preview["certified"] is False and preview["final"] is False
+        assert preview["workflow_inferred_link_count"] > 0, "preview must exercise workflow attribution"
+        assert preview["output_sha256"] == preview_sha, "packaged workflow preview differs from the repository run"
+        print(f"  workflow preview sha256 matches repository: {preview_sha[:16]}...")
         # The extracted best-effort run must be uncertified and must never have produced the submission file.
         be = json.load(open(os.path.join(tmp, "output_best_effort.manifest.json")))
         assert be["certified"] is False and be["final"] is False, "best-effort output must be marked uncertified"
@@ -127,7 +139,9 @@ def verify():
     print("package verified: the CODE is runnable and reproduces the provisional output byte for byte.")
     root_final = os.path.join(REPO, "output.csv")
     man = os.path.join(REPO, "output.manifest.json")
-    certified = os.path.exists(root_final) and os.path.exists(man) and json.load(open(man)).get("final") is True
+    final_manifest = json.load(open(man)) if os.path.exists(man) else {}
+    certified = (os.path.exists(root_final) and final_manifest.get("final") is True
+                 and final_manifest.get("certified") is not False and not final_manifest.get("plan_gaps_accepted"))
     print("CERTIFIED root output.csv: " + ("yes (exported through the gate)" if certified else
           "NO. Package verification proves reproducibility of the code, not a valid submission CSV; the strict export gate still refuses while any case is UNDETERMINED."))
 

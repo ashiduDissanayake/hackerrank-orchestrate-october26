@@ -75,6 +75,11 @@ def block_samples():
             f"status accuracy {b['status_accuracy']:.4f}, strict step F1 {b['step_strict']['f1']:.4f}. " + tail)
 
 
+def block_workflow():
+    from evaluation.workflow_eval import measure, markdown
+    return markdown(measure(os.path.join(REPO, "dataset")))
+
+
 def block_eval():
     ds, store, results = runner.run_dataset(os.path.join(REPO, "dataset"))
     c = Counter(r.status for r in results)
@@ -181,7 +186,7 @@ def block_fixture_cases():
     return "\n".join(out)
 
 
-BLOCKS = {"fixtures": block_fixtures, "samples": block_samples, "samples_validity": block_samples_validity, "eval": block_eval,
+BLOCKS = {"fixtures": block_fixtures, "samples": block_samples, "workflow": block_workflow, "samples_validity": block_samples_validity, "eval": block_eval,
           "manifest": block_manifest, "best_effort": block_best_effort, "proof_stats": block_proof_stats, "sensitivity": block_sensitivity, "fixture_cases": block_fixture_cases}
 
 

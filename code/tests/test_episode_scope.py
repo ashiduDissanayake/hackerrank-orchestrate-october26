@@ -88,6 +88,10 @@ class CarriedOver(unittest.TestCase):
 
 
 class NotCarriedOver(unittest.TestCase):
+    def test_evidence_before_the_earlier_request_is_not_inside_its_investigation_window(self):
+        res = run(doc(with_audit(World()), "search_1", "2026-01-01T08:00:00Z", "evidence_old"))
+        self.assertEqual(by_id(res)["search_1"].verdict, "VIOLATION")
+
     def test_single_request_subject_keeps_resources_seen_before_the_request(self):
         res = run(doc(with_audit(World()), "search_1", "2026-08-31T08:00:00Z", "evidence_f"), earlier=())
         self.assertEqual(by_id(res)["search_1"].verdict, "VIOLATION")

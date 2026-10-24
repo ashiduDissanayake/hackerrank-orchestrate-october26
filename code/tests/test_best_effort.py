@@ -92,10 +92,15 @@ class BestEffort(unittest.TestCase):
 
     def test_cli_leaves_the_submission_path_alone(self):
         before = os.path.exists(os.path.join(REPO, "output.csv"))
-        r = subprocess.run([sys.executable, MAIN, "best-effort", "--data", FX], capture_output=True, text=True, cwd=REPO)
+        from pathlib import Path
+        originals = {n: (Path(REPO, n).read_bytes() if Path(REPO, n).exists() else None) for n in ex.BEST_EFFORT_NAMES}
+        with tempfile.TemporaryDirectory() as artifacts:
+            r = subprocess.run([sys.executable, MAIN, "best-effort", "--data", FX, "--artifact-dir", artifacts], capture_output=True, text=True, cwd=REPO)
+            self.assertTrue(Path(artifacts, "output_best_effort.csv").is_file())
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(os.path.exists(os.path.join(REPO, "output.csv")), before)
         self.assertIn("certified=false", r.stdout)
+        self.assertEqual(originals, {n: (Path(REPO, n).read_bytes() if Path(REPO, n).exists() else None) for n in ex.BEST_EFFORT_NAMES})
 
 
 if __name__ == "__main__":

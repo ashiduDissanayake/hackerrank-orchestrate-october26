@@ -50,7 +50,7 @@ class Link:
         """Earliest time any chain evidences the resource ITSELF. Absence older than this predates what we know of it.
         A source reference only tells us an id: a record naming account_X proves neither that X existed nor when it was
         created (a stale index document can name an account that was deleted long before), so it never sets the bound."""
-        ts = [c.time for c in self.chains if c.time and c.kind != "source"]
+        ts = [c.time for c in self.chains if c.time and c.kind not in ("source", "workflow_inference")]
         return min(ts) if ts else None
 
 
@@ -171,15 +171,21 @@ def _resolve_system(cv, ln):
 def _prune_orphans(res):
     """A link that rests only on source references from resources that are no longer linked (rejected by reconciliation)
     is dropped too, with the reason recorded."""
+    # Local pruning alone lets an orphan cycle justify itself after its identity root
+    # was rejected. Only nodes reachable from an independently accepted root survive.
+    reachable = {rid for rid, ln in res.links.items() if any(c.kind != "source" for c in ln.chains)}
     changed = True
     while changed:
-        changed = False
-        for rid, ln in list(res.links.items()):
-            ln.chains = [c for c in ln.chains if c.kind != "source" or c.value in res.links]
-            if not ln.chains:
-                del res.links[rid]
-                res.rejected.append((rid, "source_resource_not_linked", "every source reference to it came from a rejected link"))
-                changed = True
+        more = {rid for rid, ln in res.links.items()
+                if any(c.kind == "source" and c.value in reachable for c in ln.chains)}
+        changed = bool(more - reachable)
+        reachable |= more
+    for rid, ln in list(res.links.items()):
+        if rid not in reachable:
+            del res.links[rid]
+            res.rejected.append((rid, "source_resource_not_linked", "no path from an accepted identity root remains"))
+        else:
+            ln.chains = [c for c in ln.chains if c.kind != "source" or c.value in reachable]
 
 
 

@@ -28,7 +28,10 @@ def manifest_commands(a):
     if a.cmd == "verify":
         m = json.load(open(a.manifest))
         cfg = m["config"]
-        ds, store, results = runner.run_dataset(os.path.join(REPO, cfg["data"]), cfg["requests"], cfg["unknown_policy"])
+        from ghostaudit.workflow import WorkflowConfig
+        ds, store, results = runner.run_dataset(os.path.join(REPO, cfg["data"]), cfg["requests"], cfg["unknown_policy"],
+                                                workflow_mode=cfg.get("workflow_mode", "evidence"),
+                                                workflow_config=WorkflowConfig(**cfg.get("workflow_config", {})))
         tmp = os.path.join(REPO, "runs", "verify", "output.csv")
         os.makedirs(os.path.dirname(tmp), exist_ok=True)
         runner.write_output(results, tmp)
@@ -41,10 +44,17 @@ def manifest_commands(a):
             diff = sorted(k for k in set(now) | set(m["code_files_sha256"]) if now.get(k) != m["code_files_sha256"].get(k))
             print("  files that differ from the producing run:", ", ".join(diff[:10]))
         return 0 if (same_out and same_in and same_code) else 1
-    ds, store, results = runner.run_dataset(a.data, a.requests, a.unknown_policy)
+    if a.cmd == "run" and os.path.realpath(a.out) == os.path.realpath(os.path.join(REPO, "output.csv")):
+        print("REFUSED: run writes provisional artifacts; only export may write repo-root output.csv.", file=sys.stderr)
+        return 2
+    from ghostaudit.workflow import WorkflowConfig
+    workflow_config = WorkflowConfig(min_margin=a.workflow_min_margin, scoring=a.workflow_scoring)
+    ds, store, results = runner.run_dataset(a.data, a.requests, a.unknown_policy,
+                                           workflow_mode=a.workflow_mode, workflow_config=workflow_config)
     pngs = [r for r in store.artifacts.values() if r.fmt == "png"]
     from ghostaudit.engine import PROOF_DEFAULTS
     cfg = {"data": os.path.relpath(a.data, REPO), "requests": a.requests, "unknown_policy": a.unknown_policy, "account_proof": PROOF_DEFAULTS,
+           "workflow_mode": a.workflow_mode, "workflow_config": workflow_config.to_dict(),
            "png_extraction": "complete" if all(r.status == "ok" for r in pngs) else "pending",
            "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)"}
     out = a.out if a.cmd == "run" else os.path.join(REPO, "runs", "export_candidate", "output.csv")
@@ -55,7 +65,8 @@ def manifest_commands(a):
     errs = ex.validate_output(ds, out)
     manifest = ex.build_manifest(["python3", "code/main.py"] + sys.argv[1:], cfg, ds, results, out, errs)
     if a.cmd == "best-effort":
-        paths, reg = ex.write_best_effort(ds, results, errs, manifest, REPO)
+        os.makedirs(a.artifact_dir, exist_ok=True)
+        paths, reg = ex.write_best_effort(ds, results, errs, manifest, a.artifact_dir)
         print("BEST-EFFORT REVIEW ARTIFACT (certified=false; not a submission, root output.csv untouched):")
         for p_ in paths.values():
             print("  ", os.path.relpath(p_, REPO))
@@ -67,6 +78,8 @@ def manifest_commands(a):
         ex.write_manifest(manifest, mpath)
         print(f"PROVISIONAL: wrote {len(results)} rows to {a.out}; manifest -> {mpath}; diagnostics -> {a.diagnostics}")
         print(f"policy={a.unknown_policy}  contract_valid={manifest['contract_valid']} ({len(errs)} validation errors)  undetermined cases={len(manifest['undetermined_cases'])}")
+        if a.workflow_mode != "evidence":
+            print("INFERENCE PREVIEW: certified=false; workflow assignments are hypotheses, not proven ownership. See diagnostics and manifest.")
         for k, v in runner.diagnostics(results).items():
             print(f"  {k}: {v}")
         return 0
@@ -78,6 +91,7 @@ def manifest_commands(a):
         return 1
     final = os.path.join(REPO, "output.csv")
     manifest["final"] = True
+    manifest["certified"] = not bool(a.accept_plan_gaps and manifest["plan_gap_cases"])
     manifest["plan_gaps_accepted"] = bool(a.accept_plan_gaps and manifest["plan_gap_cases"])
     import shutil
     shutil.copyfile(out, final)
@@ -101,11 +115,19 @@ def main():
     ex.add_argument("--allow-dirty", action="store_true")
     ex.add_argument("--accept-plan-gaps", action="store_true", help="export although some INCOMPLETE cases carry unresolved obligations (disclosed in the manifest)")
     ex.add_argument("--skip-tests", action="store_true", help="NOT allowed for a final export; for debugging the gate only")
+    sub.choices["best-effort"].add_argument("--artifact-dir", default=REPO,
+                                         help="directory for the three uncertified artifacts (use a temporary directory when testing fixtures)")
     sub.choices["verify"].add_argument("manifest")
     sub.choices["explain"].add_argument("case_id")
     for name in ("run", "explain", "export", "best-effort"):
         sub.choices[name].add_argument("--unknown-policy", default="not_certified", choices=["not_certified", "certify_established"],
                                        help="status for cases with unresolved obligations (open decision P3)")
+        sub.choices[name].add_argument("--workflow-mode", default="evidence", choices=["evidence", "joint"],
+                                       help="joint: opt-in inference preview; never certifiable or exportable")
+        sub.choices[name].add_argument("--workflow-min-margin", type=float, default=0.25,
+                                       help="minimum counterfactual assignment-score margin (not a probability)")
+        sub.choices[name].add_argument("--workflow-scoring", default="contextual", choices=["contextual", "anchor"],
+                                       help="anchor omits reported-outcome agreement as a sensitivity control")
     d = sub.choices["dump"]
     d.add_argument("--audit-at")
     d.add_argument("--resource")
@@ -116,7 +138,9 @@ def main():
     if a.cmd in ("run", "explain"):
         import json
         from ghostaudit import run as runner
-        ds, store, results = runner.run_dataset(a.data, a.requests, a.unknown_policy)
+        from ghostaudit.workflow import WorkflowConfig
+        ds, store, results = runner.run_dataset(a.data, a.requests, a.unknown_policy, workflow_mode=a.workflow_mode,
+                                                workflow_config=WorkflowConfig(min_margin=a.workflow_min_margin, scoring=a.workflow_scoring))
         if a.cmd == "run":
             runner.write_output(results, a.out)
             runner.write_diagnostics(results, a.diagnostics)

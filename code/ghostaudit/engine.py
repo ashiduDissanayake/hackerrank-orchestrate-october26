@@ -1,7 +1,8 @@
 """Per-case audit: intent -> subject -> links -> obligations -> status -> steps.
 
-A pure function of (request, admissible evidence): no cross-case state, so a case yields the same result alone,
-in a shuffled batch, or beside unrelated or later requests.
+A deterministic function of the request, admissible evidence and explicitly supplied earlier-request context.
+The optional workflow experiment additionally supplies competing-request hypotheses; it cannot be certified.
+No inferred link is fed back into another case's evidence or candidate graph.
 
 Internal status vs output status (user decision U8, review finding P1-1): UNKNOWN obligations are kept distinct
 from violations, and an UNDETERMINED case is NEVER reported COMPLETE by default. The contract defines COMPLETE as
@@ -61,6 +62,8 @@ class CaseResult:
     conditions: list = field(default_factory=list)
     candidates: list = field(default_factory=list)
     carried_over: list = field(default_factory=list)    # resources scoped to an EARLIER request of the same subject (never silently dropped)
+    workflow_inferences: list = field(default_factory=list)  # optional heuristic proposals, never certified evidence
+    workflow_decisions: list = field(default_factory=list)
 
 
 def carried_over_from(ln, req, earlier):
@@ -73,17 +76,30 @@ def carried_over_from(ln, req, earlier):
     last = max(max(c.time or "", c.available or "") for c in ln.chains)
     if last >= req.requested_at:
         return []
-    return [e.case_id for e in earlier if e.audit_at <= req.requested_at and last <= e.audit_at]
+    return [e.case_id for e in earlier if e.audit_at <= req.requested_at and last <= e.audit_at
+            and all(e.requested_at <= (c.available or c.time) <= e.audit_at for c in ln.chains)]
 
 
 def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False, pre_request_exclusion=True, weak_promotion=True,
-               earlier_requests=(), episode_scoping=True, view_cls=CaseView):
+               earlier_requests=(), episode_scoping=True, view_cls=CaseView, workflow_inferences=(), workflow_decisions=()):
     intent = classify(req.request_text)
     if not intent.deletion:
         return CaseResult(req.case_id, "NOT_APPLICABLE", "NOT_APPLICABLE", [], intent)
     subj = ident.resolve(req.email, req.audit_at)
     cv = view_cls(store, req.audit_at)     # production: CaseView. Only measurement scripts pass a relaxed view (never the CLI)
     lr = link_subject(cv, subj)
+    inferred = []
+    if workflow_inferences:
+        from .linking import Chain, Link
+        for p in workflow_inferences:
+            rid = p["resource_id"]
+            if rid in lr.links or p["event_time"] > req.audit_at:
+                continue
+            lr.links[rid] = Link(rid, p["system_id"],
+                                 [Chain("workflow_inference", p["activity_id"], p["activity_id"], "workflow_assignment",
+                                        subj.user_id or "", p["event_time"], p["event_time"])],
+                                 system_basis="workflow_target")
+            inferred.append(dict(p))
     actions = action_table(rules)
     obs, carried = [], []
     for rid in sorted(lr.links):
@@ -91,6 +107,18 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_w
         ob = evaluate(cv, subj, ln, actions)
         if ob is None:
             continue
+        if (rid in {p["resource_id"] for p in inferred} and ob.category == "USER_PROFILE" and ob.verdict == "COMPLIANT"):
+            # Inferring a previously unknown id does not make an old, pre-request
+            # empty snapshot evidence of this request's final state. Require the
+            # same subject proof or timely explicit/per-copy absence evidence.
+            from .state import copy_states
+            states = copy_states(cv, rid, ln.system_id, None, subj, ob.category)
+            timely = bool(states.latest) and all(e.kind == "absent" and e.time >= req.requested_at for e in states.latest.values())
+            proof = account_proof(cv, subj, req.requested_at, allow_weak, require_row, pre_request_exclusion, weak_promotion)
+            if not timely and proof.status != "ABSENT":
+                ob = type(ob)(ob.system_id, rid, ob.category, ob.action, "UNKNOWN", "inferred_profile_state_not_established", "",
+                              {"underlying_evidence": ob.evidence_id, "proof_status": proof.status, "proof_reason": proof.reason,
+                               "missing": "post-request account state for the inferred profile id"})
         co = carried_over_from(ln, req, earlier_requests) if episode_scoping else []
         if co:
             # Evidence that only serves an earlier request's window. Resolved or unresolved items are scoped out with a record; a PRESENT
@@ -118,6 +146,8 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_w
         obs.append(ob)
     res = CaseResult(req.case_id, "", "", [], intent, subj, lr.links, lr.rejected, obs,
                      [o for o in obs if o.verdict == "UNKNOWN"], list(subj.conditions), cands, carried)
+    res.workflow_inferences = inferred
+    res.workflow_decisions = list(workflow_decisions)
     violations = [o for o in obs if o.verdict == "VIOLATION"]
     if subj.user_id is None:
         res.internal, res.status, res.steps = "UNDETERMINED", "INCOMPLETE", []

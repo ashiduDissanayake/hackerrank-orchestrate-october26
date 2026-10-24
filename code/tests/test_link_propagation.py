@@ -92,6 +92,25 @@ class SourceReferenceReachesPolicy(unittest.TestCase):
 
 
 class FixedPoint(unittest.TestCase):
+    def test_cycle_loses_all_links_when_its_only_identity_root_is_rejected(self):
+        w = World().snap("evidence_1", SNAP, "primary", [OTHER])
+        search_doc(w, rid="search_root", src="search_b", eid="evidence_root", email="other.person@example.org",
+                   extra={"lookup_key": U.email})
+        search_doc(w, rid="search_b", src="search_c", eid="evidence_b", email="")
+        search_doc(w, rid="search_c", src="search_b", eid="evidence_c", email="")
+        res = run(w)
+        self.assertFalse({"search_root", "search_b", "search_c"} & set(res.links))
+
+    def test_cycle_keeps_an_independent_valid_identity_root(self):
+        w = World().snap("evidence_1", SNAP, "primary", [OTHER])
+        search_doc(w, rid="search_root", src="search_b", eid="evidence_root", email="other.person@example.org",
+                   extra={"lookup_key": U.email})
+        search_doc(w, rid="search_b", src="search_c", eid="evidence_b", email="")
+        search_doc(w, rid="search_c", src="search_b", eid="evidence_c", email=U.email)
+        res = run(w)
+        self.assertNotIn("search_root", res.links)
+        self.assertTrue({"search_b", "search_c"} <= set(res.links))
+
     def test_chains_are_followed_and_cycles_terminate(self):
         w = World().snap("evidence_1", SNAP, "primary", [OTHER])
         search_doc(w, rid="search_1", src="search_2", eid="evidence_s1")

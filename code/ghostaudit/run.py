@@ -23,11 +23,22 @@ def earlier_requests_by_case(ds, ident):
     return out
 
 
-def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="not_certified", **audit_kwargs):
+def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="not_certified", workflow_mode="evidence", workflow_config=None, **audit_kwargs):
+    if workflow_mode not in ("evidence", "joint"):
+        raise ValueError("workflow mode must be evidence or joint")
     ds, store = build(root, requests_file)
     ident = IdentityIndex(ds.identities, ds.audit_log)
     earlier = earlier_requests_by_case(ds, ident)
-    results = [audit_case(r, store, ident, ds.rules, unknown_policy, earlier_requests=earlier[r.case_id], **audit_kwargs) for r in ds.requests]
+    attributor = None
+    if workflow_mode == "joint":
+        from .workflow import WorkflowAttributor
+        history = {q.case_id: q for q in load_request_history(ds.root)}
+        history.update({q.case_id: q for q in ds.requests})
+        attributor = WorkflowAttributor(store, ident, list(history.values()), workflow_config)
+    results = []
+    for r in ds.requests:
+        extra = ({"workflow_inferences": attributor.proposals(r), "workflow_decisions": attributor.decisions(r)} if attributor else {})
+        results.append(audit_case(r, store, ident, ds.rules, unknown_policy, earlier_requests=earlier[r.case_id], **extra, **audit_kwargs))
     results.sort(key=lambda r: case_sort_key(r.case_id))
     return ds, store, results
 
@@ -47,6 +58,9 @@ def diagnostics(results):
         c[f"internal:{r.internal}"] += 1
         if r.unresolved:
             c["cases_with_unresolved"] += 1
+        if r.workflow_inferences:
+            c["cases_with_workflow_inferences"] += 1
+            c["workflow_inferred_links"] += len(r.workflow_inferences)
         if r.conditions:
             c["cases_with_identity_conditions"] += 1
         for o in r.obligations:
@@ -71,6 +85,8 @@ def case_detail(r):
         "obligations": [{"system": o.system_id, "resource": o.resource_id, "category": o.category, "action": o.action,
                          "verdict": o.verdict, "reason": o.reason, "evidence": o.evidence_id, "detail": o.detail} for o in r.obligations],
         "window_candidates": r.candidates[:10],
+        "workflow_inferences": r.workflow_inferences,
+        "workflow_decisions": r.workflow_decisions,
     }
 
 
