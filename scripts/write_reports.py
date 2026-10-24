@@ -1,8 +1,11 @@
 """Fills the AUTO blocks of code/evaluation/evaluation_report.md and usage_report.md from the actual evaluation and the
 run manifest, so the reports can never drift from the run they describe.
 
-  python3 scripts/write_reports.py            # run the evaluation + a provisional run, then update both reports
-  python3 scripts/write_reports.py --check    # exit 1 if the reports are out of date (used by the packaging check)
+  python3 scripts/write_reports.py            # re-run the provisional run and the best-effort artifact, then update both reports
+  python3 scripts/write_reports.py --check    # exit 1 if the reports are out of date OR the cached run manifest is stale (used by the packaging check)
+
+The reports must describe the run that produced the CSV, never a cached manifest from older code: in write mode the provisional run is ALWAYS
+regenerated first; in check mode a manifest whose code or input hashes differ from the current tree is reported as stale.
 
 A block looks like  <!--AUTO:name-->  ...  <!--/AUTO:name-->  and is replaced wholesale. Everything outside the blocks is
 hand-written narrative. The reports are the single authoritative copies; scripts/package.py generates the packaging copy.
@@ -28,6 +31,7 @@ from ghostaudit import run as runner  # noqa: E402
 EVAL = os.path.join(CODE, "evaluation", "evaluation_report.md")
 USAGE = os.path.join(CODE, "evaluation", "usage_report.md")
 MANIFEST = os.path.join(REPO, "runs", "provisional", "output.manifest.json")
+REGISTER = os.path.join(REPO, "output_best_effort.unresolved.json")
 FX = labeled.FX
 
 
@@ -100,7 +104,9 @@ def block_manifest():
         "| field | value |", "|---|---|",
         f"| command | `{' '.join(m['command'])}` |",
         f"| configuration | `{json.dumps(m['config'], sort_keys=True)}` |",
-        f"| git commit / working tree | `{(g['commit'] or 'none')[:12]}` / {'DIRTY (uncommitted changes)' if g['dirty'] else 'clean'} |",
+        f"| producing commit (HEAD when the run was made) | `{(g['commit'] or 'none')[:12]}` |",
+        f"| prediction-affecting files differing from that commit | {len(g.get('dirty_code_files', [])) or 'none'} (the code hash below identifies the exact code either way) |",
+        f"| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | {len([f for f in g['dirty_files'] if f not in g.get('dirty_code_files', [])])} |",
         f"| output.csv sha256 | `{m['output_sha256']}` |",
         f"| code sha256 ({m.get('code_files', '?')} files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `{m['code_sha256']}` |",
         f"| input files hashed | {len(m['inputs_sha256'])} (dataset csv + evidence); combined listing in the manifest |",
@@ -108,6 +114,52 @@ def block_manifest():
         f"| contract-valid | {m['contract_valid']} ({m['validation_error_count']} validation errors) |",
         f"| UNDETERMINED cases | {len(m['undetermined_cases'])}: {', '.join(m['undetermined_cases'])} |",
         f"| runtime model calls | {m.get('runtime_model_calls', 'n/a')} |", f"| final (exported) | {m['final']} |"])
+
+
+def block_samples_validity():
+    ds, store, results = runner.run_dataset(os.path.join(REPO, "dataset"), "sample_deletion_requests.csv")
+    import tempfile
+    with tempfile.TemporaryDirectory() as t:
+        out = os.path.join(t, "o.csv")
+        runner.write_output(results, out)
+        errs = ex.validate_output(ds, out)
+    if not errs:
+        return "The 32 public-sample rows all pass the contract validator."
+    return (f"Contract validation of the 32 public-sample rows: {len(errs)} errors. "
+            "Each is a COMPLETE row with zero steps: the subject's only gold steps are an account-absence verification (account resource id never linked to the "
+            "subject) and an anonymized analytics record, and no retained audit record exists to cite, so the row has nothing the evidence lets the engine name. "
+            "A COMPLETE row needs at least one verification step, so the contract validator rejects it.\n\n" + "\n".join(f"* {e}" for e in errs))
+
+
+def block_best_effort():
+    reg = json.load(open(REGISTER, encoding="utf-8"))["unresolved_cases"]
+    det = [e for e in reg if not e["status_determined"]]
+    part = [e for e in reg if e["status_determined"]]
+    total = sum(json.load(open(MANIFEST))["status_counts"].values())
+    lines = [f"`python3 code/main.py best-effort` writes `output_best_effort.csv` (all {total} rows), "
+             "`output_best_effort.unresolved.json` and `output_best_effort.manifest.json` (`certified: false`, every validation error). It is a review artifact, never the submission.", "",
+             f"**{len(det)} cases whose status rests on an unresolved obligation** (the row is contract-invalid by construction):", "",
+             "| case | missing fact |", "|---|---|"]
+    for e in det:
+        for u in e["unresolved"]:
+            lines.append(f"| {e['case_id']} | {u['information_gap'].replace('|', '/')} |")
+    lines += ["", f"**{len(part)} cases that are INCOMPLETE on established violations** and also carry an unresolved obligation (the plan may be missing the unresolved items): "
+              + ", ".join(e["case_id"] for e in part) + "."]
+    return "\n".join(lines)
+
+
+def block_proof_stats():
+    ds, store, results = runner.run_dataset(os.path.join(REPO, "dataset"))
+    proofs = [(r, o) for r in results for o in r.obligations if o.reason == "no_profile_for_subject_in_snapshot"]
+    promoted = [r.case_id for r, o in proofs if any("subject_in_source" in v[3] for v in o.detail["copies"].values())]
+    excl = [(r, o) for r, o in proofs if o.detail.get("excluded_copies")]
+    declared_only = [r.case_id for r, o in proofs if all(v[3] == "declared" for v in o.detail["copies"].values())]
+    lines = [f"Subject-level discharges in the real run: {len(proofs)} of {len(results)} requests (plus {sum(1 for r in results for o in r.obligations if o.reason == 'account_deleted_per_tombstone')} by a DELETED tombstone).",
+             f"* proofs whose latest primary or replica capture is a **weakly scoped document export promoted per source** (it holds the subject's own records and exports profile rows): {len(promoted)}",
+             f"* proofs that exclude at least one replica whose latest capture predates the request and shows attributable rows without the subject: {len(excl)}"
+             + (f" ({', '.join(r.case_id for r, _ in excl)}); of these COMPLETE: {', '.join(r.case_id for r, _ in excl if r.internal == 'COMPLETE') or 'none'}" if excl else ""),
+             f"* proofs of which every copy used is a declared capture: {len(declared_only)}"]
+    return "\n".join(lines)
 
 
 def block_sensitivity():
@@ -119,7 +171,7 @@ def block_fixture_cases():
     exp = {r["case_id"]: r for r in csv.DictReader(open(os.path.join(FX, "expected_output.csv"), encoding="utf-8"))}
     internal = json.load(open(os.path.join(FX, "expected_internal.json"), encoding="utf-8"))
     out = []
-    for cid in ("fx_case_05", "fx_case_16", "fx_case_22", "fx_case_23"):
+    for cid in ("fx_case_05", "fx_case_16", "fx_case_22", "fx_case_23", "fx_case_25", "fx_case_26", "fx_case_28"):
         out.append(f"**{cid}** expected: `{exp[cid]['deletion_status'] if cid in exp else 'UNDETERMINED (internal expectation only)'}`")
         if cid in exp:
             out += ["", "```json", json.dumps(json.loads(exp[cid]["steps_json"]), indent=1, sort_keys=True), "```"]
@@ -129,8 +181,8 @@ def block_fixture_cases():
     return "\n".join(out)
 
 
-BLOCKS = {"fixtures": block_fixtures, "samples": block_samples, "eval": block_eval, "manifest": block_manifest,
-          "sensitivity": block_sensitivity, "fixture_cases": block_fixture_cases}
+BLOCKS = {"fixtures": block_fixtures, "samples": block_samples, "samples_validity": block_samples_validity, "eval": block_eval,
+          "manifest": block_manifest, "best_effort": block_best_effort, "proof_stats": block_proof_stats, "sensitivity": block_sensitivity, "fixture_cases": block_fixture_cases}
 
 
 def fill(path, text_blocks):
@@ -143,10 +195,22 @@ def fill(path, text_blocks):
     return s
 
 
+def manifest_stale():
+    """True if the cached provisional manifest does not describe the current code and inputs."""
+    if not os.path.exists(MANIFEST) or not os.path.exists(REGISTER):
+        return True
+    m = json.load(open(MANIFEST))
+    return m.get("code_sha256") != ex.code_hash() or m.get("inputs_sha256") != ex.input_hashes(os.path.join(REPO, "dataset"))
+
+
 def main():
     check = "--check" in sys.argv
-    if not os.path.exists(MANIFEST):
-        subprocess.check_call([sys.executable, os.path.join(CODE, "main.py"), "run"], cwd=REPO, stdout=subprocess.DEVNULL)
+    if check and manifest_stale():
+        print("STALE: runs/provisional/output.manifest.json (or the best-effort register) does not describe the current code/inputs; run python3 scripts/write_reports.py")
+        sys.exit(1)
+    if not check:    # the reports must describe the run that produced the CSV: always regenerate it
+        for cmd in ("run", "best-effort"):
+            subprocess.check_call([sys.executable, os.path.join(CODE, "main.py"), cmd], cwd=REPO, stdout=subprocess.DEVNULL)
     blocks = {k: f() for k, f in BLOCKS.items()}
     stale = []
     for path in (EVAL, USAGE):

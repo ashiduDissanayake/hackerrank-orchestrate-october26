@@ -36,7 +36,8 @@ def cmd_all(_):
               os.path.join(code_dir, "tests", "test_export.py"),
               os.path.join(code_dir, "tests", "test_account_gap.py"), os.path.join(code_dir, "tests", "test_phone_linking.py"),
               os.path.join(code_dir, "tests", "test_identity_conflicts.py"), os.path.join(code_dir, "tests", "test_image_transcriptions.py"),
-              os.path.join(code_dir, "tests", "test_account_proof.py")]
+              os.path.join(code_dir, "tests", "test_account_proof.py"),
+              os.path.join(code_dir, "tests", "test_best_effort.py")]
     failed = []
     for sfile in suites:
         r = subprocess.run([sys.executable, sfile], capture_output=True, text=True)
@@ -56,6 +57,16 @@ def cmd_all(_):
 def cmd_score(a):
     gold = scoring.load_output(a.gold)
     pred = scoring.load_output(a.pred)
+    shared = set(gold) & set(pred)
+    if not shared:
+        print(f"ERROR: --pred and --gold share no case_id ({len(pred)} predicted cases vs {len(gold)} labeled). Accuracy is only defined on labeled cases: "
+              "for the public samples run `python3 code/main.py run --requests sample_deletion_requests.csv --out runs/samples/output.csv` first, then score that file.",
+              file=sys.stderr)
+        sys.exit(2)
+    if set(gold) - set(pred):
+        print(f"WARNING: {len(set(gold) - set(pred))} labeled cases have no prediction and count as wrong", file=sys.stderr)
+    if set(pred) - set(gold):
+        print(f"WARNING: {len(set(pred) - set(gold))} predicted cases have no label and are ignored", file=sys.stderr)
     m = scoring.score(gold, pred)
     print(scoring.summarize(m))
     if a.diff:

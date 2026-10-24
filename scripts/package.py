@@ -108,7 +108,8 @@ def verify():
         env = dict(os.environ)
         steps = [("tests + labeled evaluation", [sys.executable, "code/evaluation/main.py", "all"]),
                  ("provisional run", [sys.executable, "code/main.py", "run"]),
-                 ("verify manifest", [sys.executable, "code/main.py", "verify", "runs/provisional/output.manifest.json"])]
+                 ("verify manifest", [sys.executable, "code/main.py", "verify", "runs/provisional/output.manifest.json"]),
+                 ("best-effort review artifact", [sys.executable, "code/main.py", "best-effort"])]
         for label, cmd in steps:
             r = subprocess.run(cmd, cwd=tmp, capture_output=True, text=True, env=env)
             print(f"  [{'ok' if r.returncode == 0 else 'FAILED'}] extracted package: {label}")
@@ -119,7 +120,16 @@ def verify():
         print(f"  output sha256 in the extracted package {got[:16]}... == repository run {repo_out[:16]}...: {got == repo_out}")
         if got != repo_out:
             sys.exit(1)
-    print("package verified")
+        # The extracted best-effort run must be uncertified and must never have produced the submission file.
+        be = json.load(open(os.path.join(tmp, "output_best_effort.manifest.json")))
+        assert be["certified"] is False and be["final"] is False, "best-effort output must be marked uncertified"
+        assert not os.path.exists(os.path.join(tmp, "output.csv")), "the package run must not write output.csv"
+    print("package verified: the CODE is runnable and reproduces the provisional output byte for byte.")
+    root_final = os.path.join(REPO, "output.csv")
+    man = os.path.join(REPO, "output.manifest.json")
+    certified = os.path.exists(root_final) and os.path.exists(man) and json.load(open(man)).get("final") is True
+    print("CERTIFIED root output.csv: " + ("yes (exported through the gate)" if certified else
+          "NO. Package verification proves reproducibility of the code, not a valid submission CSV; the strict export gate still refuses while any case is UNDETERMINED."))
 
 
 if __name__ == "__main__":

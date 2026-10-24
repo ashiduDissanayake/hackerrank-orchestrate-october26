@@ -118,7 +118,7 @@ class ExportGate(unittest.TestCase):
     def test_exportable_when_fully_resolved_and_clean(self):
         tmp, data = self._subset(drop={"fx_case_07", "fx_case_14", "fx_case_17"})
         try:
-            with mock.patch.object(ex, "git_state", return_value={"commit": "abc", "dirty": False, "dirty_files": []}):
+            with mock.patch.object(ex, "git_state", return_value={"commit": "abc", "dirty": False, "dirty_files": [], "dirty_code_files": []}):
                 reasons, m = self._gate(data)
             self.assertEqual(reasons, [])
             self.assertEqual(m["undetermined_cases"], [])
@@ -129,13 +129,31 @@ class ExportGate(unittest.TestCase):
     def test_refuses_dirty_tree_and_certifying_policy(self):
         tmp, data = self._subset(drop={"fx_case_07", "fx_case_14", "fx_case_17"})
         try:
-            with mock.patch.object(ex, "git_state", return_value={"commit": "abc", "dirty": True, "dirty_files": ["x.py"]}):
+            with mock.patch.object(ex, "git_state", return_value={"commit": "abc", "dirty": True, "dirty_files": ["x.py"], "dirty_code_files": ["code/ghostaudit/x.py"]}):
                 reasons, _ = self._gate(data)
-                self.assertTrue(any("dirty" in r for r in reasons), reasons)
+                self.assertTrue(any("prediction-affecting files differ" in r for r in reasons), reasons)
                 reasons, _ = self._gate(data, policy="certify_established", allow_dirty=True)
                 self.assertTrue(any("only 'not_certified'" in r for r in reasons), reasons)
         finally:
             shutil.rmtree(tmp)
+
+    def test_documentation_only_changes_do_not_block_an_export(self):
+        tmp, data = self._subset(drop={"fx_case_07", "fx_case_14", "fx_case_17"})
+        try:
+            with mock.patch.object(ex, "git_state", return_value={"commit": "abc", "dirty": True, "dirty_files": ["README.md", "code/evaluation/evaluation_report.md"],
+                                                                  "dirty_code_files": []}):
+                reasons, _ = self._gate(data)
+            self.assertEqual(reasons, [])
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_dirty_paths_are_classified_as_code_or_documentation(self):
+        code = {"code/ghostaudit/engine.py", "code/ghostaudit/image_transcriptions/evidence_09.json", "code/main.py"}
+        dirty = ["README.md", "code/ghostaudit/engine.py", "code/evaluation/evaluation_report.md", "code/ghostaudit/image_transcriptions/",
+                 "code/docs/", "code/tests/test_export.py"]
+        self.assertEqual(ex.dirty_code_paths(dirty, code), ["code/ghostaudit/engine.py", "code/ghostaudit/image_transcriptions/"])
+        self.assertEqual(ex.dirty_code_paths(["README.md", "scripts/package.py"], code), [])
+        self.assertIn("dirty_code_files", ex.git_state())
 
     def test_export_command_refuses_and_writes_nothing_on_unresolved_data(self):
         final = os.path.join(REPO, "output.csv")

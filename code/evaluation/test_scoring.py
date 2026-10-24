@@ -242,5 +242,26 @@ class ValidatorRules(unittest.TestCase):
             self.assertEqual(OP_STATE[op], st)
 
 
+class ScoreCli(unittest.TestCase):
+    """README regression: scoring the 518-case output against the 32 labeled samples compared disjoint case sets."""
+
+    def _cli(self, pred, gold):
+        import subprocess
+        return subprocess.run([sys.executable, os.path.join(HERE, "main.py"), "score", "--pred", pred, "--gold", gold], capture_output=True, text=True)
+
+    def test_disjoint_case_sets_are_an_error_not_a_score(self):
+        repo = os.path.dirname(os.path.dirname(HERE))
+        r = self._cli(os.path.join(repo, "dataset", "output.csv"), os.path.join(repo, "dataset", "sample_output.csv"))
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertIn("share no case_id", r.stderr)
+        self.assertIn("--requests sample_deletion_requests.csv", r.stderr)
+
+    def test_identical_sets_score_normally(self):
+        repo = os.path.dirname(os.path.dirname(HERE))
+        gold = os.path.join(repo, "dataset", "sample_output.csv")
+        r = self._cli(gold, gold)
+        self.assertEqual(r.returncode, 0, r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
