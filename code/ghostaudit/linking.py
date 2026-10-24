@@ -15,6 +15,7 @@ import json
 from dataclasses import dataclass, field
 
 from .identity import KIND
+from .observations import system_from_resource
 
 
 @dataclass(frozen=True)
@@ -38,14 +39,17 @@ class Link:
     system_id: str | None
     chains: list = field(default_factory=list)
     conflict: str | None = None     # set when the record's own identity contradicts a catalog link
+    system_basis: str | None = None  # how system_id was resolved: observation | catalog | namespace_prefix (None = unresolved)
 
     def attribute_direct(self):
         """True if some chain rests on an attribute of the record itself (not a lookup key, catalog row or source ref)."""
         return any(c.kind == "direct" for c in self.chains)
 
     def since(self):
-        """Earliest time any chain evidences the resource. Absence older than this predates what we know of it."""
-        ts = [c.time for c in self.chains if c.time]
+        """Earliest time any chain evidences the resource ITSELF. Absence older than this predates what we know of it.
+        A source reference only tells us an id: a record naming account_X proves neither that X existed nor when it was
+        created (a stale index document can name an account that was deleted long before), so it never sets the bound."""
+        ts = [c.time for c in self.chains if c.time and c.kind != "source"]
         return min(ts) if ts else None
 
 
@@ -74,9 +78,9 @@ def link_subject(cv, subj):
     def add(o, chain):
         if not o.resource_id:
             return
-        ln = res.links.setdefault(o.resource_id, Link(o.resource_id, o.system_id))
-        if ln.system_id is None:
-            ln.system_id = o.system_id
+        ln = res.links.setdefault(o.resource_id, Link(o.resource_id, o.system_id, system_basis="observation" if o.system_id else None))
+        if ln.system_id is None and o.system_id:
+            ln.system_id, ln.system_basis = o.system_id, "observation"
         if chain not in ln.chains:
             ln.chains.append(chain)
 
@@ -114,26 +118,68 @@ def link_subject(cv, subj):
     emails = {i.value for i in subj.identifiers if i.field == "email" and i.verified}
     for c in cv.catalog_links():
         if c.user_ref == subj.user_id and c.email in emails:
-            ln = res.links.setdefault(c.resource_id, Link(c.resource_id, c.system_id))
+            ln = res.links.setdefault(c.resource_id, Link(c.resource_id, c.system_id, system_basis="catalog" if c.system_id else None))
             ch = Chain("catalog", c.activity_id, c.activity_id, "details", c.user_ref, c.event_time)
             if ch not in ln.chains:
                 ln.chains.append(ch)
 
-    # structural: a linked record naming another resource as its source
-    for rid in list(res.links):
+    # structural: a linked record names another resource as its source. Followed to a fixed point (a visited set stops
+    # cycles); every link keeps the chain that produced it, so provenance is the path of source references.
+    _follow_sources(cv, res)
+    for rid, ln in res.links.items():
+        _resolve_system(cv, ln)
+    _reconcile(cv, subj, res)
+    _prune_orphans(res)
+    return res
+
+
+def _follow_sources(cv, res):
+    queue, seen = list(res.links), set()
+    while queue:
+        rid = queue.pop(0)
+        if rid in seen:
+            continue
+        seen.add(rid)
         for o in cv.for_resource(rid):
             src = o.f("source_resource_id")
-            if src and src not in res.links:
-                ln = res.links.setdefault(src, Link(src, None))
-                ln.chains.append(Chain("source", o.evidence_id, o.locator, "source_resource_id", rid, o.observed_at))
-    for rid, ln in res.links.items():
-        if ln.system_id is None:
-            for o in cv.for_resource(rid):
-                if o.system_id:
-                    ln.system_id = o.system_id
-                    break
-    _reconcile(cv, subj, res)
-    return res
+            if not src or src == rid:
+                continue
+            new = src not in res.links
+            ln = res.links.setdefault(src, Link(src, None))
+            ch = Chain("source", o.evidence_id, o.locator, "source_resource_id", rid, o.observed_at)
+            if ch not in ln.chains:
+                ln.chains.append(ch)
+            if new:
+                queue.append(src)
+
+
+def _resolve_system(cv, ln):
+    """System of a linked resource: its own observations first, then the existing justified id namespace
+    (system_from_resource: account_* is account_service, ...). A link keeps which basis was used."""
+    if ln.system_id is None:
+        for o in cv.for_resource(ln.resource_id):
+            if o.system_id:
+                ln.system_id, ln.system_basis = o.system_id, "observation"
+                break
+    if ln.system_id is None:
+        sysid = system_from_resource(ln.resource_id)
+        if sysid:
+            ln.system_id, ln.system_basis = sysid, "namespace_prefix"
+
+
+def _prune_orphans(res):
+    """A link that rests only on source references from resources that are no longer linked (rejected by reconciliation)
+    is dropped too, with the reason recorded."""
+    changed = True
+    while changed:
+        changed = False
+        for rid, ln in list(res.links.items()):
+            ln.chains = [c for c in ln.chains if c.kind != "source" or c.value in res.links]
+            if not ln.chains:
+                del res.links[rid]
+                res.rejected.append((rid, "source_resource_not_linked", "every source reference to it came from a rejected link"))
+                changed = True
+
 
 
 def foreign_identifiers(cv, subj, rid):

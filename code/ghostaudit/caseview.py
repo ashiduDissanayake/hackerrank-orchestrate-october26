@@ -11,6 +11,7 @@ class CaseView:
     def __init__(self, store, audit_at):
         self._s = store
         self.audit_at = audit_at
+        self.memo = {}      # per-case derived indexes (never evidence themselves)
 
     # --- admissibility -----------------------------------------------------------------------------------
     def _ok(self, o):

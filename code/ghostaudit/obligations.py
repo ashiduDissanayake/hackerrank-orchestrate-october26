@@ -78,8 +78,10 @@ def evaluate(cv, subj, link, actions):
     if cat is None and sysid:  # linked only by a catalog row: no observation yet, the owning system decides the category
         from .facts import SYSTEM_CATEGORY
         cat = SYSTEM_CATEGORY.get(sysid)
-    if cat is None:
-        return None
+    if cat is None:   # a linked resource whose category cannot be resolved is an explicit gap, never a silent drop
+        return Obligation(sysid, rid, "UNRESOLVED_CATEGORY", "NONE", "UNKNOWN", "category_unresolved", "",
+                          {"missing": "no observation, owning system or id namespace identifies what kind of record this is",
+                           "chains": [(c.kind, c.evidence_id) for c in link.chains]})
     act = EXTRA_ACTIONS.get(cat) or actions.get(cat)  # data flows / backups: the obligation is DISABLE / BLOCK_RESTORE, not the table's RETAIN
     o_ = lambda verdict, reason, ev="", **d: Obligation(sysid, rid, cat, act or "NONE", verdict, reason, ev, d)  # noqa: E731
 
@@ -98,7 +100,7 @@ def evaluate(cv, subj, link, actions):
             return o_("UNKNOWN", "no_restore_flag_in_admissible_evidence")
         return o_("VIOLATION", "restore_allowed", o.evidence_id) if val else o_("COMPLIANT", "restore_blocked", o.evidence_id)
 
-    cs = copy_states(cv, rid, sysid, link.since())
+    cs = copy_states(cv, rid, sysid, link.since(), subj, cat)
     present = cs.present_copies()
 
     if act == DELETE:

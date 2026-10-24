@@ -33,9 +33,8 @@ against known account states and never used to name a resource.
 from dataclasses import dataclass, field
 
 from .facts import COLLECTION_CATEGORY
-from .identity import KIND
-from .normalize import phone_matches
-from .state import copy_of
+from .copies import copy_of
+from .coverage_rules import absence_support, covers_category, row_matches as _row_matches
 
 STRONG = ("declared", "inferred_from_table")
 RANK = {"present": 3, "indeterminate": 2, "absent": 1}
@@ -64,22 +63,6 @@ class AccountProof:
     reason: str = ""
 
 
-def _row_matches(o, subj):
-    """Same identifier semantics as linking: exact email/hash/user-id tokens, and phones by normalize.phone_matches
-    (international, 00-prefixed or >= 9-digit national form, in a phone field or free text)."""
-    for ident in subj.identifiers:
-        if not ident.verified or not ident.linkable_at(o.observed_at):
-            continue
-        if ident.field == "phone":
-            toks = (o.f("ids_phonetxt") or "").split("|") + (o.f("ids_phone") or "").split("|")
-            if any(t and phone_matches(t, ident.value) for t in toks):
-                return True
-            continue
-        if ident.value in (o.f(f"ids_{KIND[ident.field]}") or "").split("|"):
-            return True
-    return bool(subj.user_id and subj.user_id in (o.f("ids_user") or "").split("|"))
-
-
 def _identifiable(o):
     return any(o.f(k) for k in ("ids_email", "ids_hash", "ids_user", "ids_phone", "ids_phonetxt", "user_ref", "email", "email_hash", "phone"))
 
@@ -93,18 +76,12 @@ def is_profile_row(o):
     return not rt or rt == PROFILE
 
 
-def _profile_scope(sc):
-    """The artifact evidences capture of a profile collection/table (not just of the system)."""
-    return any(COLLECTION_CATEGORY.get(c) == PROFILE for c in sc.captured)
-
-
 def _events(cv, subj, requested_at, allow_weak, require_row, weak_promotion):
     rows_by_art = {}
     for o in cv.for_system("account_service"):
         if o.kind == "record" and is_profile_row(o):
             rows_by_art.setdefault((o.evidence_id, copy_of(o.store)), []).append(o)
     art_has_rows = {e for (e, _c) in rows_by_art}
-    subject_copies = None      # (artifact, copy) pairs that hold ANY record about the subject; computed only if a weak scope needs it
     events, seen, seen_copies = [], set(), set()
     for sc in cv.scopes("account_service"):
         copy = copy_of(sc.store)
@@ -117,18 +94,8 @@ def _events(cv, subj, requested_at, allow_weak, require_row, weak_promotion):
             continue        # a declared non-profile collection says nothing about profiles, for or against
         rows = [o for o in rows_by_art.get((sc.evidence_id, copy), []) if not sc.collection or o.f("collection") == sc.collection]
         hidden = cv.hidden_in_artifact(sc.evidence_id, "account_service")
-        promoted = False
-        if weak_promotion and sc.basis == "inferred_from_rows" and sc.complete and sc.evidence_id in art_has_rows:
-            # Per-source promotion: a document-table export is only a weak claim about WHICH collections a table covers. It is
-            # taken as covering the profile collection for THIS subject when (a) the export demonstrably includes profile
-            # rows (the collection is part of what it exports) and (b) this same copy holds records about the subject in
-            # other collections (the subject's data was included in the extract, so a missing profile row is an omission
-            # by the datastore, not by the extract). An export that never mentions the subject proves nothing about them.
-            if subject_copies is None:
-                subject_copies = {(o.evidence_id, copy_of(o.store)) for o in cv.all() if o.kind == "record" and _row_matches(o, subj)}
-            promoted = (sc.evidence_id, copy) in subject_copies
-        strong = sc.basis in STRONG or allow_weak or promoted
-        supports = (_profile_scope(sc) or allow_weak or promoted) and strong and sc.complete
+        supports, basis = absence_support(cv, subj, sc, PROFILE, allow_weak=allow_weak) if weak_promotion else (
+            (covers_category(sc, PROFILE) or allow_weak) and (sc.basis in STRONG or allow_weak) and sc.complete, sc.basis)
         if any(_row_matches(o, subj) for o in rows):
             status, detail = "present", "a row carries a subject identifier"
         elif hidden:
@@ -141,7 +108,7 @@ def _events(cv, subj, requested_at, allow_weak, require_row, weak_promotion):
             status, detail = "absent", f"{len(rows)} account row(s), none carries a subject identifier"
         if status == "absent" and not supports:
             continue        # a capture that does not evidence the profile table never supports (or excludes) anything
-        events.append(CopyEvent(copy, status, sc.evidence_id, sc.available_at, sc.basis + ("+subject_in_source" if promoted else ""), detail,
+        events.append(CopyEvent(copy, status, sc.evidence_id, sc.available_at, basis, detail,
                                 supports and status == "absent", sc.available_at < requested_at))
     return events, seen_copies
 

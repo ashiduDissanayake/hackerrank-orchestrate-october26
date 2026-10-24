@@ -13,11 +13,11 @@ Scope basis (declared vs inferred_from_*) is kept on the event so reports can te
 """
 from dataclasses import dataclass, field
 
+from .copies import copy_of  # noqa: F401  (re-exported)
+from .coverage_rules import absence_support
 from .facts import read
 
 
-def copy_of(store):
-    return store if "replica" in store and store != "search_documents_primary" else "primary"
 
 
 @dataclass(frozen=True)
@@ -44,9 +44,12 @@ class CopyStates:
         return max(evs, key=lambda e: (e.time, e.evidence_id)) if evs else None
 
 
-def copy_states(cv, resource_id, system_id, since=None):
-    """since: earliest time the resource is evidenced for this subject. Absence evidence older than `since` is
-    ignored: not seeing a record before we know it exists says nothing about its state at the cutoff."""
+def copy_states(cv, resource_id, system_id, since=None, subj=None, category=None):
+    """since: earliest time the resource itself is evidenced for this subject. Absence evidence older than `since` is
+    ignored: not seeing a record before we know it exists says nothing about its state at the cutoff.
+    A scope-based absence is accepted only under the shared standard (coverage_rules.absence_support): the capture must
+    evidence a collection/table of the record's `category`, come from a complete source, and have a strong scope (or be a
+    weak document export promoted for `subj`). Explicit lookups (404, not-found) are unaffected."""
     cs = CopyStates()
     obs = cv.for_resource(resource_id)
     collections = {o.f("collection") for o in obs if o.f("collection")}
@@ -68,7 +71,10 @@ def copy_states(cv, resource_id, system_id, since=None):
             continue
         if since and sc.available_at < since:
             continue
-        cs.events.append(Event(sc.available_at, copy_of(sc.store), "absent", sc.evidence_id, "scope", sc.basis, None))
+        supports, basis = absence_support(cv, subj, sc, category)
+        if not supports:
+            continue
+        cs.events.append(Event(sc.available_at, copy_of(sc.store), "absent", sc.evidence_id, "scope", basis, None))
     for e in cs.events:
         cur = cs.latest.get(e.copy)
         if cur is None or (e.time, e.kind == "present", e.evidence_id) > (cur.time, cur.kind == "present", cur.evidence_id):

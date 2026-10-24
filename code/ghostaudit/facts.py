@@ -2,6 +2,7 @@
 
 Everything here reads one observation; reasoning across observations lives in state.py / obligations.py.
 """
+import json
 import re
 from dataclasses import dataclass, field
 
@@ -91,7 +92,7 @@ def _flag(v):
     return None
 
 
-def subject_text_exposure(o, subj):
+def subject_text_exposure(o, subj, skip=()):
     """Subject identifiers found inside ANY text field of the record: phone (any common written form, via
     normalize.phone_matches) and full name (whole phrase). Used only on records already linked to the subject."""
     found = set()
@@ -100,6 +101,8 @@ def subject_text_exposure(o, subj):
     phones = {i.value for i in subj.identifiers if i.field == "phone"}
     names = [n for n in subj.names if n]
     for k, v in text_fields(o.fields):
+        if k in skip:
+            continue
         if phones and any(phone_matches(d, p) for d in phone_tokens(v) for p in phones):
             found.add("text:phone")
         if any(name_in_text(n, v) for n in names):
@@ -107,24 +110,53 @@ def subject_text_exposure(o, subj):
     return found
 
 
+# Fields that carry the QUESTION asked of a system (the lookup key), not what the system returned. A treatment label on a
+# lookup row ("result": REDACTED) may discount identifiers that exist only as query metadata; it never discounts identifiers
+# in the returned payload (an email or name field, free text, a user reference field).
+QUERY_FIELDS = {"lookup_value", "lookup_key", "match_key", "query", "subject_key", "scan_key", "owner_key", "trace_lookup_key",
+                "correlation_key", "subject_reference", "subject_selector"}
+TREATED = ("ANONYMIZED", "REDACTED")
+
+
+def _payload_token(o, kind):
+    """Does an identifier token of this kind (email|hash|phone|user) appear in a field that is NOT query metadata? Uses the
+    per-token source fields recorded at extraction (ids_src). Unknown provenance counts as payload (conservative)."""
+    toks = o.f(f"ids_{kind}") or (o.f("ids_phonetxt") if kind == "phone" else None)
+    if not toks:
+        return False
+    src = o.f("ids_src")
+    if not src:
+        return True
+    try:
+        srcs = json.loads(src)
+    except json.JSONDecodeError:
+        return True
+    prefixes = (f"{kind}:", "phonetxt:") if kind == "phone" else (f"{kind}:",)
+    for key, fields in srcs.items():
+        if key.startswith(prefixes) and (not fields or any(f not in QUERY_FIELDS for f in fields)):
+            return True
+    return False
+
+
 def read(o, subj=None):
     cat = category_of(o)
     f = Facts(cat, o.present, result=o.f("result"))
     res = o.f("result")
+    lookup = o.kind in ("record_lookup",) or o.store in ("handover", "ledger", "history")
+    treated = lookup and res in TREATED
+    # A treatment label only discounts QUERY METADATA: on a treated lookup row identifiers are read from the returned payload.
     for k in DIRECT:
         if o.f(k):
             f.exposed.add(k)
     for kind in ("email", "hash", "phone"):  # identifiers embedded in free text (message_text, excerpts, scan hits)
-        if o.f(f"ids_{kind}") and not f.exposed:
+        if o.f(f"ids_{kind}") and not f.exposed and (not treated or _payload_token(o, kind)):
             f.exposed.add(f"embedded:{kind}")
-    if cat in ("ANALYTICS_PROFILE", "PRODUCT_TELEMETRY") and (o.f("user_ref") or o.f("ids_user")):
+    if cat in ("ANALYTICS_PROFILE", "PRODUCT_TELEMETRY") and (o.f("user_ref") or o.f("ids_user")) and (not treated or o.f("user_ref") or _payload_token(o, "user")):
         f.exposed.add("user_ref")   # rule_07/08: still attributable to a user via ANY user-reference token
-    f.exposed |= subject_text_exposure(o, subj)
-    if o.kind in ("record_lookup",) or o.store in ("handover", "ledger", "history"):
-        # lookup records: the result word carries the treatment state, the lookup value carries the identifier
-        if res in ("ANONYMIZED", "REDACTED"):
-            f.exposed.clear()
-        elif res in ("IDENTIFIABLE", "FOUND"):
+    f.exposed |= subject_text_exposure(o, subj, skip=QUERY_FIELDS if treated else ())
+    if lookup:
+        # lookup records: the result word carries the treatment state; a treated label never overrides a returned identifier
+        if res in ("IDENTIFIABLE", "FOUND"):
             f.exposed.add("lookup_value")
         if cat == "DATA_FLOW":
             f.enabled = {"ACTIVE": True, "DISABLED": False}.get(res)
