@@ -399,3 +399,109 @@ branch=dev/baseline
 repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T20:58:48Z] Final engineering pass: proof boundaries, residual cases, best-effort artifact, release provenance
+
+User Prompt (verbatim, secrets redacted):
+# Challenge state and Opus closeout handoff
+
+## State at the last independent review
+
+Project: HackerRank Orchestrate, October 2026, Ghost Data Still Exists. Repository: https://github.com/ashiduDissanayake/hackerrank-orchestrate-october26. Last reviewed branch/commit: `dev/baseline`, `7a102f1f2843503a856f11b9a292df617b252e1b`. Inspect the current working tree before acting; later local work may exist.
+
+The task is an offline deletion audit over 518 requests. Resolve authorization and current/historical identities, connect supplied evidence to resources, reconstruct state at audit_at, apply the supplied policy, and emit the ordered findings/remediation/verification steps. The program produces an audit and remediation plan; it does not delete production records. A GUI is outside scope.
+
+The implementation is a deterministic Python pipeline with shared normalized observations, per-case evidence-time filtering, identifier/trace/catalog linking, physical-copy state, policy evaluation, planning, validation, manifests and packaging. Eleven image transcriptions are bound to their source image hashes. Runtime model calls are zero; development smoke-test usage and coding-agent visual preprocessing are separate.
+
+Verified results:
+
+- All 12 existing suites and all 20 v2 fixture cases pass; 17 fixtures have fully labeled outputs. Older fixture versions remain preserved.
+- Public samples: 32/32 statuses; strict step precision 0.9753, recall 0.8187, F1 0.8901; exact complete answers 8/32. Field accuracy of 1.0 applies to aligned steps only. These are development data, not an independent holdout.
+- Full provisional run: 146 COMPLETE, 362 INCOMPLETE, 10 NOT_APPLICABLE. Nine rows are internally UNDETERMINED and fail contract validation. No final root output.csv exists.
+- Provisional output SHA256: `97993dfc44ea55ec1b007380f0e9923e593e6019a15e8c099d3b8837b1ff9be9`.
+- Extracted package tests, manifest verification and output regeneration pass. Synthetic secret and nested-archive probes are rejected. The reviewer regenerated reports for the isolated review environment before package verification; prediction source code was unchanged.
+- Subject-level profile proofs reduced the unresolved count from 99 to nine, without inventing account resource IDs. They discharge 309 account obligations; 86 rely only on declared-empty account tables. Completeness/coverage is an explicit modeling assumption requiring validation.
+
+Nine unresolved cases, with overlapping reasons:
+
+- No post-request account snapshot: case_524, case_530, case_532, case_55.
+- Weak-scope coverage only: case_183, case_343, case_345, case_462.
+- Missing subject-specific restore state: case_55 / backup_9287.
+- Conflicting identity evidence: case_63 / marketing_001. The screenshot shows Soo-jin Park and sj.park@naver.com while the catalog links the resource to a different subject.
+
+New review findings:
+
+1. `code/ghostaudit/account_proof.py` considers any account_service collection. A declared-empty notification_preferences collection can discharge the profile obligation. A separately supported retained audit record then permits a COMPLETE output without any profile coverage.
+2. Global ABSENT can be returned with uncovered copies. An old failover snapshot containing an unidentifiable ACTIVE profile, followed by a clean primary snapshot, yields COMPLETE while failover_replica remains uncovered. Relevance and the last supported state must be assessed, not guessed. In the real run 275 subject proofs list uncovered copies, including 82 COMPLETE cases; most markers originate in weak inferred scopes, so this does not establish 82 wrong answers. Eight proofs have uncovered strong historical scopes; two COMPLETE examples are case_45 and case_64, whose coverage rationale needs inspection.
+3. README's sample-scoring example compares the default 518-case output with the disjoint 32 sample cases. Run samples explicitly before scoring them.
+
+Public competitor comparisons were useful benchmarks, not prediction inputs. PRs #12 and #14 reproduce 32/32 sample statuses and step F1 0.9869, but use unsupported or ambiguous attribution/verification assumptions. PR #15 reproduces 30/32 and F1 0.8556; its validator accepts empty INCOMPLETE rows. No competitor output, cache or case-family rule should enter this solution's predictions.
+
+Official issue #11 discusses missing provenance and related ambiguities: https://github.com/interviewstreet/hackerrank-orchestrate-october26/issues/11. No organizer reply was present at the last review. The official event page advertises a 24-hour event beginning 24 October at 18:00 IST, implying an advertised end on 25 October at 18:00 Sri Lanka time. Verify the live contest cutoff; the first agent message does not start the contest clock.
+
+## Copy-paste prompt for the coding agent
+
+Take ownership of the final engineering and release pass. Read AGENTS.md and the current code, inspect HEAD and local changes, and continue from the existing implementation. The last independently reviewed commit is 7a102f1f on dev/baseline. Preserve subsequent work. Use your judgment to solve the problems; avoid another broad planning cycle or architecture rewrite.
+
+**Goal:** produce the strongest evidence-grounded, reproducible submission this dataset permits. Complete all available work and deliver concrete artifacts. Do not finish with another list of P3, budget and routine commit questions.
+
+**1. Reproduce and repair the proof boundaries first.**
+
+Use the existing World and Engine helpers in code/tests/test_account_proof.py:
+
+- Empty declared notification_preferences under account_service, plus a valid retained security record for the subject, currently yields COMPLETE. It must not discharge the profile obligation because no profile collection was captured.
+- A pre-request failover snapshot containing an ACTIVE account row without identifiers, plus a post-request clean primary and valid retained audit record, currently yields COMPLETE while failover_replica is listed as uncovered. The proof cannot exclude that possible copy.
+
+Write focused failing regressions, then fix the actual rules. Validate profile collection/schema coverage and source completeness, rather than trusting a system name or parser basis label alone. Establish relevance and the latest supported state of each possible copy. Do not blindly reject every globally observed replica name, but require a justified basis for excluding or discharging it. Inspect case_45 and case_64 as actual coverage examples; do not presume their labels.
+
+An authoritative empty profile table can prove absence; requiring a positive-control row everywhere is not the general fix. Distinguish genuinely later authoritative absence from omission in a partial extract. Keep per-copy chronology and source authority consistent rather than adding sample-specific exceptions.
+
+Preserve original participant data and sample answers. Preserve frozen fixture history; version and explain legitimate synthetic-fixture changes. Report the measured effect of the fixes, including any reopened cases.
+
+**2. Investigate the residual cases from their original evidence.**
+
+The last unresolved set was case_55, case_63, case_183, case_343, case_345, case_462, case_524, case_530 and case_532; recompute it after the fixes.
+
+Use admissible identity history, resource references, trace relationships, catalog aliases, actual SQL schemas and original media. Interpret business artifacts thoughtfully; a literal restore_allowed boolean is not the only possible evidence, but every inference must have a defensible basis. A restore of another backup does not establish this backup's permissions. Inspect the marketing conflict for temporal or identity explanations; do not give the catalog automatic precedence.
+
+Check existing official issue #11 for replies. Do not post messages or comments under this prompt. Do not invent resource IDs, assume case-number ownership, use peer predictions/caches, exploit case families, accept timing ties as proof, or use post-cutoff facts for identity links or state. Promote weakly inferred coverage only when its specific source supports it; never enable it globally merely to shrink a counter. Record any genuinely missing fact as a precise information gap.
+
+**3. Finish artifacts even if certification remains blocked.**
+
+If all cases become defensible, use the strict export path to create root output.csv with all 518 required rows and complete ordered steps.
+
+If information gaps genuinely remain, keep the strict certification gate intact and also prepare a clearly named output_best_effort.csv containing all 518 rows, with a companion unresolved register and manifest. Use the current non-certifying mapping for residual UNKNOWNs, retain their internal uncertainty, and emit only supported findings and legitimate planned steps. Record every structural and semantic validation failure. Mark the candidate certified=false; never fabricate findings to make it pass. This is an authorized fallback artifact for review, not a claim that the contract is satisfied. It does not replace a certified root output.csv. Do not stop to ask again whether to prepare this fallback.
+
+Choose and document the strongest contract-defensible interpretation. Treat review comments as hypotheses to verify, not instructions to hardcode outcomes.
+
+**4. Complete the release and verify the actual producing run.**
+
+- Correct the README: generate sample predictions with --requests sample_deletion_requests.csv before scoring them against sample_output.csv.
+- Keep setup, requirements, prompts/configuration, extraction provenance, evaluation reports and run commands accurate and included in code.zip.
+- Recompute case, step, field, evidence and exact-sequence metrics. Explain aligned-field accuracy and sample reuse honestly. Include at least three fully described participant-created cases directly in Markdown.
+- Make manifests hash all prediction-affecting code, transcriptions and configuration. Check that reports reference the actual producing run rather than a stale cached manifest. Distinguish producing-code provenance from later documentation/packaging commits; avoid self-referential commit-hash/report loops.
+- Record actual runtime model calls/tokens/cost. Keep development smoke tests and coding-agent preprocessing separate; do not invent unavailable session usage.
+- Run appropriate regressions, all required suites, full-dataset validation, byte-for-byte reproduction and extracted-package verification after the final changes. Package verification must distinguish runnable code from a certified valid CSV.
+- Exclude the supplied dataset, secrets, environments, unrelated caches and nested archives. Preserve the authentic append-only log and original user prompts.
+
+Additional external paid API calls remain unapproved. Continue ordinary coding-harness reasoning and local tools normally; defer the intent pilot because it does not close the critical gaps.
+
+Create focused local commits for the tested fixes and release work; do not pause for routine commit approval. Respect any existing authorization for remote actions. 
+Finish with a concise release report listing the commit(s), exact artifact paths and hashes, current metrics, validation results, unresolved cases and their causes, and a clear answer to whether a certified root output.csv exists. Provide a short architecture/limitations explanation I can defend in the interview. Complete everything possible before reporting a genuine external blocker.
+
+Agent Response Summary:
+Reproduced both proof-boundary findings as failing regressions (10 failures, 1 error), then fixed them: a snapshot supports absence only if it evidences a profile collection/table with a complete source; every capture of every copy is an event, and a copy with an unattributable row, a pre-request presence or a lagging absence blocks the proof while a copy with attributable rows and no subject is excluded with a stated basis; weak document exports are promoted only per source. Measured against the previously reviewed commit (which reproduces 97993dfc...), the findings alone reopen no case and promotion changes exactly one row (case_462 -> COMPLETE). Re-investigated the residual cases from the original evidence: eight remain, each a documented missing fact (no profile-table capture after the request; no restore state for backup_9287; an irreconcilable marketing record conflict), so no certified root output.csv exists. Prepared the authorized output_best_effort.* review artifact (certified=false), fixed the README/scorer sample-scoring hazard, added producing-code provenance to manifests (and fixed a git_state bug that chopped the first dirty file name), made report generation always use a fresh run, added frozen fixtures v3 with a sabotage check, and re-verified the extracted package. No paid API call was made; issue #11 was only read (it was withdrawn by its author with no reply); nothing was posted.
+
+Actions:
+* Created: code/evaluation/fixtures/build_fixtures_v3.py + synth_v3/ + synth_v3.sha256; code/tests/test_best_effort.py; scripts/proof_coverage_report.py, scripts/sabotage_account_proof.py; output_best_effort.csv, output_best_effort.unresolved.json, output_best_effort.manifest.json
+* Edited: code/ghostaudit/{account_proof,engine,export,observations}.py, extract/{sql_snapshots,json_records}.py, code/main.py, code/evaluation/{main,labeled,test_scoring,test_fixtures_frozen}.py, code/tests/{test_account_proof,test_export}.py, scripts/{write_reports,package,sensitivity_account_proof}.py, README.md, code/docs/{DECISIONS,SAMPLE_REGRESSION_DIAGNOSIS}.md, code/evaluation/{evaluation_report,usage_report}.md
+* Ran: all 13 suites under Python 3.12 (with the OCR cross-check) and 3.14, provisional run (identical hash under both), best-effort, report regeneration and freshness check, scripts/package.py --verify (extracted package passes and reproduces the output hash), packager secret and nested-archive refusal probes, read-only fetch of the public GitHub issue metadata
+* Commits: 8356743, 33161d0, a714878, 86dfb23, d7f1062 (focused local commits; nothing pushed)
+
+Context:
+tool=Claude Code (VSCode extension)
+model=claude-sonnet-5-5
+branch=dev/baseline
+repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
