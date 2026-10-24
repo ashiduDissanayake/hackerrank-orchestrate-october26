@@ -59,7 +59,7 @@ def check_internal(res, exp):
         if res.internal != "UNDETERMINED":
             fails.append(f"internal status {res.internal}, expected UNDETERMINED")
         if res.status == "COMPLETE":
-            policy.append("output status COMPLETE although obligations are unresolved (provisional policy 'established_only'; P3 open)")
+            policy.append("output status COMPLETE although obligations are unresolved (policy certify_established; never valid for export)")
         names = {o.resource_id for o in res.obligations if o.verdict == "UNKNOWN"} | {s["resource_id"] for s in res.steps}
         for bad in exp.get("must_not_emit", []):
             if bad.startswith("any step naming "):
@@ -69,7 +69,7 @@ def check_internal(res, exp):
     return fails, policy
 
 
-POLICY = os.environ.get("UNKNOWN_POLICY", "established_only")
+POLICY = os.environ.get("UNKNOWN_POLICY", "not_certified")
 
 
 def run_fixtures(verbose=True):
@@ -107,6 +107,7 @@ def main():
     gold = scoring.load_output(os.path.join(REPO, "dataset", "sample_output.csv"))
     ms = scoring.score(gold, as_pred(results))
     print(scoring.summarize(ms))
+    gate_failures = n_fail
     if "--diff" in sys.argv:
         for cid, c in ms["per_case"].items():
             if c["exact"]:
@@ -118,7 +119,13 @@ def main():
                 print("  EXTRA  ", s["phase"][:4], s["system_id"], s["resource_id"], s["operation"], s["evidence_id"])
             for s, f, v in c["wrong_fields"]:
                 print(f"  WRONG {f}: gold={s[f]!r} pred={v!r} for {s['phase'][:4]} {s['system_id']} {s['resource_id']} {s['operation']}")
+    # gate: every frozen fixture must pass; the samples are development data and report-only
+    if gate_failures:
+        print(f"\nGATE FAILED: {gate_failures} fixture case(s) failed")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    rc = main()
+    sys.exit(rc or 0)

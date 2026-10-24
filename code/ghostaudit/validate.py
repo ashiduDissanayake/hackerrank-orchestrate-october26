@@ -20,6 +20,44 @@ from .contract import (
 )
 
 
+# An incomplete deletion must be a complete plan: every finding is remediated and then verified, and nothing is
+# remediated or verified without a finding that justifies it (AGENTS.md 6.3: findings, the COMPLETE remediation
+# plan, and the checks that must pass afterwards).
+FINDING_REMEDIATIONS = {
+    "REPORT_REMAINING_RECORD": ("DELETE_RECORD",),
+    "REPORT_EXPOSED_PII": ("REDACT_RECORD", "ANONYMIZE_RECORD"),
+    "REPORT_ACTIVE_DATA_FLOW": ("DISABLE_DATA_FLOW",),
+    "REPORT_RESTORE_RISK": ("BLOCK_RESTORE",),
+}
+REMEDIATION_VERIFICATION = {
+    "DELETE_RECORD": "VERIFY_RECORD_ABSENT", "REDACT_RECORD": "VERIFY_RECORD_REDACTED",
+    "ANONYMIZE_RECORD": "VERIFY_RECORD_ANONYMIZED", "DISABLE_DATA_FLOW": "VERIFY_DATA_FLOW_DISABLED",
+    "BLOCK_RESTORE": "VERIFY_RESTORE_BLOCKED",
+}
+
+
+def _chain_errors(case_id, steps):
+    errs = []
+    by = {}
+    for s in steps:
+        by.setdefault((s["system_id"], s["resource_id"]), []).append(s["operation"])
+    for (system, rid), ops in sorted(by.items()):
+        findings = [o for o in ops if o in FINDING_REMEDIATIONS]
+        rems = [o for o in ops if o in REMEDIATION_VERIFICATION]
+        for f in findings:
+            if not any(r in ops for r in FINDING_REMEDIATIONS[f]):
+                errs.append(f"{case_id}: {f} on {system}/{rid} has no matching remediation ({'/'.join(FINDING_REMEDIATIONS[f])})")
+            need = {REMEDIATION_VERIFICATION[r] for r in FINDING_REMEDIATIONS[f]}
+            if not need & set(ops):
+                errs.append(f"{case_id}: {f} on {system}/{rid} has no matching verification ({'/'.join(sorted(need))})")
+        for r in rems:
+            if not any(r in FINDING_REMEDIATIONS[f] for f in findings):
+                errs.append(f"{case_id}: {r} on {system}/{rid} has no finding that justifies it")
+            if REMEDIATION_VERIFICATION[r] not in ops:
+                errs.append(f"{case_id}: {r} on {system}/{rid} has no matching verification ({REMEDIATION_VERIFICATION[r]})")
+    return errs
+
+
 def validate_row(case_id, status, steps_json, audit_at=None, evidence_time=None):
     errs = []
 
@@ -93,6 +131,9 @@ def validate_row(case_id, status, steps_json, audit_at=None, evidence_time=None)
                 err(f"step {s['step_no']}: finding must cite evidence")
             if s["phase"] != "FINDING" and s["evidence_id"] != "":
                 err(f"step {s['step_no']}: {s['phase']} step must use empty evidence_id")
+
+    if status == "INCOMPLETE":
+        errs += _chain_errors(case_id, steps)
 
     if audit_at and evidence_time:
         for s in steps:

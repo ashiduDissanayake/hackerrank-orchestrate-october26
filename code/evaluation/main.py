@@ -31,7 +31,9 @@ def cmd_all(_):
     code_dir = os.path.dirname(HERE)
     suites = [os.path.join(HERE, "test_scoring.py"), os.path.join(HERE, "test_fixtures_frozen.py"),
               os.path.join(code_dir, "tests", "test_core.py"), os.path.join(code_dir, "tests", "test_intent.py"),
-              os.path.join(code_dir, "tests", "test_invariance.py")]
+              os.path.join(code_dir, "tests", "test_invariance.py"),
+              os.path.join(code_dir, "tests", "test_review_findings.py"),
+              os.path.join(code_dir, "tests", "test_export.py")]
     failed = []
     for sfile in suites:
         r = subprocess.run([sys.executable, sfile], capture_output=True, text=True)
@@ -40,7 +42,11 @@ def cmd_all(_):
         if r.returncode:
             failed.append(sfile)
     print(flush=True)
-    subprocess.call([sys.executable, os.path.join(HERE, "labeled.py")])
+    rc = subprocess.call([sys.executable, os.path.join(HERE, "labeled.py")])
+    if rc != 0:
+        print(f"FAIL  labeled evaluation exited with status {rc}", flush=True)
+        failed.append("labeled.py")
+    print(f"\n{'ALL CHECKS PASSED' if not failed else 'FAILED: ' + ', '.join(os.path.basename(f) for f in failed)}")
     sys.exit(1 if failed else 0)
 
 
@@ -63,14 +69,12 @@ def cmd_score(a):
 
 
 def cmd_validate(a):
-    reqs = list(csv.DictReader(open(a.requests, encoding="utf-8")))
-    manifest = {r["file_id"]: r["captured_at"] for r in csv.DictReader(open(a.manifest, encoding="utf-8"))} if a.manifest else None
-    errs = validate_rows(
-        a.pred,
-        expected_case_ids=[r["case_id"] for r in reqs],
-        audit_at_by_case={r["case_id"]: r["audit_at"] for r in reqs} if manifest else None,
-        evidence_time=manifest.get if manifest else None,
-    )
+    """Contract validation incl. finding/remediation/verification chains and evidence-time checks for file, activity
+    and audit ids (the same checks the export gate applies)."""
+    from ghostaudit import export as ex
+    from ghostaudit.data import load_dataset
+    ds = load_dataset(os.path.dirname(os.path.abspath(a.requests)), os.path.basename(a.requests))
+    errs = ex.validate_output(ds, a.pred)
     print(f"{len(errs)} validation errors")
     for e in errs[:50]:
         print(" ", e)
@@ -90,7 +94,6 @@ def main():
     v = sub.add_parser("validate")
     v.add_argument("--pred", required=True)
     v.add_argument("--requests", required=True)
-    v.add_argument("--manifest", help="evidence_files.csv; enables evidence-time checks for file_ids (activity/audit ids are not yet resolved)")
     v.set_defaults(fn=cmd_validate)
     a = ap.parse_args()
     a.fn(a)

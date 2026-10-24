@@ -241,3 +241,26 @@ branch=dev/baseline
 repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T17:44:48Z] Response to external review findings (P1-1 .. P2-6)
+
+User Prompt (verbatim, secrets redacted):
+(The user switched the model with /model sonnet, then pasted a six-point review.) 1. [P1] Unknown cases are being certified as complete. In engine.py:65, unresolved obligations become COMPLETE under the default policy. I reproduced 112 cases labeled COMPLETE while internally UNDETERMINED, including the eight empty-step cases. Announcing this fallback does not make those conclusions evidence-backed. This needs investigation and contract-consistent handling; blindly switching all unknowns to INCOMPLETE does not solve it. 2. [P1] The committed CSV does not reproduce from the committed defaults. Regenerating it changes eight statuses from INCOMPLETE to COMPLETE. Their step arrays remain empty, so both versions fail validation. The saved artifact appears to come from a different configuration or earlier implementation. Record the exact command, configuration, input hashes, and code commit, then regenerate the final artifact consistently. 3. [P1] Some identifying information passes as successfully removed. I reproduced two additional counterexamples: a support message containing a phone number in its text receives VERIFY_RECORD_REDACTED; an analytics record containing subject_reference=user_9999 receives VERIFY_RECORD_ANONYMIZED, although it remains linked to that user. Phone extraction checks specific field names in common.py:63, while the analytics check recognizes only the normalized user_ref field in facts.py:68. These checks need broader, policy-aware coverage. 4. [P1] Explicit tombstone records can receive the wrong treatment. ACCOUNT_TOMBSTONE is missing from the explicit record-type mapping in facts.py:7. In a counterexample where the tombstone belongs to account_service, the code classifies it as a normal profile and recommends deleting its permitted stable reference. Explicit record types should take precedence over system-based defaults. 5. [P1] Intent classification mishandles mixed instructions. In intent.py:60: "Delete my account, but do not delete records your policy requires retaining" becomes non-deletion. "Remove me from the newsletter and keep my account" becomes deletion. Both receive high confidence. Negation and deletion scope need clause-level interpretation. 6. [P2] Passing tests do not enforce submission readiness. evaluation/main.py:43 ignores the labeled-evaluation subprocess's return code. I simulated that child failing, and all still exited successfully. Separately, validate.py:88 accepts an INCOMPLETE answer containing only a finding, with no remediation or verification. Add explicit completeness checks and a final export gate.
+
+Agent Response Summary:
+Reproduced every finding as a failing counterexample test first (13 of 15 failed; the 2 controls passed), then fixed each: non-certifying default policy with an opt-in certifying switch, run manifests plus a verify command and a final export gate (the only writer of the submission path), subject-aware exposure detection, explicit-evidence category precedence including tombstones, a clause-level intent classifier, finding/remediation/verification chain validation, and exit-code gates in the evaluator. Investigated the UNDETERMINED set (107 of 112 involve the unresolved account link) and measured the cost of the honest default (sample status accuracy 0.719). Removed the stale irreproducible output.csv; no final output exists because the gate refuses.
+
+Actions:
+* Created: code/tests/test_review_findings.py (17 tests), code/tests/test_export.py (7), code/ghostaudit/export.py
+* Edited: facts.py, obligations.py, intent.py, engine.py, run.py, validate.py, main.py, evaluation/main.py, evaluation/labeled.py, code/docs/DECISIONS.md
+* Removed output.csv from the index and working tree (git rm --cached; stale and not reproducible)
+* Ran: all suites (python3 code/evaluation/main.py all), provisional run, export gate (refused as designed)
+* No commit made
+
+Context:
+tool=Claude Code (VSCode extension)
+model=claude-sonnet-5-5
+branch=dev/baseline
+repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

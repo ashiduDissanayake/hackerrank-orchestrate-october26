@@ -10,7 +10,7 @@ from .pipeline import build
 from .validate import case_sort_key
 
 
-def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="established_only"):
+def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="not_certified"):
     ds, store = build(root, requests_file)
     ident = IdentityIndex(ds.identities, ds.audit_log)
     results = [audit_case(r, store, ident, ds.rules, unknown_policy) for r in ds.requests]

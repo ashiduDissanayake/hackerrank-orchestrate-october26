@@ -44,12 +44,15 @@ def action_table(rules):
 
 
 def category_of_resource(obs):
-    cats = Counter(read(o).category for o in obs if read(o).category)
-    if not cats:
+    """Highest-precedence category among the resource's observations (explicit evidence beats system defaults);
+    ties go to the most frequent, then alphabetical."""
+    from .facts import category_rank
+    ranked = [category_rank(o) for o in obs]
+    ranked = [(c, r) for c, r in ranked if c]
+    if not ranked:
         return None
-    for specific in ("SUPPORT_ATTACHMENT", "MARKETING_PROFILE"):
-        if specific in cats:
-            return specific
+    top = max(r for _, r in ranked)
+    cats = Counter(c for c, r in ranked if r == top)
     return sorted(cats.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
 
 
@@ -108,12 +111,12 @@ def evaluate(cv, subj, link, actions):
         return o_("COMPLIANT", "record_absent", e.evidence_id, basis=e.basis)
 
     if act in (REDACT, ANONYMIZE):
-        if cat == "EMAIL_DELIVERY_LOG" and not any(read(o).exposed for o in obs):
+        if cat == "EMAIL_DELIVERY_LOG" and not any(read(o, subj).exposed for o in obs):
             return o_("COMPLIANT", "log_has_no_email", cs.newest("present").evidence_id if present else "")
-        exposed_events = [e for c, e in cs.latest.items() if e.kind == "present" and read(e.obs).exposed]
+        exposed_events = [e for c, e in cs.latest.items() if e.kind == "present" and read(e.obs, subj).exposed]
         if exposed_events:
             e = max(exposed_events, key=lambda x: (x.time, x.evidence_id))
-            return o_("VIOLATION", "identifiers_exposed", e.evidence_id, exposed=sorted(read(e.obs).exposed), copies=present)
+            return o_("VIOLATION", "identifiers_exposed", e.evidence_id, exposed=sorted(read(e.obs, subj).exposed), copies=present)
         if present:
             e = cs.newest("present", present)
             return o_("COMPLIANT", "treated_record_present", e.evidence_id)

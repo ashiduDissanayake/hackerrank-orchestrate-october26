@@ -2,13 +2,16 @@
 
 Everything here reads one observation; reasoning across observations lives in state.py / obligations.py.
 """
+import re
 from dataclasses import dataclass, field
 
 RECORD_TYPE_CATEGORY = {  # explicit record_type values found in handover / ledger / history records
     "USER_PROFILE": "USER_PROFILE", "SEARCH_INDEX_ENTRY": "SEARCH_INDEX_ENTRY", "ANALYTICS_PROFILE": "ANALYTICS_PROFILE",
     "SUPPORT_MESSAGE": "SUPPORT_MESSAGE", "SUPPORT_ATTACHMENT": "SUPPORT_ATTACHMENT", "USER_EXPORT": "USER_EXPORT",
     "DATA_FLOW": "DATA_FLOW", "BACKUP_ARCHIVE": "BACKUP_ARCHIVE", "SECURITY_AUDIT_LOG": "SECURITY_AUDIT_LOG",
-    "LEGAL_HOLD_RECORD": "LEGAL_HOLD_RECORD",
+    "LEGAL_HOLD_RECORD": "LEGAL_HOLD_RECORD", "ACCOUNT_TOMBSTONE": "ACCOUNT_TOMBSTONE",
+    "SECONDARY_IDENTIFIER": "SECONDARY_IDENTIFIER", "MARKETING_PROFILE": "MARKETING_PROFILE", "CACHE_ENTRY": "CACHE_ENTRY",
+    "EMAIL_DELIVERY_LOG": "EMAIL_DELIVERY_LOG", "PRODUCT_TELEMETRY": "PRODUCT_TELEMETRY",
 }
 SYSTEM_CATEGORY = {
     "account_service": "USER_PROFILE", "search_service": "SEARCH_INDEX_ENTRY", "cache_service": "CACHE_ENTRY",
@@ -32,19 +35,50 @@ class Facts:
     result: str | None = None
 
 
-def category_of(o):
+COLLECTION_CATEGORY = {
+    "deleted_customer_references": "ACCOUNT_TOMBSTONE", "retained_order_records": "LEGAL_HOLD_RECORD",
+    "security_audit_events": "SECURITY_AUDIT_LOG", "ticket_attachments": "SUPPORT_ATTACHMENT",
+    "support_conversations": "SUPPORT_MESSAGE", "customer_profiles": "USER_PROFILE",
+    "customer_search_documents": "SEARCH_INDEX_ENTRY", "customer_analytics_reports": "ANALYTICS_PROFILE",
+    "customer_export_jobs": "USER_EXPORT", "backup_catalog": "BACKUP_ARCHIVE", "connector_configurations": "DATA_FLOW",
+}
+# resource-id prefixes that identify ONE category unambiguously (account/search/analytics/support are ambiguous)
+PREFIX_CATEGORY = {
+    "tombstone": "ACCOUNT_TOMBSTONE", "legal_hold": "LEGAL_HOLD_RECORD", "audit_record": "SECURITY_AUDIT_LOG",
+    "data_flow": "DATA_FLOW", "backup": "BACKUP_ARCHIVE", "export": "USER_EXPORT", "marketing": "MARKETING_PROFILE",
+    "cache": "CACHE_ENTRY", "email_delivery": "EMAIL_DELIVERY_LOG",
+}
+# every category name that deletion_rules.csv or the data-flow obligation can use is also a valid explicit record_type
+KNOWN_CATEGORIES = set(SYSTEM_CATEGORY.values()) | set(RECORD_TYPE_CATEGORY.values()) | {
+    "ACCOUNT_TOMBSTONE", "SECONDARY_IDENTIFIER", "PRODUCT_TELEMETRY", "MARKETING_PROFILE", "CACHE_ENTRY", "EMAIL_DELIVERY_LOG"}
+_PFX = re.compile(r"^([a-z_]+?)_[A-Za-z]?\d+[A-Za-z]*$")
+
+
+def category_rank(o):
+    """(category, rank). Precedence: explicit record_type (4) > collection (3) > unambiguous resource prefix (3)
+    > event kind (2) > owning system default (1). The owning system never overrides explicit evidence: a tombstone
+    reported by account_service is still a tombstone."""
     rt = o.f("record_type")
-    if rt in RECORD_TYPE_CATEGORY:
-        return RECORD_TYPE_CATEGORY[rt]
+    if rt in KNOWN_CATEGORIES:
+        return rt, 4
+    coll = COLLECTION_CATEGORY.get(o.f("collection"))
+    if coll:
+        return coll, 3
+    m = _PFX.match(o.resource_id or "")
+    if m and m.group(1) in PREFIX_CATEGORY:
+        return PREFIX_CATEGORY[m.group(1)], 3
     if (o.kind or "").startswith("contact_"):  # contact-index lookups: a secondary copy of contact identifiers (rule_02)
-        return "SECONDARY_IDENTIFIER"
+        return "SECONDARY_IDENTIFIER", 2
     cat = SYSTEM_CATEGORY.get(o.system_id)
-    if o.system_id == "support_platform" and (o.store == "pdf" or o.f("collection") == "ticket_attachments"
-                                              or (o.kind or "").startswith("attachment") or o.f("file_name")):
-        return "SUPPORT_ATTACHMENT"
+    if o.system_id == "support_platform" and (o.store == "pdf" or (o.kind or "").startswith("attachment") or o.f("file_name")):
+        return "SUPPORT_ATTACHMENT", 2
     if o.system_id == "analytics_platform" and o.f("email_opt_in") is not None:
-        return "MARKETING_PROFILE"
-    return cat
+        return "MARKETING_PROFILE", 2
+    return cat, 1
+
+
+def category_of(o):
+    return category_rank(o)[0]
 
 
 def _flag(v):
@@ -55,7 +89,39 @@ def _flag(v):
     return None
 
 
-def read(o):
+PHONE_TOKEN = re.compile(r"(?<![\w.])\+?\d[\d\s().\-]{6,}\d(?![\w])")
+SKIP_FIELDS = ("ids_", "ids_src", "resource_id", "locator", "trace", "alt_")
+
+
+def _phone_variants_match(token_digits, subject_digits):
+    """Token written in international, 00-prefixed or national form of the subject's number (>= 9 digits, so short
+    numeric strings such as order numbers cannot collide)."""
+    t = token_digits.lstrip("0")
+    return len(t) >= 9 and (t == subject_digits or subject_digits.endswith(t))
+
+
+def subject_text_exposure(o, subj):
+    """Subject identifiers found inside ANY text field of the record: phone (any common written form) and name."""
+    found = set()
+    if subj is None:
+        return found
+    phones = {i.value for i in subj.identifiers if i.field == "phone"}
+    names = [n for n in subj.names if n and len(n.strip()) >= 5 and " " in n.strip()]
+    for k, v in o.fields:
+        if not v or k.startswith(SKIP_FIELDS) or k.endswith("_raw"):
+            continue
+        if phones:
+            for tok in PHONE_TOKEN.findall(v):
+                d = re.sub(r"\D", "", tok)
+                if any(_phone_variants_match(d, p) for p in phones):
+                    found.add("text:phone")
+        low = v.lower()
+        if any(n.strip().lower() in low for n in names):
+            found.add("text:name")
+    return found
+
+
+def read(o, subj=None):
     cat = category_of(o)
     f = Facts(cat, o.present, result=o.f("result"))
     res = o.f("result")
@@ -65,8 +131,9 @@ def read(o):
     for kind in ("email", "hash", "phone"):  # identifiers embedded in free text (message_text, excerpts, scan hits)
         if o.f(f"ids_{kind}") and not f.exposed:
             f.exposed.add(f"embedded:{kind}")
-    if cat == "ANALYTICS_PROFILE" and o.f("user_ref"):
-        f.exposed.add("user_ref")
+    if cat in ("ANALYTICS_PROFILE", "PRODUCT_TELEMETRY") and (o.f("user_ref") or o.f("ids_user")):
+        f.exposed.add("user_ref")   # rule_07/08: still attributable to a user via ANY user-reference token
+    f.exposed |= subject_text_exposure(o, subj)
     if o.kind in ("record_lookup",) or o.store in ("handover", "ledger", "history"):
         # lookup records: the result word carries the treatment state, the lookup value carries the identifier
         if res in ("ANONYMIZED", "REDACTED"):

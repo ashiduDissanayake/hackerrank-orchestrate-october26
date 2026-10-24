@@ -3,12 +3,15 @@
 A pure function of (request, admissible evidence): no cross-case state, so a case yields the same result alone,
 in a shuffled batch, or beside unrelated or later requests.
 
-Internal status vs output status (user decision U8): UNKNOWN obligations are kept distinct from violations.
-The CSV needs one of three statuses, and the output policy for unresolved obligations is still an OPEN decision
-(P3/P6). Two switchable policies exist (see DECISIONS.md for the measured effect of each):
-  established_only       status/steps reflect only what the evidence establishes; unresolved items are listed in
-                         diagnostics (default, announced in every run report)
-  unknown_is_incomplete  any unresolved obligation makes the case INCOMPLETE
+Internal status vs output status (user decision U8, review finding P1-1): UNKNOWN obligations are kept distinct
+from violations, and an UNDETERMINED case is NEVER reported COMPLETE by default. The contract defines COMPLETE as
+"only when every relevant copy has the required treatment ... and no active path can recreate prohibited data",
+which an unresolved obligation does not satisfy, so the non-certifying default is INCOMPLETE. INCOMPLETE cannot
+carry invented findings, so such rows are contract-INVALID by construction: they are listed as UNDETERMINED in the
+run manifest and the final export gate refuses to export while any exist.
+  not_certified        (default) UNDETERMINED -> INCOMPLETE, established steps only, flagged unresolved
+  certify_established  UNDETERMINED -> COMPLETE when nothing established is violated. Opt-in only, for measuring the
+                       cost of the default; never used for the final export
 """
 from dataclasses import dataclass, field
 
@@ -35,7 +38,7 @@ class CaseResult:
     candidates: list = field(default_factory=list)
 
 
-def audit_case(req, store, ident, rules, unknown_policy="established_only"):
+def audit_case(req, store, ident, rules, unknown_policy="not_certified"):
     intent = classify(req.request_text)
     if not intent.deletion:
         return CaseResult(req.case_id, "NOT_APPLICABLE", "NOT_APPLICABLE", [], intent)
@@ -61,10 +64,10 @@ def audit_case(req, store, ident, rules, unknown_policy="established_only"):
         res.internal = res.status = "INCOMPLETE"
     elif res.unresolved or res.conditions:
         res.internal = "UNDETERMINED"
-        if unknown_policy == "established_only":
-            res.status = "COMPLETE"      # nothing established as violated; unresolved items are listed, never turned into steps
-        elif unknown_policy == "unknown_is_incomplete":
-            res.status = "INCOMPLETE"    # not shown complete -> INCOMPLETE (may have no finding: contract-invalid, flagged)
+        if unknown_policy == "not_certified":
+            res.status = "INCOMPLETE"
+        elif unknown_policy == "certify_established":
+            res.status = "COMPLETE"
         else:
             raise ValueError(f"unknown policy {unknown_policy!r}")
     else:
