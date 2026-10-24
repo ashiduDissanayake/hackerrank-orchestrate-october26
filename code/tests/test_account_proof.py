@@ -32,9 +32,10 @@ class World:
     def __init__(self):
         self.st = Store()
 
-    def snap(self, eid, t, copy, rows, basis="declared", collection=None, system="account_service", scope=True):
+    def snap(self, eid, t, copy, rows, basis="declared", collection=None, system="account_service", scope=True, captured=None, complete=True):
         if scope:
-            self.st.add_scope(ScopeDecl(eid, t, system, copy, basis, collection))
+            cap = captured if captured is not None else ((collection,) if collection else (("customer_profiles",) if basis != "inferred_from_rows" else ()))
+            self.st.add_scope(ScopeDecl(eid, t, system, copy, basis, collection, cap, complete))
         for i, f in enumerate(rows):
             f = dict(f)
             if collection:
@@ -85,7 +86,7 @@ class Gates(unittest.TestCase):
     def test_snapshot_before_the_request_is_not_evidence_of_the_post_request_state(self):
         p = World().snap("evidence_1", "2026-05-20T00:00:00Z", "primary", [OTHER]).proof()
         self.assertEqual(p.status, "NO_COVERAGE")
-        self.assertEqual(p.uncovered, ["primary"])
+        self.assertIn("primary", p.reason)
 
     def test_snapshot_captured_after_the_cutoff_is_invisible(self):
         self.assertEqual(World().snap("evidence_1", "2026-06-20T00:00:00Z", "primary", [OTHER]).proof().status, "NO_COVERAGE")
@@ -123,6 +124,107 @@ class Gates(unittest.TestCase):
         self.assertEqual(empty.proof(require_row=True).status, "INDETERMINATE")
 
 
+PRE = "2026-05-20T00:00:00Z"            # before REQ_AT
+UNATTRIBUTABLE = {"account_status": "ACTIVE"}
+
+
+class ProofBoundaries(unittest.TestCase):
+    """Review findings: what a snapshot may be taken to cover, and which copies the proof can leave unasserted."""
+
+    def test_declared_empty_non_profile_collection_does_not_cover_profiles(self):
+        p = World().snap("evidence_1", SNAP, "primary", [], collection="notification_preferences").proof()
+        self.assertEqual(p.status, "NO_COVERAGE")
+
+    def test_non_profile_collection_rows_neither_prove_nor_disprove(self):
+        w = World().snap("evidence_1", SNAP, "primary", [{"email": "rui.costa@example.org"}], collection="notification_preferences")
+        w.snap("evidence_2", SNAP, "primary", [OTHER])
+        self.assertEqual(w.proof().status, "ABSENT")          # the preference row is not a profile; the profile table is clean
+
+    def test_inventory_scope_without_the_profile_table_is_not_profile_coverage(self):
+        self.assertEqual(World().snap("evidence_1", SNAP, "primary", [], captured=("support_records",)).proof().status, "NO_COVERAGE")
+
+    def test_incomplete_source_does_not_support_absence(self):
+        self.assertEqual(World().snap("evidence_1", SNAP, "primary", [OTHER], complete=False).proof().status, "NO_COVERAGE")
+
+    def test_unattributable_pre_request_replica_row_blocks_the_proof(self):
+        w = World().snap("evidence_0", PRE, "failover_replica", [UNATTRIBUTABLE], basis="inferred_from_table")
+        w.snap("evidence_1", SNAP, "primary", [OTHER])
+        p = w.proof()
+        self.assertEqual(p.status, "INDETERMINATE")
+        self.assertIn("failover_replica", p.reason)
+
+    def test_replica_that_held_the_subject_before_the_request_and_was_not_recaptured_blocks_the_proof(self):
+        w = World().snap("evidence_0", PRE, "failover_replica", [MINE_UID], basis="inferred_from_table")
+        w.snap("evidence_1", SNAP, "primary", [OTHER])
+        self.assertEqual(w.proof().status, "INDETERMINATE")
+
+    def test_later_strong_capture_of_the_replica_supersedes_the_old_state(self):
+        w = World().snap("evidence_0", PRE, "failover_replica", [UNATTRIBUTABLE], basis="inferred_from_table")
+        w.snap("evidence_1", SNAP, "primary", [OTHER]).snap("evidence_1", SNAP, "failover_replica", [OTHER], basis="inferred_from_table")
+        self.assertEqual(w.proof().status, "ABSENT")
+
+    def test_replica_lagging_the_primary_in_one_capture_blocks_the_proof(self):
+        w = World().snap("evidence_0", PRE, "primary", [MINE_UID]).snap("evidence_0", PRE, "failover_replica", [OTHER], basis="inferred_from_table")
+        w.snap("evidence_1", SNAP, "primary", [OTHER])
+        p = w.proof()
+        self.assertEqual(p.status, "INDETERMINATE")
+        self.assertIn("failover_replica", p.reason)
+
+    def test_replica_captured_clean_before_the_request_is_excluded_with_a_stated_basis(self):
+        w = World().snap("evidence_0", PRE, "failover_replica", [OTHER], basis="inferred_from_table").snap("evidence_1", SNAP, "primary", [OTHER])
+        p = w.proof()
+        self.assertEqual(p.status, "ABSENT")
+        self.assertIn("failover_replica", p.excluded)
+        self.assertIn("never evidenced", p.excluded["failover_replica"])
+
+    def test_weakly_scoped_replica_that_never_showed_the_subject_does_not_block(self):
+        w = World().snap("evidence_0", PRE, "read_replica", [OTHER], basis="inferred_from_rows").snap("evidence_1", SNAP, "primary", [OTHER])
+        self.assertEqual(w.proof().status, "ABSENT")
+
+    def test_weakly_scoped_replica_that_held_the_subject_does_block(self):
+        w = World().snap("evidence_0", PRE, "read_replica", [MINE_UID], basis="inferred_from_rows").snap("evidence_1", SNAP, "primary", [OTHER])
+        self.assertEqual(w.proof().status, "INDETERMINATE")
+
+
+class WeakSourcePromotion(unittest.TestCase):
+    """A weakly inferred scope (document-table export) supports absence only when its OWN source shows it covers this subject."""
+
+    def _doc_artifact(self, w, subject_rows=True, profile_rows=True, complete=True, eid="evidence_1", t=SNAP):
+        """Primary + read_replica document tables; an audit row for the subject in the primary copy, a profile row of someone else in the replica."""
+        for copy in ("primary", "read_replica"):
+            w.st.add_scope(ScopeDecl(eid, t, "account_service", copy, "inferred_from_rows", None, (), complete))
+        if subject_rows:
+            w.st.add_obs(make_obs(eid, "p/a", t, t, "security_service", "audit_record_7", "primary", "record", True,
+                                  normalize_fields({"subject_reference": "user_7", "retention_until": "2031-12-31T23:59:59Z"})))
+        if profile_rows:
+            w.st.add_obs(make_obs(eid, "r/a", t, t, "account_service", "account_900", "read_replica", "record", True,
+                                  normalize_fields({"collection": "customer_profiles", **OTHER})))
+        return w
+
+    def test_promoted_when_the_artifact_holds_the_subjects_rows_and_the_profile_collection(self):
+        p = self._doc_artifact(World()).proof()
+        self.assertEqual(p.status, "ABSENT")
+        self.assertEqual(p.copies["primary"].basis, "inferred_from_rows+subject_in_source")
+
+    def test_not_promoted_when_the_artifact_has_nothing_about_the_subject(self):
+        self.assertEqual(self._doc_artifact(World(), subject_rows=False).proof().status, "NO_COVERAGE")
+
+    def test_not_promoted_when_no_profile_collection_appears_in_the_artifact(self):
+        self.assertEqual(self._doc_artifact(World(), profile_rows=False).proof().status, "NO_COVERAGE")
+
+    def test_not_promoted_when_the_source_is_incomplete(self):
+        self.assertEqual(self._doc_artifact(World(), complete=False).proof().status, "NO_COVERAGE")
+
+    def test_promotion_is_switchable(self):
+        self.assertEqual(self._doc_artifact(World()).proof(weak_promotion=False).status, "NO_COVERAGE")
+
+    def test_the_subjects_own_profile_in_the_replica_is_still_found(self):
+        w = self._doc_artifact(World())
+        w.st.add_obs(make_obs("evidence_1", "r/b", SNAP, SNAP, "account_service", "account_901", "read_replica", "record", True,
+                              normalize_fields({"collection": "customer_profiles", **MINE_UID})))
+        self.assertEqual(w.proof().status, "PRESENT")
+
+
 class Engine(unittest.TestCase):
     def _case(self, world):
         world.st.finalize()
@@ -138,6 +240,21 @@ class Engine(unittest.TestCase):
         self.assertEqual([(o.resource_id, o.verdict, o.reason, o.evidence_id) for o in acct], [(None, "COMPLIANT", "no_profile_for_subject_in_snapshot", "evidence_1")])
         self.assertEqual(res.internal, "COMPLETE")
         self.assertEqual([s["resource_id"] for s in res.steps], ["audit_record_7"], "no account step: no account id is evidenced")
+
+    def _with_audit_record(self, world):
+        world.st.add_obs(make_obs("evidence_1", "a", SNAP, SNAP, "security_service", "audit_record_7", "primary", "record", True,
+                                  normalize_fields({"subject_reference": "user_7", "retention_until": "2031-12-31T23:59:59Z"})))
+        return world
+
+    def test_empty_notification_collection_plus_retained_record_is_not_certified_complete(self):
+        res = self._case(self._with_audit_record(World().snap("evidence_1", SNAP, "primary", [], collection="notification_preferences")))
+        self.assertEqual(res.internal, "UNDETERMINED")
+        self.assertEqual([o.verdict for o in res.obligations if o.category == "USER_PROFILE"], ["UNKNOWN"])
+
+    def test_unattributable_replica_row_plus_clean_primary_is_not_certified_complete(self):
+        world = World().snap("evidence_0", PRE, "failover_replica", [UNATTRIBUTABLE], basis="inferred_from_table").snap("evidence_1", SNAP, "primary", [OTHER])
+        res = self._case(self._with_audit_record(world))
+        self.assertEqual(res.internal, "UNDETERMINED")
 
     def test_a_linked_account_resource_takes_precedence_over_the_proof(self):
         world = World().snap("evidence_1", SNAP, "primary", [OTHER])

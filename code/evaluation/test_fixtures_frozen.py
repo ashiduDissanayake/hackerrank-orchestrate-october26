@@ -1,4 +1,4 @@
-"""Guards the frozen labeled fixtures (synth_v1).
+"""Guards the frozen labeled fixtures (synth_v1, synth_v2, synth_v3).
 
 1. Every fixture file hashes to the value in synth_v1.sha256 (any edit after the freeze fails the test).
 2. The build is deterministic (rebuilding yields the identical manifest).
@@ -20,7 +20,7 @@ from ghostaudit.validate import validate_row  # noqa: E402
 
 FX = os.path.join(HERE, "fixtures")
 # version -> (builder script, number of fully labeled output rows)
-VERSIONS = {"synth_v1": ("build_fixtures.py", 13), "synth_v2": ("build_fixtures_v2.py", 17)}
+VERSIONS = {"synth_v1": ("build_fixtures.py", 13), "synth_v2": ("build_fixtures_v2.py", 17), "synth_v3": ("build_fixtures_v3.py", 18)}
 
 
 def paths(version):
@@ -56,8 +56,9 @@ class Frozen(unittest.TestCase):
             before = open(man).read()
             subprocess.check_call([sys.executable, os.path.join(FX, script)], stdout=subprocess.DEVNULL)
             self.assertEqual(open(man).read(), before, f"{v}: rebuild produced a different fixture set")
-        # building v2 must never touch v1
-        self.assertEqual(current_hashes(paths("synth_v1")[0]), frozen_hashes(paths("synth_v1")[1]))
+        # building a later version must never touch an earlier one
+        for v in VERSIONS:
+            self.assertEqual(current_hashes(paths(v)[0]), frozen_hashes(paths(v)[1]), f"{v} changed while rebuilding")
 
     def test_labels_are_contract_valid(self):
         for v, (_, expected_rows) in VERSIONS.items():
@@ -90,7 +91,7 @@ class Frozen(unittest.TestCase):
                         self.assertIn(rid, corpus)
 
     def test_coverage_of_required_scenarios(self):
-        out, _ = paths("synth_v2")
+        out, _ = paths("synth_v3")
         reqs = list(csv.DictReader(open(os.path.join(out, "deletion_requests.csv"), encoding="utf-8")))
         internal = json.load(open(os.path.join(out, "expected_internal.json"), encoding="utf-8"))
         statuses = {r["deletion_status"] for r in csv.DictReader(open(os.path.join(out, "expected_output.csv"), encoding="utf-8"))}

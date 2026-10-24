@@ -30,7 +30,9 @@ def extract(evidence_id, path, available_at, store, report):
             avail = _later(available_at, cap)
             ds, coll = snap["data_store"], snap["collection"]
             if coll != HISTORY:
-                store.add_scope(ScopeDecl(evidence_id, avail, ds, "bundle", "declared", coll))
+                declared_n = snap.get("record_count")      # when the export states a count, it must match what it holds
+                store.add_scope(ScopeDecl(evidence_id, avail, ds, "bundle", "declared", coll, (coll,),
+                                          declared_n is None or declared_n == len(snap["records"])))
             for ri, rec in enumerate(snap["records"]):
                 rec = dict(rec)
                 t = rec.pop("recorded_at", None) or cap

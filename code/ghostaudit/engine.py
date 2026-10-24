@@ -23,16 +23,27 @@ from .obligations import account_from_tombstone, account_gap, action_table, eval
 from .planner import plan
 
 
-def account_from_proof(cv, subj, req, allow_weak=False, require_row=False):
+def account_obligation_from_proof(p):
     """Subject-level absence of any account profile, from subject-keyed queries of account snapshots (account_proof.py).
     Records the proof internally like the tombstone proof: no resource id is invented, so no step is emitted."""
     from .obligations import Obligation
-    p = account_proof(cv, subj, req.requested_at, allow_weak, require_row)
     if p.status != "ABSENT":
         return None
     return Obligation("account_service", None, "USER_PROFILE", "DELETE", "COMPLIANT", "no_profile_for_subject_in_snapshot", p.evidence_id,
                       {"no_step": True, "proof_reason": p.reason,
-                       "copies": {c: (e.status, e.evidence_id, e.time, e.basis) for c, e in p.copies.items()}, "uncovered_copies": p.uncovered})
+                       "copies": {c: (e.status, e.evidence_id, e.time, e.basis) for c, e in p.copies.items()}, "uncovered_copies": p.uncovered,
+                       "excluded_copies": p.excluded})
+
+
+def proof_summary(p):
+    """What the proof found when it could NOT discharge the obligation: the precise information gap for the register."""
+    return {"status": p.status, "reason": p.reason,
+            "copies": {c: (e.status, e.evidence_id, e.time, e.basis, e.detail) for c, e in p.copies.items()}, "excluded_copies": p.excluded}
+
+
+# The account-proof switches the engine uses by default (each measured in evaluation_report.md section 5); recorded in every run
+# manifest so the configuration that produced an output is explicit rather than implied by code defaults.
+PROOF_DEFAULTS = {"allow_weak": False, "require_row": False, "pre_request_exclusion": True, "weak_promotion": True}
 
 
 @dataclass
@@ -51,7 +62,7 @@ class CaseResult:
     candidates: list = field(default_factory=list)
 
 
-def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False):
+def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False, pre_request_exclusion=True, weak_promotion=True):
     intent = classify(req.request_text)
     if not intent.deletion:
         return CaseResult(req.case_id, "NOT_APPLICABLE", "NOT_APPLICABLE", [], intent)
@@ -66,8 +77,15 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_w
             obs.append(ob)
     cands = window_candidates(cv, req, set(lr.links))
     if not any(o.category == "USER_PROFILE" for o in obs):
-        obs.append(account_from_tombstone(cv, obs) or account_from_proof(cv, subj, req, allow_weak, require_row)
-                   or account_gap([c for c in cands if c[2] == "account_service"]))
+        ob, proof = account_from_tombstone(cv, obs), None
+        if ob is None:
+            proof = account_proof(cv, subj, req.requested_at, allow_weak, require_row, pre_request_exclusion, weak_promotion)
+            ob = account_obligation_from_proof(proof)
+        if ob is None:
+            ob = account_gap([c for c in cands if c[2] == "account_service"])
+            if proof is not None:
+                ob.detail["proof"] = proof_summary(proof)
+        obs.append(ob)
     res = CaseResult(req.case_id, "", "", [], intent, subj, lr.links, lr.rejected, obs,
                      [o for o in obs if o.verdict == "UNKNOWN"], list(subj.conditions), cands)
     violations = [o for o in obs if o.verdict == "VIOLATION"]

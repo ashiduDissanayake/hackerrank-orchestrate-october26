@@ -1,0 +1,28 @@
+{
+  "exported_at": "2026-04-10T11:00:00Z",
+  "snapshots": [
+    {
+      "captured_at": "2026-04-10T11:00:00Z",
+      "collection": "customer_profiles",
+      "data_store": "account_service",
+      "records": [
+        {
+          "account_status": "ACTIVE",
+          "customer_reference": "user_9323",
+          "email": "unrelated.23@example.org",
+          "resource_id": "account_9323"
+        },
+        {
+          "account_status": "ACTIVE",
+          "customer_reference": null,
+          "email": null,
+          "email_hash": null,
+          "full_name": null,
+          "phone": null,
+          "resource_id": "account_g23x"
+        }
+      ]
+    }
+  ],
+  "source": "records_assurance_service"
+}

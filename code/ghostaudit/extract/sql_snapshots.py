@@ -63,10 +63,17 @@ def extract(evidence_id, path, available_at, store, report):
     tables = [r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")]
     cols = {t: [c[1] for c in db.execute(f'PRAGMA table_info("{t}")')] for t in tables}
 
-    # scope for typed inventory
+    # Source completeness: the export closed its transaction, and a typed inventory carries its completion marker.
+    committed = re.search(r"^\s*COMMIT\s*;", text, re.M) is not None
+    complete = committed and (done is not None or "snapshot_scope" not in tables)
+    if not complete:
+        report.notes.append("source completeness not established (no COMMIT, or inventory without snapshot_completed_at)")
+
+    # scope for typed inventory: the declared origin system is covered for the tables of that system present in the file
     if "snapshot_scope" in tables:
         for r in db.execute("SELECT origin_system, captured_at FROM snapshot_scope"):
-            store.add_scope(ScopeDecl(evidence_id, max(available_at, r["captured_at"]), r["origin_system"], "inventory", "declared"))
+            captured = tuple(sorted(t for t in tables if TYPED_SYSTEM.get(t) == r["origin_system"]))
+            store.add_scope(ScopeDecl(evidence_id, max(available_at, r["captured_at"]), r["origin_system"], "inventory", "declared", None, captured, complete))
 
     doc_tables = [t for t in tables if DOC_COLS <= set(cols[t])]
     doc_systems = set()
@@ -74,7 +81,7 @@ def extract(evidence_id, path, available_at, store, report):
         doc_systems |= {r[0] for r in db.execute(f'SELECT DISTINCT origin_system FROM "{t}"')}
     for t in doc_tables:
         for sysid in sorted(doc_systems):
-            store.add_scope(ScopeDecl(evidence_id, available_at, sysid, _store_name(t), "inferred_from_rows"))
+            store.add_scope(ScopeDecl(evidence_id, available_at, sysid, _store_name(t), "inferred_from_rows", None, (), complete))
 
     for t in tables:
         if t == "snapshot_scope":
@@ -102,14 +109,14 @@ def extract(evidence_id, path, available_at, store, report):
                                        r["resource_id"], _store_name(t), "record", True, rec))
         elif ACCT_COLS <= cset:
             sysid = "account_service"
-            store.add_scope(ScopeDecl(evidence_id, available_at, sysid, _store_name(t), "inferred_from_table"))
+            store.add_scope(ScopeDecl(evidence_id, available_at, sysid, _store_name(t), "inferred_from_table", None, ("customer_profiles",), complete))
             for r in db.execute(f'SELECT * FROM "{t}"'):
                 d = dict(r)
                 rid = d.pop("resource_id")
                 obs_t = d.pop("updated_at")
                 store.add_obs(make_obs(evidence_id, f"{t}:{rid}", available_at, obs_t, sysid, rid, _store_name(t), "record", True, normalize_fields(d)))
         elif SEARCH_COLS <= cset:
-            store.add_scope(ScopeDecl(evidence_id, available_at, "search_service", _store_name(t), "inferred_from_table"))
+            store.add_scope(ScopeDecl(evidence_id, available_at, "search_service", _store_name(t), "inferred_from_table", None, ("customer_search_documents",), complete))
             for r in db.execute(f'SELECT * FROM "{t}"'):
                 d = dict(r)
                 rid = d.pop("resource_id")

@@ -20,7 +20,7 @@ REPO = os.path.dirname(CODE)
 import scoring  # noqa: E402
 from ghostaudit import run as runner  # noqa: E402
 
-FX = os.path.join(HERE, "fixtures", os.environ.get("FIXTURE_VERSION", "synth_v2"))
+FX = os.path.join(HERE, "fixtures", os.environ.get("FIXTURE_VERSION", "synth_v3"))
 
 
 def as_pred(results):

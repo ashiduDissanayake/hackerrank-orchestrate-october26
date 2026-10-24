@@ -1,0 +1,240 @@
+{
+  "fx_case_01": {
+    "intent": "NOT_DELETION"
+  },
+  "fx_case_02": {
+    "intent": "NOT_DELETION"
+  },
+  "fx_case_03": {
+    "intent": "NOT_DELETION"
+  },
+  "fx_case_04": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "analytics_f04",
+      "account_f04",
+      "audit_record_f04"
+    ],
+    "note": "analytics_f04 is anonymized at the cut; link holds via the earlier observation carrying the email (chain d)"
+  },
+  "fx_case_05": {
+    "intent": "DELETION",
+    "links_rejected": [
+      "search_f05b"
+    ],
+    "must_not_cite": [
+      "evidence_f06",
+      "evidence_f07"
+    ],
+    "note": "evidence_f06 is captured after audit_at (old row inside a later artifact); evidence_f07 is available before audit_at but its record is observed after audit_at. Both must be ignored; search_f05b must not be linked or cited."
+  },
+  "fx_case_06": {
+    "intent": "DELETION",
+    "note": "residue only in the failover replica of an artifact covering primary and failover"
+  },
+  "fx_case_07": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "export_f07",
+      "audit_record_f07"
+    ],
+    "must_not_emit": [
+      "VERIFY_RECORD_ABSENT for export_f07",
+      "status COMPLETE"
+    ],
+    "note": "export_service is not in the scope of any admissible snapshot, so absence of export_f07 is not evidence",
+    "obligations": {
+      "audit_record_f07": "COMPLIANT",
+      "export_f07": "UNKNOWN:no_admissible_evidence"
+    },
+    "status": "UNDETERMINED"
+  },
+  "fx_case_08": {
+    "intent": "DELETION",
+    "note": "tombstone present with name/email/phone/hash -> assessed for prohibited identifiers"
+  },
+  "fx_case_09": {
+    "intent": "DELETION",
+    "note": "tombstone holds only the stable user reference -> compliant"
+  },
+  "fx_case_11": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "data_flow_f11",
+      "backup_f11"
+    ],
+    "note": "backup_f11 links through the HISTORICAL email in force before the 2026-05-01 change"
+  },
+  "fx_case_12": {
+    "intent": "DELETION",
+    "links_rejected": [
+      "search_f12d"
+    ],
+    "note": "search_f12d email is a near-miss (.jr) of the subject email and must not link"
+  },
+  "fx_case_13": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "analytics_f13"
+    ],
+    "note": "linked through the historical email_hash (audit log, change on 2026-04-01 <= audit_at)"
+  },
+  "fx_case_14": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f14"
+    ],
+    "must_not_emit": [
+      "any step naming account_f14x",
+      "any step with resource_id None"
+    ],
+    "note": "REVISED in v2. account_f14x is still only an activity-window candidate and is never linked or emitted, but evidence_f03 (post-request primary+failover snapshot) holds no row with the subject's identifiers, so the SUBJECT-level account state is established absent",
+    "obligations": {
+      "audit_record_f14": "COMPLIANT",
+      "subject_account": "COMPLIANT:no_profile_for_subject_in_snapshot"
+    }
+  },
+  "fx_case_15": {
+    "intent": "DELETION",
+    "note": "retained legal hold is present in primary and replica; that is permitted"
+  },
+  "fx_case_16": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "search_f16"
+    ],
+    "links_rejected": [
+      "search_f16b"
+    ],
+    "note": "the subject's current email only becomes theirs on 2026-06-20, after audit_at; evidence under it cannot link"
+  },
+  "fx_case_17": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f17"
+    ],
+    "must_not_emit": [
+      "any step naming account_f14x",
+      "any step with resource_id None"
+    ],
+    "note": "REVISED in v2. account_f14x is still only an activity-window candidate and is never linked or emitted, but evidence_f03 (post-request primary+failover snapshot) holds no row with the subject's identifiers, so the SUBJECT-level account state is established absent",
+    "obligations": {
+      "audit_record_f17": "COMPLIANT",
+      "subject_account": "COMPLIANT:no_profile_for_subject_in_snapshot"
+    }
+  },
+  "fx_case_21": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f21"
+    ],
+    "must_not_emit": [
+      "any step with resource_id None",
+      "an invented account resource id"
+    ],
+    "note": "evidence_g02 is an admissible post-request primary+failover snapshot whose rows all carry other users' identifiers",
+    "obligations": {
+      "audit_record_f21": "COMPLIANT",
+      "subject_account": "COMPLIANT:no_profile_for_subject_in_snapshot"
+    }
+  },
+  "fx_case_22": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "account_f22",
+      "audit_record_f22"
+    ],
+    "note": "primary is clean but the failover replica holds the subject's row (matched by the user id and email): a clean primary cannot discharge a populated replica"
+  },
+  "fx_case_23": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f23"
+    ],
+    "must_not_emit": [
+      "any step naming account_g23x",
+      "status COMPLETE"
+    ],
+    "note": "account_g23x carries no identifier, so it could be the subject's: the snapshot cannot exclude it and absence is not proven",
+    "obligations": {
+      "audit_record_f23": "COMPLIANT",
+      "subject_account": "UNKNOWN:unresolved_link"
+    },
+    "status": "UNDETERMINED"
+  },
+  "fx_case_24": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f24"
+    ],
+    "must_not_emit": [
+      "status COMPLETE"
+    ],
+    "note": "evidence_g08 (2026-05-05) is older than the request (2026-05-10): it says nothing about the post-request state",
+    "obligations": {
+      "audit_record_f24": "COMPLIANT",
+      "subject_account": "UNKNOWN:unresolved_link"
+    },
+    "status": "UNDETERMINED"
+  },
+  "fx_case_25": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f25"
+    ],
+    "must_not_emit": [
+      "status COMPLETE"
+    ],
+    "note": "evidence_h02 declares an EMPTY account_service collection, but the collection is notification_preferences: no profile collection was captured",
+    "obligations": {
+      "audit_record_f25": "COMPLIANT",
+      "subject_account": "UNKNOWN:unresolved_link"
+    },
+    "status": "UNDETERMINED"
+  },
+  "fx_case_26": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f26"
+    ],
+    "must_not_emit": [
+      "any step with resource_id None"
+    ],
+    "note": "evidence_h05 is a document-table export (weak scope). It holds the subject's audit record in BOTH copies and exports profile rows (another user's, in the replica), so the profile collection is part of the export and the subject's data was included: the missing profile row is evidence of absence in both copies (per-source promotion)",
+    "obligations": {
+      "audit_record_f26": "COMPLIANT",
+      "subject_account": "COMPLIANT:no_profile_for_subject_in_snapshot"
+    }
+  },
+  "fx_case_27": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f27"
+    ],
+    "must_not_emit": [
+      "status COMPLETE"
+    ],
+    "note": "evidence_h07 exports other users' records only; an export that never mentions the subject says nothing about the subject's profile",
+    "obligations": {
+      "audit_record_f27": "COMPLIANT",
+      "subject_account": "UNKNOWN:unresolved_link"
+    },
+    "status": "UNDETERMINED"
+  },
+  "fx_case_28": {
+    "intent": "DELETION",
+    "links_accepted": [
+      "audit_record_f28"
+    ],
+    "must_not_emit": [
+      "any step naming account_g28x",
+      "status COMPLETE"
+    ],
+    "note": "evidence_h04 is a clean post-request primary snapshot, but the failover replica was last captured before the request (evidence_h03) with a row that carries no identifier: it could be the subject's and nothing shows its state afterwards",
+    "obligations": {
+      "audit_record_f28": "COMPLIANT",
+      "subject_account": "UNKNOWN:unresolved_link"
+    },
+    "status": "UNDETERMINED"
+  }
+}

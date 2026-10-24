@@ -77,6 +77,8 @@ class ScopeDecl:
     store: str
     basis: str                # declared | inferred_from_table | inferred_from_rows
     collection: str | None = None
+    captured: tuple = ()      # collections/tables whose capture this artifact evidences (a profile proof needs a profile collection)
+    complete: bool = True     # source-completeness checks passed (SQL transaction committed, inventory completion marker, counts)
 
 
 @dataclass

@@ -1,0 +1,31 @@
+{
+  "exported_at": "2026-06-14T09:30:00Z",
+  "snapshots": [
+    {
+      "captured_at": "2026-06-14T09:30:00Z",
+      "collection": "deleted_customer_references",
+      "data_store": "identity_service",
+      "records": [
+        {
+          "account_status": "DELETED",
+          "email": "bela.horvat@example.org",
+          "email_hash": "7b7b6dbcde4c815b531b897fb6d5aded6b9ddeae6f95de5a3637bcfc6eb42128",
+          "name": "Bela Horvat",
+          "phone": "+36 20 555 0008",
+          "resource_id": "tombstone_f08",
+          "subject_reference": "user_f08"
+        },
+        {
+          "account_status": "DELETED",
+          "email": null,
+          "email_hash": null,
+          "name": null,
+          "phone": null,
+          "resource_id": "tombstone_f09",
+          "subject_reference": "user_f09"
+        }
+      ]
+    }
+  ],
+  "source": "records_assurance_service"
+}
