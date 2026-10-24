@@ -287,3 +287,115 @@ branch=dev/baseline
 repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T19:50:02Z] Closeout review: subject-level account proof, reproducibility hash, reports, README, package
+
+User Prompt (verbatim, secrets redacted):
+# Closeout review — Ghost Data Still Exists
+
+Reviewed for 25 October 2026, Asia/Colombo.
+
+Keep your current evidence engine as the foundation. The next work should be subject-level account-absence reasoning, resolving genuine source ambiguity, and completing the release artifacts. More intent classification and more test counts will not by themselves produce a valid final CSV.
+
+## Versions and method
+
+| Implementation | Fixed commit |
+| --- | --- |
+| Your `dev/baseline` | `462a85fbc2fb99945d6ffc1d453aadd056c1bbe3` |
+| [PR #12](https://github.com/interviewstreet/hackerrank-orchestrate-october26/pull/12) | `3b2f31e3f563de3280cfa6e510fec181813ef237` |
+| [PR #14](https://github.com/interviewstreet/hackerrank-orchestrate-october26/pull/14) | `9983fadeaa5804cded19ef7cabfa131f66168ee5` |
+| [PR #15](https://github.com/interviewstreet/hackerrank-orchestrate-october26/pull/15) | `52464ce729bec0c3f380f5c2e87cf5c3a517b920` |
+
+All four implementations were run against the supplied participant data and rescored with your common scorer on the same 32 public cases. PR #14 ran offline with its published cached model outputs. No paid API calls were made during this review. Competitor predictions and caches were used only to reproduce and compare their implementations, never as labels or inputs to your predictions. No organizer-only truth was accessed. Your repository was not modified.
+
+## Measured comparison
+
+| Implementation | Correct sample statuses | Exact complete answers | Strict step F1 | Full-run structural checks with your validator |
+| --- | ---: | ---: | ---: | --- |
+| Your current default | 24/32 | 8/32 | 0.8113 | 99 errors; 99 internally UNDETERMINED cases |
+| PR #12 | 32/32 | 28/32 | 0.9869 | 0 structural errors; previously reproduced evidence-grounding defects remain |
+| PR #14, offline cached run | 32/32 | 28/32 | 0.9869 | One missing verification citation, in case_218 |
+| PR #15 | 30/32 | 11/32 | 0.8556 | Nine INCOMPLETE rows with empty steps, plus a row-order convention difference |
+| Your diagnostic `certify_established` policy | 32/32 | 8/32 | 0.8901 | Two empty deletion rows; all 99 cases remain internally UNDETERMINED |
+
+The last row is an ablation, not an approved submission policy. Relabeling uncertain cases improves measured status accuracy and removes many status-dependent citation mismatches, but resolves none of the underlying evidence gaps. No final CSV was exported from that policy.
+
+Your current full run reproduces 56 COMPLETE, 452 INCOMPLETE and 10 NOT_APPLICABLE. All 11 suites pass, and all 16 frozen fixtures pass. `verify` reproduces output bytes with unchanged code and inputs. These checks do not establish hidden-set accuracy. The engine reports uncertainty in 335 cases in total; 99 have no established violation and are assigned the internal UNDETERMINED status. Other uncertain cases already have an established violation and therefore a conclusive INCOMPLETE status.
+
+The peer implementations do not establish that the data is fully resolvable. PR #12 assigns ambiguous resources using timing, workflow-result agreement and case-number tie-breaks, and substitutes case-associated files when resource state is missing. PR #14 uses global allocation, reported-status matching, and a 30-second timing-phase heuristic. Its cached visual interpretation assumes that an archive listed without a visible block is restorable and resolves the marketing identity conflict in favor of the catalog. PR #15 links nearby account deletes within ten minutes and permits empty INCOMPLETE outputs in its own validator. Its committed reports also lag its current code: the current sample result is 30/32 and 0.8556, rather than the older figures written in its report.
+
+PR #15 additionally treats case_533 as a deletion request even though the text asks to replace an outdated mobile number and leave the account active. Your classification of that text as non-deletion is supported by the request itself.
+
+## A new account-proof avenue worth testing
+
+The diagnosis currently conflates two questions:
+
+1. Can we establish that no account profile for the subject remains in an authoritative snapshot?
+2. Can we recover the original account resource ID required by a canonical verification step?
+
+The second can be impossible while the first is answerable. A non-null stable `user_id` column allows a profile snapshot to be queried by the subject directly; an unknown old account ID is not mathematically necessary for that query.
+
+Concrete example: `evidence_54`, the SQL primary/failover snapshot captured at `2026-09-02T23:00:00Z`. Both profile tables declare `user_id TEXT NOT NULL`.
+
+| Subject | Primary matching rows | Failover matching rows |
+| --- | ---: | ---: |
+| user_01 | 0 | 0 |
+| user_02 | 0 | 0 |
+| user_05 | 0 | 1 |
+| user_8741 | 1 | 1 |
+
+The user_05 control demonstrates why a clean primary cannot discharge a populated replica. This is a subject-keyed query over the actual snapshot, independent of timestamp-based ownership assignment.
+
+A coverage probe found that 95 of the 99 UNDETERMINED cases have at least one account scope after requested_at and by audit_at; 91 have at least one scope marked declared by the existing parser. All eight regressed COMPLETE sample cases have a post-request account scope. The four UNDETERMINED cases without any such scope are case_55, case_524, case_530 and case_532.
+
+**These are candidates, not 95 resolved cases.** A safe implementation must validate that the source covers the relevant profile collection and copy, that its scope actually establishes completeness rather than a filtered subset, that stable identifiers are represented reliably, that there are no unidentifiable relevant rows, and that there is no later admissible contradictory state. A parser's `declared` label alone is insufficient. Account snapshots also do not prove that other systems, flows or restores are compliant.
+
+When this proves subject-level absence, record that proof internally, similarly to the existing subject-level tombstone proof. Do not invent an account resource ID or assign an orphan ID just to emit a step. Missing canonical IDs can remain a step-recall limitation after the overall state becomes better established. Cases with no other supported verification still need an accepted output representation; this approach is not a guarantee of a fully valid export.
+
+The policy condition `Always` means the USER_PROFILE treatment has no additional policy condition. That wording alone does not prove that a recoverable account ID exists for every case or that an implementation's UNKNOWN obligation must be permanent. Every proposed discharge still needs evidence.
+
+## Two genuine artifact ambiguities
+
+The actual screenshots were inspected independently during this review.
+
+- **case_55 / backup_9287:** the console shows an archive, its account email, storage path, checksum and retention metadata. The successful restore entries shown are for other backup IDs. No subject-specific restore permission or block state is displayed. PR #14's choice to infer restore risk from the recovery-console context is an interpretation, not an explicit fact that your boolean extractor missed. It should be disclosed and evaluated as such.
+- **case_63 / marketing_001:** the screenshot shows Soo-jin Park and `sj.park@naver.com`, while the catalog links that resource to another subject. There is no supplied universal rule saying that the catalog wins this conflict. Your UNKNOWN treatment preserves the contradiction; copying a peer's precedence decision would be an assumption.
+
+An independent participant has already raised [official issue #11](https://github.com/interviewstreet/hackerrank-orchestrate-october26/issues/11) about missing resource provenance, ambiguous timestamp associations and tombstone coverage. At review time the issue has no comments or organizer clarification, and official main remains at `0eddbbd33f682eae0a2770d67412af8a3cf4af20`. No message was posted as part of this review.
+
+The output taxonomy has no uncertainty status. If admissible evidence cannot determine the required state, approval of a policy switch cannot create that evidence. A best-effort prediction file can be prepared and its risks disclosed, but it must not be described as a fully certified audit or fully contract-conforming result while those gaps remain. No known competitor file is an authorized source of missing facts.
+
+## Concrete release work that should proceed now
+
+1. **Implement and measure the subject-level coverage check.** Start with the concrete SQL controls above. Test partial inventories, a populated replica, future captures and later contradictory observations. Report which actual cases qualify; do not blanket-discharge all 95 candidates.
+2. **Keep the evidence safeguards.** Preserve historical-identifier resolution, conflict handling, field-aware policy, per-copy state and the cutoff throughout linking and decision making. Do not add case-number allocation, story-family rules, guessed resource IDs or arbitrary evidence fallbacks.
+3. **Finish required documents.** At this pushed commit neither `code/evaluation/evaluation_report.md` nor `code/evaluation/usage_report.md` exists. The README still documents `python3 code/main.py`, although the implemented CLI requires a subcommand. Write the actual setup/run/verify instructions, metric definitions, at least three fully described synthetic cases, observed failures and improvements, and the final-run usage accounting. The official README states that the code judge ignores raw JSON/CSV/log files, so these explanations must appear directly in Markdown.
+4. **Fix reproducibility coverage.** `code_hash()` currently hashes only `.py` and `.md` files under `code/ghostaudit`; it excludes all 11 JSON transcriptions that affect predictions. Include those files and relevant prompts/configuration in the manifest's hashes. Distinguish final runtime calls from coding-agent visual preprocessing and any earlier development calls; do not invent unavailable token counts.
+5. **Prepare the package independently of P3.** Ensure the dependency manifest is actually included: the inherited archive command includes README and code, while requirements.txt currently lives at the root. Include required source, extraction caches needed for the documented offline run, tests and reports; exclude the supplied dataset, secrets, environments, caches unrelated to the solution and nested archives. Test an extracted package with the participant dataset supplied separately.
+6. **Regenerate final evidence and artifacts together.** Freeze the chosen implementation and configuration, run all 518 cases, run the complete validation, reproduce the output, then write usage/evaluation reports that refer to that exact run. The root log remains an authentic append-only record. Do not call a blocked or best-effort candidate certified.
+
+## Paid pilot
+
+The proposed intent pilot is not the critical path for the remaining profile links, restore state or identity conflict. Model agreement on unlabeled request texts is a cross-check, not a measured precision result. If run later with user-approved spending, use disagreements and ambiguous multilingual/mixed-intent texts as a targeted quality check, review the outputs, and record actual usage. The $40 budget is not needed for the work above.
+
+## Recommended decision
+
+Keep your engine and use peer implementations as comparison targets. Your agent has already completed the useful OCR/alias/phone improvements, so wholesale integration adds little value and risks importing unsupported assumptions. The strongest next improvement is a justified subject-level absence proof, followed immediately by documentation and packaging. Genuine unresolved cases need organizer interpretation or an explicitly disclosed best-effort submission decision; weakening a validator does not resolve them.
+
+Agent Response Summary:
+Implemented the subject-level account-absence proof (account_proof.py) with explicit gates (scope, post-request timing, attributable rows, no rows hidden by the cutoff, latest-event-per-copy, primary required) and validated it against the public samples' known account states; that validation exposed two real flaws that were fixed (weak scope hiding presence; a profile lookup must outrank a later declared-empty snapshot). Unresolved cases dropped from 99 to 9 (case_524/530/532/55: no post-request account snapshot; case_183/343/345/462: weak scope only; case_63: source conflict), with 0 false absences on the samples, and two stricter options measured and left off. Revised fixtures into a frozen v2 (labels written before running the engine) with four new proof scenarios. Widened the reproducibility hash to all package files including the 11 transcriptions, moved requirements into code/, wrote evaluation_report.md, usage_report.md (final run uses no model; only a 9-call smoke test cost about 0.013 USD; coding-agent usage not measurable) and a README matching the real CLI, added a report generator, and built a deterministic package script whose --verify extracts the zip with the dataset supplied separately, passes all suites and regenerates a byte-identical output. No root output.csv exists: the export gate still refuses because 9 rows are contract-invalid. No paid API calls were made and no peer artifact was used.
+
+Actions:
+* Created: code/ghostaudit/account_proof.py; tests/test_account_proof.py (18); fixtures build_fixtures_v2.py + synth_v2/ + synth_v2.sha256; scripts/{package,write_reports,validate_account_proof,sensitivity_account_proof}.py; code/evaluation/{evaluation_report,usage_report}.md
+* Edited: engine.py, caseview.py, observations.py, export.py (code_files/hash, runtime_model_calls), main.py, test_fixtures_frozen.py (v1+v2), labeled.py (synth_v2), build_fixtures.py (manifest path only; v1 output byte-identical), README.md (rewritten), code/docs/{DECISIONS,SAMPLE_REGRESSION_DIAGNOSIS}.md
+* Moved requirements.txt to code/requirements.txt
+* Ran: all 12 suites, labeled evaluation, provisional run, verify (byte-identical), export gate (refused as designed), report freshness check, package --verify (extracted package passes and reproduces the output hash), packager negative tests (planted secret and nested archive refused)
+* No commit made; files are staged only. No paid API calls.
+
+Context:
+tool=Claude Code (VSCode extension)
+model=claude-sonnet-5-5
+branch=dev/baseline
+repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

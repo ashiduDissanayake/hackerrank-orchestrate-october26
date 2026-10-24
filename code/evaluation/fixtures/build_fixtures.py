@@ -28,6 +28,7 @@ sys.path.insert(0, os.path.join(REPO, "code"))
 from ghostaudit.contract import OP_STATE, canonical_sort  # noqa: E402
 
 OUT = os.path.join(HERE, "synth_v1")
+MANIFEST = os.path.join(HERE, "synth_v1.sha256")
 REQ_AT, REP_AT, AUDIT_AT = "2026-06-01T09:00:00Z", "2026-06-02T09:00:00Z", "2026-06-15T12:00:00Z"
 T_EARLY, T_BUNDLE, T_LEGAL, T_MAIN, T_R, T_LATE = (
     "2026-06-01T08:00:00Z", "2026-06-14T09:30:00Z", "2026-06-14T08:30:00Z",
@@ -363,7 +364,7 @@ def build():
             p = os.path.join(root, nm)
             manifest.append((os.path.relpath(p, OUT), hashlib.sha256(open(p, "rb").read()).hexdigest()))
     manifest.sort()
-    with open(os.path.join(HERE, "synth_v1.sha256"), "w") as f:
+    with open(MANIFEST, "w") as f:
         for rel, h in manifest:
             f.write(f"{h}  {rel}\n")
     print(f"built {len(cases)} cases, {len(manifest)} files; manifest -> synth_v1.sha256")

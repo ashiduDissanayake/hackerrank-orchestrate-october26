@@ -15,11 +15,24 @@ run manifest and the final export gate refuses to export while any exist.
 """
 from dataclasses import dataclass, field
 
+from .account_proof import account_proof
 from .caseview import CaseView
 from .intent import classify
 from .linking import link_subject, window_candidates
 from .obligations import account_from_tombstone, account_gap, action_table, evaluate
 from .planner import plan
+
+
+def account_from_proof(cv, subj, req, allow_weak=False, require_row=False):
+    """Subject-level absence of any account profile, from subject-keyed queries of account snapshots (account_proof.py).
+    Records the proof internally like the tombstone proof: no resource id is invented, so no step is emitted."""
+    from .obligations import Obligation
+    p = account_proof(cv, subj, req.requested_at, allow_weak, require_row)
+    if p.status != "ABSENT":
+        return None
+    return Obligation("account_service", None, "USER_PROFILE", "DELETE", "COMPLIANT", "no_profile_for_subject_in_snapshot", p.evidence_id,
+                      {"no_step": True, "proof_reason": p.reason,
+                       "copies": {c: (e.status, e.evidence_id, e.time, e.basis) for c, e in p.copies.items()}, "uncovered_copies": p.uncovered})
 
 
 @dataclass
@@ -38,7 +51,7 @@ class CaseResult:
     candidates: list = field(default_factory=list)
 
 
-def audit_case(req, store, ident, rules, unknown_policy="not_certified"):
+def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False):
     intent = classify(req.request_text)
     if not intent.deletion:
         return CaseResult(req.case_id, "NOT_APPLICABLE", "NOT_APPLICABLE", [], intent)
@@ -53,7 +66,8 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified"):
             obs.append(ob)
     cands = window_candidates(cv, req, set(lr.links))
     if not any(o.category == "USER_PROFILE" for o in obs):
-        obs.append(account_from_tombstone(cv, obs) or account_gap([c for c in cands if c[2] == "account_service"]))
+        obs.append(account_from_tombstone(cv, obs) or account_from_proof(cv, subj, req, allow_weak, require_row)
+                   or account_gap([c for c in cands if c[2] == "account_service"]))
     res = CaseResult(req.case_id, "", "", [], intent, subj, lr.links, lr.rejected, obs,
                      [o for o in obs if o.verdict == "UNKNOWN"], list(subj.conditions), cands)
     violations = [o for o in obs if o.verdict == "VIOLATION"]

@@ -20,7 +20,7 @@ REPO = os.path.dirname(CODE)
 import scoring  # noqa: E402
 from ghostaudit import run as runner  # noqa: E402
 
-FX = os.path.join(HERE, "fixtures", "synth_v1")
+FX = os.path.join(HERE, "fixtures", os.environ.get("FIXTURE_VERSION", "synth_v2"))
 
 
 def as_pred(results):
@@ -96,7 +96,7 @@ def run_fixtures(verbose=True):
 
 def main():
     print(f"unresolved-obligation policy: {POLICY} (open decision P3)")
-    print("== frozen fixtures (synth_v1) ==")
+    print(f"== frozen fixtures ({os.path.basename(FX)}) ==")
     m, n_fail, n, policy = run_fixtures()
     print(f"\ncases passing: {n - n_fail}/{n}  (labeled-output cases: {m['cases']})")
     print(scoring.summarize(m))

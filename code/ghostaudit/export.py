@@ -46,14 +46,30 @@ def input_hashes(root):
     return dict(sorted(out.items()))
 
 
-def code_hash():
-    files = []
-    for base in (os.path.join(CODE, "ghostaudit"),):
-        for d, _, names in os.walk(base):
-            if "__pycache__" in d:
+def code_files():
+    """Every file that can change a prediction: all of code/ghostaudit (sources, image transcriptions, any prompt or
+    config added later; any extension), the CLI entry point, and the dependency manifest. Caches and bytecode are excluded."""
+    out = {}
+    for d, dirs, names in os.walk(os.path.join(CODE, "ghostaudit")):
+        dirs[:] = sorted(x for x in dirs if x != "__pycache__")
+        for n in names:
+            if n.endswith((".pyc", ".pyo")) or n.startswith("."):
                 continue
-            files += [os.path.relpath(os.path.join(d, n), CODE) for n in names if n.endswith((".py", ".md"))]
-    return _tree_hash(files, CODE)
+            p = os.path.join(d, n)
+            out[os.path.relpath(p, REPO)] = p
+    for rel in ("code/main.py", "code/requirements.txt"):
+        p = os.path.join(REPO, rel)
+        if os.path.exists(p):
+            out[rel] = p
+    return dict(sorted(out.items()))
+
+
+def code_hash():
+    h = hashlib.sha256()
+    for rel, p in code_files().items():
+        h.update(rel.encode())
+        h.update(sha256_file(p).encode())
+    return h.hexdigest()
 
 
 def git_state():
@@ -84,6 +100,9 @@ def build_manifest(argv, config, ds, results, out_path, validation_errors):
         "python": sys.version.split()[0],
         "git": git_state(),
         "code_sha256": code_hash(),
+        "code_files": len(code_files()),
+        "runtime_model_calls": 0,   # the pipeline is deterministic code; no LLM is called at run time
+        "prompts": [],
         "inputs_sha256": input_hashes(ds.root),
         "output_sha256": sha256_file(out_path),
         "rows": len(results),

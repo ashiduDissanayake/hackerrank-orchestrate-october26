@@ -19,22 +19,26 @@ sys.path.insert(0, os.path.dirname(HERE))
 from ghostaudit.validate import validate_row  # noqa: E402
 
 FX = os.path.join(HERE, "fixtures")
-OUT = os.path.join(FX, "synth_v1")
-MANIFEST = os.path.join(FX, "synth_v1.sha256")
+# version -> (builder script, number of fully labeled output rows)
+VERSIONS = {"synth_v1": ("build_fixtures.py", 13), "synth_v2": ("build_fixtures_v2.py", 17)}
 
 
-def current_hashes():
+def paths(version):
+    return os.path.join(FX, version), os.path.join(FX, f"{version}.sha256")
+
+
+def current_hashes(out):
     res = {}
-    for root, _, names in os.walk(OUT):
+    for root, _, names in os.walk(out):
         for nm in names:
             p = os.path.join(root, nm)
-            res[os.path.relpath(p, OUT)] = hashlib.sha256(open(p, "rb").read()).hexdigest()
+            res[os.path.relpath(p, out)] = hashlib.sha256(open(p, "rb").read()).hexdigest()
     return res
 
 
-def frozen_hashes():
+def frozen_hashes(manifest):
     res = {}
-    for line in open(MANIFEST):
+    for line in open(manifest):
         h, rel = line.rstrip("\n").split("  ", 1)
         res[rel] = h
     return res
@@ -42,46 +46,56 @@ def frozen_hashes():
 
 class Frozen(unittest.TestCase):
     def test_hashes_match_manifest(self):
-        self.assertEqual(current_hashes(), frozen_hashes(), "fixture files changed after the freeze")
+        for v in VERSIONS:
+            out, man = paths(v)
+            self.assertEqual(current_hashes(out), frozen_hashes(man), f"{v}: fixture files changed after the freeze")
 
     def test_build_is_deterministic(self):
-        before = open(MANIFEST).read()
-        subprocess.check_call([sys.executable, os.path.join(FX, "build_fixtures.py")], stdout=subprocess.DEVNULL)
-        self.assertEqual(open(MANIFEST).read(), before, "rebuild produced a different fixture set")
+        for v, (script, _) in VERSIONS.items():
+            out, man = paths(v)
+            before = open(man).read()
+            subprocess.check_call([sys.executable, os.path.join(FX, script)], stdout=subprocess.DEVNULL)
+            self.assertEqual(open(man).read(), before, f"{v}: rebuild produced a different fixture set")
+        # building v2 must never touch v1
+        self.assertEqual(current_hashes(paths("synth_v1")[0]), frozen_hashes(paths("synth_v1")[1]))
 
     def test_labels_are_contract_valid(self):
-        reqs = {r["case_id"]: r for r in csv.DictReader(open(os.path.join(OUT, "deletion_requests.csv"), encoding="utf-8"))}
-        ev = {r["file_id"]: r["captured_at"] for r in csv.DictReader(open(os.path.join(OUT, "evidence_files.csv")))}
-        n = 0
-        for r in csv.DictReader(open(os.path.join(OUT, "expected_output.csv"), encoding="utf-8")):
-            errs = validate_row(r["case_id"], r["deletion_status"], r["steps_json"], audit_at=reqs[r["case_id"]]["audit_at"], evidence_time=ev.get)
-            self.assertEqual(errs, [], r["case_id"])
-            n += 1
-        self.assertEqual(n, 13)
+        for v, (_, expected_rows) in VERSIONS.items():
+            out, _ = paths(v)
+            reqs = {r["case_id"]: r for r in csv.DictReader(open(os.path.join(out, "deletion_requests.csv"), encoding="utf-8"))}
+            ev = {r["file_id"]: r["captured_at"] for r in csv.DictReader(open(os.path.join(out, "evidence_files.csv")))}
+            ev.update({r["activity_id"]: r["event_time"] for r in csv.DictReader(open(os.path.join(out, "system_activity.csv")))})
+            n = 0
+            for r in csv.DictReader(open(os.path.join(out, "expected_output.csv"), encoding="utf-8")):
+                errs = validate_row(r["case_id"], r["deletion_status"], r["steps_json"], audit_at=reqs[r["case_id"]]["audit_at"], evidence_time=ev.get)
+                self.assertEqual(errs, [], f"{v} {r['case_id']}")
+                n += 1
+            self.assertEqual(n, expected_rows, v)
 
     def test_internal_references_exist(self):
-        internal = json.load(open(os.path.join(OUT, "expected_internal.json"), encoding="utf-8"))
-        corpus = ""
-        for root, _, names in os.walk(OUT):
-            for nm in names:
-                if nm not in ("expected_internal.json", "expected_output.csv"):
-                    corpus += open(os.path.join(root, nm), encoding="utf-8").read()
-        for case, exp in internal.items():
-            for key in ("links_accepted", "links_rejected"):
-                for rid in exp.get(key, []):
-                    self.assertIn(rid, corpus, f"{case}: {rid} not found in fixture inputs")
-            for rid in exp.get("must_not_cite", []):
-                self.assertIn(rid, corpus)
-            for u in exp.get("links_unresolved", []):
-                for rid in u["candidates"]:
-                    self.assertIn(rid, corpus)
+        for v in VERSIONS:
+            out, _ = paths(v)
+            internal = json.load(open(os.path.join(out, "expected_internal.json"), encoding="utf-8"))
+            corpus = ""
+            for root, _, names in os.walk(out):
+                for nm in names:
+                    if nm not in ("expected_internal.json", "expected_output.csv"):
+                        corpus += open(os.path.join(root, nm), encoding="utf-8").read()
+            for case, exp in internal.items():
+                for key in ("links_accepted", "links_rejected", "must_not_cite"):
+                    for rid in exp.get(key, []):
+                        self.assertIn(rid, corpus, f"{v} {case}: {rid} not found in fixture inputs")
+                for u in exp.get("links_unresolved", []):
+                    for rid in u["candidates"]:
+                        self.assertIn(rid, corpus)
 
     def test_coverage_of_required_scenarios(self):
-        reqs = list(csv.DictReader(open(os.path.join(OUT, "deletion_requests.csv"), encoding="utf-8")))
-        internal = json.load(open(os.path.join(OUT, "expected_internal.json"), encoding="utf-8"))
-        statuses = {r["deletion_status"] for r in csv.DictReader(open(os.path.join(OUT, "expected_output.csv"), encoding="utf-8"))}
+        out, _ = paths("synth_v2")
+        reqs = list(csv.DictReader(open(os.path.join(out, "deletion_requests.csv"), encoding="utf-8")))
+        internal = json.load(open(os.path.join(out, "expected_internal.json"), encoding="utf-8"))
+        statuses = {r["deletion_status"] for r in csv.DictReader(open(os.path.join(out, "expected_output.csv"), encoding="utf-8"))}
         self.assertEqual(statuses, {"COMPLETE", "INCOMPLETE", "NOT_APPLICABLE"})
-        self.assertTrue(any(v.get("status") == "UNDETERMINED" for v in internal.values()))
+        self.assertGreaterEqual(sum(1 for v in internal.values() if v.get("status") == "UNDETERMINED"), 3)
         self.assertTrue(any(re_.encode("ascii", "ignore") != re_.encode() for re_ in (r["request_text"] for r in reqs)),
                         "needs non-ASCII (multilingual) request text")
 

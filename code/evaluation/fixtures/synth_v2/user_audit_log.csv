@@ -1,0 +1,7 @@
+audit_id,user_id,event_time,field_name,old_value,new_value
+fxa_01,user_f11,2026-05-01T08:00:00Z,email,selma.aydin.old@example.org,selma.aydin@example.org
+fxa_02,user_f11,2026-05-01T08:00:00Z,email_hash,51f7957396b91414cde2d3cf0802f119c8cab920cf27ad0a75b5462efc8f382d,454864d20ed703b8bf536e6a4d6ba8d9bf4fad32019507916322307bf8f8087a
+fxa_03,user_f13,2026-04-01T08:00:00Z,email,yusuf.marek.old@example.org,yusuf.marek@example.org
+fxa_04,user_f13,2026-04-01T08:00:00Z,email_hash,67429bc73111d922822424a70093c7f381a8173e38e2edbf2098e8e86ed49f2f,2ce150b4c4c7496f60c21c474d735da0fa378183fe1b9bd26c473362d28cd8c1
+fxa_05,user_f16,2026-06-20T08:00:00Z,email,anouk.visser@example.org,anouk.visser.new@example.org
+fxa_06,user_f16,2026-06-20T08:00:00Z,email_hash,71b88b7bcfd706683cd6b84974bccd001087008877878cfb1371727e52352b33,9a16c72ef55b45096a15e1e1f0c17d896875d7454ca290e307081a9087723a33

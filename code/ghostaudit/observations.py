@@ -114,10 +114,12 @@ class Store:
 
     def finalize(self):
         self._obs.sort(key=lambda o: (o.evidence_id, o.locator))
-        self._by_resource, self._by_ident = {}, {}
+        self._by_resource, self._by_ident, self._by_system = {}, {}, {}
         for o in self._obs:
             if o.resource_id:
                 self._by_resource.setdefault(o.resource_id, []).append(o)
+            if o.system_id:
+                self._by_system.setdefault(o.system_id, []).append(o)
             tk = o.f("trace_lookup_key")
             if tk:
                 self._by_ident.setdefault(("trace", tk.strip().lower()), []).append(o)

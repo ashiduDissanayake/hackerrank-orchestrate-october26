@@ -1,44 +1,90 @@
-# HackerRank Orchestrate - October 2026
+# Ghost Data Still Exists: deletion-audit agent
 
-## Ghost Data Still Exists
+For every request in `dataset/deletion_requests.csv` this program decides whether the person asked for deletion, reconstructs what each system held about them at the case's `audit_at`, applies `deletion_rules.csv`, and returns `COMPLETE`, `INCOMPLETE` or `NOT_APPLICABLE` with the findings, an ordered remediation plan and the verification checks that must pass.
 
-Build an AI agent that audits whether a user's personal data was actually deleted.
+The design is **deterministic evidence code, not a model on the prediction path**. Nothing in `code/ghostaudit` calls a language model. A claim is only used as a claim; state comes from admissible evidence.
 
-A deletion workflow may report **Complete** while data still exists in databases, logs, support attachments, exports, search indexes, archives, or backups. Sync and restore processes may also bring deleted data back.
+## Setup
 
-For each request, the agent must first determine whether deletion was actually requested. It then returns `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE`, reports any remaining data or recreation risk, and produces the ordered remediation and verification steps required to finish an authorized deletion safely.
+Requirements: Python 3.10 or newer (developed and tested on 3.12), and the poppler `pdftotext` command (PDF evidence). The pipeline itself uses only the standard library.
 
-Read [`problem_statement.md`](./problem_statement.md) for the complete challenge contract.
+```bash
+python3 -m venv .venv && . .venv/bin/activate           # Windows: .venv\Scripts\activate
+pip install -r code/requirements.txt                     # pillow (OCR cross-check test) and anthropic (smoke-test script only)
+# system tools:   macOS: brew install poppler tesseract    Debian/Ubuntu: apt-get install poppler-utils tesseract-ocr
+```
+
+`tesseract` and `pillow` are needed only for the OCR cross-check test; without them that one test is skipped and says so. No API key is needed for anything on the prediction path. The participant dataset is **not** part of the package: place it at `dataset/` next to `code/`.
+
+## Run
+
+```bash
+python3 code/main.py run                      # provisional output + manifest + diagnostics under runs/provisional/
+python3 code/main.py explain case_01 --data dataset --requests sample_deletion_requests.csv    # why a case came out as it did
+python3 code/main.py coverage                 # per-artifact extraction coverage report
+python3 code/main.py verify runs/provisional/output.manifest.json   # regenerate and compare: byte-identical output, unchanged inputs and code
+python3 code/main.py export                   # the ONLY writer of ./output.csv (see below)
+```
+
+`run` never writes the submission path. `export` writes `./output.csv` and `./output.manifest.json` only if every gate passes: the output is contract-valid, no case is UNDETERMINED, the policy is the non-certifying default, all PNG evidence is transcribed, the git tree is clean (so the manifest's commit identifies the code), and the complete test suite passes. A refused export lists every reason and writes nothing.
+
+The CLI requires a subcommand (`python3 code/main.py` alone prints usage).
+
+## Verify and test
+
+```bash
+python3 code/evaluation/main.py all           # every test suite + labeled evaluation; non-zero exit on any failure
+python3 code/evaluation/main.py validate --pred output.csv --requests dataset/deletion_requests.csv
+python3 code/evaluation/main.py score --pred runs/provisional/output.csv --gold dataset/sample_output.csv --diff   # public samples only
+python3 scripts/write_reports.py              # refresh the numeric blocks of the two reports from the actual evaluation
+```
+
+Metric definitions, results, the synthetic evaluation cases, failures found and improvements made are in `code/evaluation/evaluation_report.md`; model/token/cost accounting (the final run uses no model) is in `code/evaluation/usage_report.md`; decisions, alternatives, measurements and limitations are in `code/docs/DECISIONS.md`; the diagnosis of the public-sample regressions is in `code/docs/SAMPLE_REGRESSION_DIAGNOSIS.md`.
+
+## Package
+
+```bash
+python3 scripts/package.py                    # builds ./code.zip (README, code/, scripts/, a generated evaluation/ copy of the two reports)
+python3 scripts/package.py --verify           # also extracts it to a temp dir, supplies the dataset separately, then runs the tests, run and verify there
+```
+
+The archive excludes `dataset/`, virtual environments, caches, `runs/`, secrets and nested archives, and the packager fails if it finds a secret-looking string or an archive inside.
+
+## How it works
+
+1. **Extract** (`ghostaudit/extract/`): SQL snapshots (executed in an in-memory SQLite), JSON exports and bundles, six log dialects, the shift handover, PDFs (`pdftotext`) and the 11 PNG screenshots (hash-bound transcriptions in `ghostaudit/image_transcriptions/`, cross-checked against local OCR) become timestamped observations with two times each: when the artifact existed and when the record was observed. Snapshot scope declarations are kept, so "not captured" can be told from "absent".
+2. **Cutoff** (`caseview.py`): the only way case logic reads evidence. An observation is visible only if **both** its artifact time and its observation time are at or before `audit_at`.
+3. **Identity** (`identity.py`): current and historical emails, hashes and phones with the time each belonged to the user; identifiers introduced after the cutoff are excluded. Phones and names are normalized in one place (`normalize.py`); names never link.
+4. **Link** (`linking.py`): a record is linked to the subject only through an explicit evidence chain (a direct identifier, a lookup key, a source reference or a data-catalog row). Activity-window matches are candidates, never links. A link contradicted by the record it points at is rejected or reported as a conflict.
+5. **State and policy** (`state.py`, `obligations.py`): per physical copy (primary and each replica) the latest evidence wins; absence counts only when a lookup or a scope-covering snapshot supports it; rule conditions (retention, legal hold, ownership, tombstone assessment) are evaluated, not looked up. When no account resource is linked, `account_proof.py` queries the account snapshots by the *subject's* identifiers to establish subject-level absence without naming a resource.
+6. **Plan** (`planner.py`, `contract.py`): findings, remediation and verification in contract order, numbered consecutively; the validator rejects anything that is not a complete chain.
+
+Uncertainty is kept honest: an obligation can be COMPLIANT, a VIOLATION or UNKNOWN, and an UNKNOWN is never turned into a finding, a remediation, a verification step or a certified COMPLETE. The three output statuses have no representation for "not determined", so a case that cannot be determined is reported by the manifest as UNDETERMINED and blocks `export` instead of being guessed.
+
+## Layout
+
+```text
+code/main.py                 CLI: run | export | verify | explain | coverage | dump
+code/ghostaudit/             the engine (extract/, caseview, identity, linking, state, obligations, account_proof, planner, validate, export, ...)
+code/evaluation/             scorer, labeled evaluation, frozen fixtures (synth_v1 history, synth_v2), the two reports
+code/tests/                  unit, invariance, regression and cross-check tests
+code/docs/                   DECISIONS.md and the sample-regression diagnosis
+code/requirements.txt        pinned dependencies (tests and scripts only)
+scripts/                     package.py, write_reports.py, diagnosis and measurement scripts, the smoke test
+```
+
+## Known limitations
+
+* The output format cannot express "not determined". Cases that remain unresolved after all evidence is used are listed in `code/evaluation/evaluation_report.md` section 6 with the exact missing evidence, so a final `output.csv` is exported only when none remain, or when a decision on how to represent them has been made.
+* The PNG transcriptions are hand-authored; they are hash-bound and OCR-cross-checked but not regenerated by code.
+* The subject-level account proof rests on the snapshots' own declaration of coverage (they hold only 1 to 4 rows each); it is validated against known states and never names a resource.
+* The intent classifier is a deterministic heuristic.
 
 ---
 
-## Quick Start
+# Challenge brief (from the starter README)
 
-Clone the repository and move into the project directory:
-
-```bash
-git clone https://github.com/interviewstreet/hackerrank-orchestrate-october26.git
-cd hackerrank-orchestrate-october26
-```
-
-Start your AI coding tool from the **repository root** so it automatically reads [`AGENTS.md`](./AGENTS.md) and logs your session turns to `log.txt` in the root directory.
-
-Build your solution in `code/main.py`, or use another language and document its setup and run command clearly in your README.
-
-Your solution must:
-
-- Read the input files from `dataset/`
-- Generate one prediction row for every request in `dataset/deletion_requests.csv`
-- Write the final predictions to `output.csv` in the repository root
-
-Run the starter Python entry point with:
-
-```bash
-python3 code/main.py
-```
-
-The blank template at `dataset/output.csv` is provided as a reference. Your final generated file for submission must be the root-level `output.csv`.
-
+Build an AI agent that audits whether a user's personal data was actually deleted. A deletion workflow may report **Complete** while data still exists in databases, logs, support attachments, exports, search indexes, archives, or backups, and sync or restore processes may bring deleted data back. The full contract is in [`problem_statement.md`](./problem_statement.md) and [`AGENTS.md`](./AGENTS.md).
 
 ## Dataset
 
@@ -115,43 +161,13 @@ This repository includes [`AGENTS.md`](./AGENTS.md), which instructs compatible 
 
 ---
 
-## Packaging `code.zip` and Submission
+## Packaging `code.zip` and submission checklist
 
-| Item | Description |
-| --- | --- |
-| `code.zip` | Runnable solution, prompts, configuration, `README.md`, and `evaluation/` reports |
-| `output.csv` | One answer row for each of the 518 requests in `dataset/deletion_requests.csv` |
-| `chat_transcript` | The root `log.txt` file generated by your coding agent |
-| AI interview | Live explanation of your architecture, approach, and evaluation |
+Use `python3 scripts/package.py` (see "Package" above); it replaces the starter's `zip -r code.zip README.md code ...` command, which still works and now also carries `code/requirements.txt`. Do not include `dataset/`, virtual environments, build caches or nested archives. Before submitting, confirm that:
 
-You may use any programming language, model, framework, or retrieval approach. Include clear setup and execution instructions in `README.md` inside `code.zip`.
-
-To package `code.zip` from the repository root without bundling the dataset:
-
-**macOS / Linux:**
-
-```bash
-zip -r code.zip README.md code -x "*/__pycache__/*" "*/.venv/*" "*/venv/*" "*/node_modules/*" "*/.git/*" "*/.DS_Store"
-```
-
-**Windows (PowerShell):**
-
-```powershell
-Compress-Archive -Path README.md, code -DestinationPath code.zip -Force
-```
-
-When packaging `code.zip`:
-
-- Keep your evaluation reports in `code/evaluation/` so they are bundled automatically with `code` (or add `evaluation` to the archive command above if you placed them in a top-level `evaluation/` directory).
-- Do **not** include `dataset/`, virtual environments (`.venv`, `venv`, `node_modules`), or build caches (`__pycache__`). On Windows, keep `.venv` at the repository root (outside `code/`) and remove any `code/__pycache__` folders before running `Compress-Archive`.
-- Do **not** include nested archives (`.zip`, `.tar`, `.gz`, `.tgz`, `.7z`, `.rar`) inside `code.zip` — submissions containing nested archive files will be rejected.
-
-Before submitting, confirm that:
-
-- `output.csv` has the exact header `case_id,deletion_status,steps_json` and contains all 518 data rows sorted by `case_id`;
+- `output.csv` is the file written by `python3 code/main.py export` (never hand-edited), with the exact header `case_id,deletion_status,steps_json` and all 518 rows;
 - every `steps_json` value is a valid JSON array with consecutive step numbers starting at `1`;
-- findings cite valid evidence IDs, and `COMPLETE` verification steps cite evidence proving the current state;
-- proposed remediation and future verification steps use an empty `evidence_id` (`""`);
-- `code.zip` includes your runnable code, `README.md`, `code/evaluation/evaluation_report.md`, and `code/evaluation/usage_report.md`;
-- `log.txt` follows the `AGENTS.md` turn format and is uploaded to the `chat_transcript` slot; and
-- no API keys, credentials, real personal data, or sensitive configuration values are included.
+- findings cite valid evidence ids, `COMPLETE` verification steps cite evidence proving the current state, and remediation and future verification steps use an empty `evidence_id`;
+- `code.zip` includes the runnable code, this `README.md`, `code/evaluation/evaluation_report.md` and `code/evaluation/usage_report.md`;
+- `log.txt` is the unedited append-only log and is uploaded as the `chat_transcript`;
+- no API keys, credentials, real personal data or sensitive configuration are included.

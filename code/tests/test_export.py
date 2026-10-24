@@ -62,6 +62,28 @@ class Reproducibility(unittest.TestCase):
             self.assertEqual(run_cli("verify", mp).returncode, 1, "inputs")
 
 
+class CodeHash(unittest.TestCase):
+    def test_hash_covers_everything_that_can_change_a_prediction(self):
+        files = ex.code_files()
+        self.assertEqual(len([f for f in files if f.endswith(".json")]), 11, "all PNG transcriptions")
+        for must in ("code/main.py", "code/requirements.txt", "code/ghostaudit/engine.py", "code/ghostaudit/account_proof.py"):
+            self.assertIn(must, files)
+        self.assertFalse([f for f in files if "__pycache__" in f or f.endswith(".pyc")])
+
+    def test_changing_a_transcription_changes_the_hash(self):
+        import hashlib
+        files = ex.code_files()
+        t = next(p for f, p in files.items() if f.endswith("evidence_09.json"))
+        before = ex.code_hash()
+        orig = open(t, "rb").read()
+        try:
+            open(t, "wb").write(orig + b" ")
+            self.assertNotEqual(ex.code_hash(), before)
+        finally:
+            open(t, "wb").write(orig)
+        self.assertEqual(ex.code_hash(), before)
+
+
 class ExportGate(unittest.TestCase):
     def _subset(self, drop):
         """A copy of the fixtures without the given cases, so the gate can be tested on a fully resolved dataset."""

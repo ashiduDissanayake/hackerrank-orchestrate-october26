@@ -65,6 +65,15 @@ class CaseView:
         does list the resource under a record time after the cutoff."""
         return any(o.evidence_id == evidence_id for o in self._s._by_resource.get(resource_id, ()))
 
+    def for_system(self, system_id):
+        """Admissible observations of one system (used for subject-keyed snapshot queries)."""
+        return [o for o in self._s._by_system.get(system_id, ()) if self._ok(o)]
+
+    def hidden_in_artifact(self, evidence_id, system_id):
+        """Number of observations of `system_id` in the artifact that the cutoff hides. Count only: an absence claim
+        about a snapshot is unsound if the snapshot also holds rows this case may not see."""
+        return sum(1 for o in self._s._by_system.get(system_id, ()) if o.evidence_id == evidence_id and not self._ok(o))
+
     def all(self):
         return [o for o in self._s._obs if self._ok(o)]
 

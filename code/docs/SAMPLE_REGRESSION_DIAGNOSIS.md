@@ -55,3 +55,20 @@ Distribution on the 518 eval cases (unlabeled diagnostic, not accuracy): 96 unre
 python3 code/main.py explain case_01 --data dataset --requests sample_deletion_requests.csv
 ```
 Case_01 needs `account_001` verified absent. `grep -rn account_001 dataset/` returns only `activity_3342` (a DELETE *claim*) and the sample answer. evidence_54 would prove absence if the id were known to belong to the subject, but nothing in any artifact, at any capture time, links that id to `amina.elmasri@gmail.com`. This is a dataset property, not an implementation gap.
+
+
+## Update (2026-10-25): the two questions are different
+
+The analysis above conflated two questions, and the closeout review separated them:
+
+1. Can the SUBJECT's account state be established (no profile for the subject remains in an authoritative snapshot)?
+2. Can the original account RESOURCE ID be recovered (needed to emit the canonical verification step)?
+
+For the eight remaining cases (01, 02, 04, 21, 25, 26, 27, 28) question 2 is still **no** (unchanged: no identifier ties `account_001` ... `account_5482` to the subject), but question 1 is answerable from `evidence_54` / `evidence_51` / `evidence_90` etc.: a subject-keyed query returns no row. `ghostaudit/account_proof.py` records that as a subject-level obligation (`USER_PROFILE`, `no_profile_for_subject_in_snapshot`) **without a resource id and without a step**. Effect on the public samples: all 8 are no longer unresolved; sample status accuracy is 32/32 under the default non-certifying policy. Their gold answers still contain an account step that cannot be produced, so step recall stays below 1 (0.8187); the missing steps are a recall limitation, not an uncertainty about the state.
+
+How the proof was kept from over-claiming (details and tests in `code/tests/test_account_proof.py`, `code/evaluation/evaluation_report.md` section 5):
+
+* validated against the samples' known account states: all 3 genuinely present accounts (cases 05, 16, 24) are violations and none was claimed absent; this validation found two flaws that are fixed (weak-scope replicas must never hide presence; a profile lookup must outrank a later declared-empty bundle: case_24's lookup at 09:41 versus a declared-empty `customer_profiles` bundle at 12:00);
+* the snapshots hold only 1 to 4 rows each, so "the snapshot declares coverage" is an assumption, not a proof; two stricter switches (weak scopes, required positive-control row) are measured and left off.
+
+The real data splits as: 309 eval cases discharged by the proof (86 of them rest only on declared-empty account tables, 219 on artifacts that also show at least one account row), 8 by a `DELETED` tombstone, and **9 remain UNDETERMINED**: `case_524`, `case_530`, `case_532` (audit 2026-01-29, before any account artifact), `case_55` (also no restore state), `case_183`, `case_343`, `case_345`, `case_462` (weak scope only) and `case_63` (source conflict).
