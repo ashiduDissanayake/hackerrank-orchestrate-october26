@@ -33,6 +33,27 @@ python3 code/main.py best-effort              # review artifact when export must
 
 The CLI requires a subcommand (`python3 code/main.py` alone prints usage).
 
+## Optional workflow-attribution preview
+
+The default remains the evidence-only audit. An explicit experimental mode can propose otherwise unlinked account/analytics resources through a joint assignment of overlapping workflow requests. It preserves exact links, rejects contradictory identities, enforces the target audit cutoff for every competitor, leaves tied or low-margin assignments unresolved, and independently evaluates record state. It uses no model API.
+
+```bash
+# Sample preview and its scores (public development data):
+python3 code/main.py run --requests sample_deletion_requests.csv --workflow-mode joint --out runs/workflow_samples/output.csv --diagnostics runs/workflow_samples/diagnostics.json
+python3 code/evaluation/main.py score --pred runs/workflow_samples/output.csv --gold dataset/sample_output.csv
+
+# All 518 requests; explicitly uncertified CSV + provenance manifest:
+python3 code/main.py run --workflow-mode joint --out output_workflow_preview.csv --diagnostics runs/workflow_preview/diagnostics.json
+python3 code/main.py verify output_workflow_preview.manifest.json
+python3 scripts/evaluate_workflow.py
+```
+
+The preview improves the measured public result from 10/32 to 17/32 exact answers and from 159 to 172 matching steps, with no extra sample steps at the default margin. The threshold was selected using the public development set: this is not independent or hidden accuracy. The looser zero-margin variant gets 18/32 exact but introduces an incorrect sample step. Full metrics, remaining differences and synthetic controls are in [workflow_report.md](code/evaluation/workflow_report.md).
+
+Every inferred link and run is marked `certified=false`. Margins measure a heuristic objective, not probabilities. The method assumes one additional orphan per system/request in a competing component; this is not a supplied data guarantee. It treats proximity and agreement of reported outcomes as attribution clues, never as proof that deletion succeeded. **Strict export always rejects inference mode**, including otherwise valid rows. No confirmed ownership or COMPLETE certification is claimed for these hypotheses.
+
+`--workflow-min-margin` controls abstention (default 0.25); `--workflow-scoring anchor` removes reported-outcome agreement as a sensitivity control. The mode never uses case-number priorities, sample answers, competitor predictions or post-cutoff artifacts. `best-effort --artifact-dir <directory>` can keep an alternative run's three review artifacts separate; fixture tests use this option rather than overwriting root predictions.
+
 ## Verify and test
 
 ```bash
@@ -62,7 +83,7 @@ The archive excludes `dataset/`, virtual environments, caches, `runs/`, secrets 
 1. **Extract** (`ghostaudit/extract/`): SQL snapshots (executed in an in-memory SQLite), JSON exports and bundles, six log dialects, the shift handover, PDFs (`pdftotext`) and the 11 PNG screenshots (hash-bound transcriptions in `ghostaudit/image_transcriptions/`, cross-checked against local OCR) become timestamped observations with two times each: when the artifact existed and when the record was observed. Snapshot scope declarations are kept, so "not captured" can be told from "absent".
 2. **Cutoff** (`caseview.py`): the only way case logic reads evidence. An observation is visible only if **both** its artifact time and its observation time are at or before `audit_at`.
 3. **Identity** (`identity.py`): current and historical emails, hashes and phones with the time each belonged to the user; identifiers introduced after the cutoff are excluded. Phones and names are normalized in one place (`normalize.py`); names never link.
-4. **Link** (`linking.py`): a record is linked to the subject only through an explicit evidence chain (a direct identifier, a lookup key, a source reference or a data-catalog row). Source references are followed to a fixed point (cycle-safe, provenance kept) and a referenced resource's system comes from its observations or the existing id namespace; learning an id through a reference does not date the resource. Activity-window matches are candidates, never links. A link contradicted by the record it points at is rejected or reported as a conflict. A linked resource whose category cannot be resolved is an explicit UNKNOWN, never dropped.
+4. **Link** (`linking.py`): in the default evidence mode, a record is linked to the subject only through an explicit evidence chain (a direct identifier, a lookup key, a source reference or a data-catalog row). Source references are followed to a fixed point (cycle-safe, provenance kept) and a referenced resource's system comes from its observations or the existing id namespace; learning an id through a reference does not date the resource. Activity-window matches remain candidates in this mode. The opt-in workflow preview can evaluate explicitly marked ownership hypotheses as described above. A link contradicted by the record it points at is rejected or reported as a conflict. A linked resource whose category cannot be resolved is an explicit UNKNOWN, never dropped.
 5. **State and policy** (`state.py`, `coverage_rules.py`, `obligations.py`): per physical copy (primary and each replica) the latest evidence wins; absence counts only when a lookup or a snapshot supports it, under ONE standard shared with the account proof (the capture must hold records of the resource's category, come from a complete source and have a strong or per-source promoted scope; collection-scoped bundles are per-batch extracts and apply only to records known to belong to them); a REDACTED/ANONYMIZED result label discounts query metadata only, never identifiers in the returned payload; rule conditions (retention, legal hold, ownership, tombstone assessment) are evaluated, not looked up. When no account resource is linked, `account_proof.py` queries the account snapshots by the *subject's* identifiers to establish subject-level absence without naming a resource.
 6. **Request scope** (`engine.py`): the subject's earlier requests (from every request file in the data root) define earlier investigation windows. A resource whose every ownership chain was captured inside such a window, before this request began, is carried over (recorded, no step; a PRESENT one becomes UNKNOWN); any evidence at or after the request keeps it in scope.
 7. **Plan** (`planner.py`, `contract.py`): findings, remediation and verification in contract order, numbered consecutively; the validator rejects anything that is not a complete chain.

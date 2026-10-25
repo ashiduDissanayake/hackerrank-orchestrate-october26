@@ -756,3 +756,41 @@ branch=dev/baseline
 repo_root=/Users/ashidudissanayake/Dev/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T22:31:25.030645+00:00] SESSION START
+
+tool=Codex
+model=not_exposed_by_runtime
+Repo Root: /workspace/scratch/5350025af71c/ghost_workflow_repo
+Branch: codex/workflow-attribution
+Worktree: main
+Parent Agent: none
+Language: py
+Time Remaining: not configured
+
+Runtime metadata limitation: the harness identifies this agent as Codex, but neither environment variables, harness configuration nor current-session metadata expose an exact model identifier. No model identifier is guessed. The model-name requirement cannot be fully satisfied in this runtime.
+
+## [2026-10-25T04:12:51.927846+00:00] Workflow implementation, validation and remote integration
+
+User Prompt (verbatim, secrets redacted):
+So can't you just try some extra hard on this work flow to complete some more of the parts and merge to my repo in remote?? complete these more things try to complete at your best
+
+Agent Response Summary:
+Implemented an opt-in, explicitly uncertified joint workflow-attribution preview while preserving the evidence-only default and strict export boundary. Fixed orphan source cycles, earlier-request window bounds, a fixture test that overwrote root review artifacts, and bare output filenames, with reproduced regressions and independent assignment/temporal/state controls. Public development results improved from 10/32 to 17/32 exact full answers and from 159/0/34 to 172/0/21 matching/extra/missing steps; all 32 statuses remain correct, and threshold selection on these public examples is disclosed. All 18 suites and 31 frozen fixtures passed; the extracted 213-file package passed all suites and reproduced both full-dataset CSV hashes, but no certified root output.csv exists (strict: 8 undetermined statuses and 18 plan gaps; preview: 3 undetermined and 19 plan gaps). Prepared the tested code commits, refreshed reports and separate 518-row preview artifacts for the authorized fast-forward remote integration; no paid model API calls, competitor prediction inputs, issue posts or contest submission were made.
+
+Actions:
+* Edited: ghostaudit workflow, linking, engine, run and export; CLI; regression tests; evaluation runner and scripts; report generation and package verification; README and decision/handoff documents.
+* Ran: python3 code/evaluation/main.py all; targeted failing-then-passing source-cycle, episode, inference-state and CLI regressions; four-variant public workflow evaluation; strict and joint 518-case runs; both manifest verifications; scripts/write_reports.py; scripts/package.py --verify under Python 3.12.
+* Generated: output_workflow_preview.csv, its provenance manifest and unresolved register; refreshed output_best_effort.manifest.json; evaluation/usage/workflow reports; code.zip (213 files, sha256 1870e8d589322971717a41ed83a3ee2d9b629405d106287aed35ae4f8a4a73bf).
+* Verified: strict output sha256 b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf unchanged; joint preview sha256 6b4b15bc3f9b37ef369a52b9e22c39e228deca09f9b027a4b950ff4a819c9897; inputs and producing code unchanged for both manifests.
+* Created GitHub code commits f342c2181f27dd3c1710da175f03c915b72e00b1 and ab3bd22d53e878adec5da2f4b7c56bf7da2ca8a9 through the connected GitHub API because command-line push has no credentials; remote branch integration is the next action after this append.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=codex/workflow-attribution
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: Codex is authoritative from the harness instructions. An exact runtime model identifier is not exposed by environment variables, harness configuration or available current-session metadata; none is guessed. The repository's exact-model logging requirement therefore cannot be fully satisfied here.

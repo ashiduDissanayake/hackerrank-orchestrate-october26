@@ -679,12 +679,12 @@ The run these numbers describe:
 | field | value |
 |---|---|
 | command | `python3 code/main.py run` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
-| producing commit (HEAD when the run was made) | `b2907a44c35d` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.25, "scoring": "contextual"}, "workflow_mode": "evidence"}` |
+| producing commit (HEAD when the run was made) | `ab3bd22d53e8` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 4 |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
 | output.csv sha256 | `b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf` |
-| code sha256 (43 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `e4558d455cbff166117e345ea5182d0187915390705bf5bf6b3111890bd9cd15` |
+| code sha256 (44 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `d7fcc1031d7dac2768276e1f1620316e0ce5a05a1e1d2116a33d8f1e6380dd19` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 147, 'INCOMPLETE': 361, 'NOT_APPLICABLE': 10} |
@@ -693,3 +693,24 @@ The run these numbers describe:
 | runtime model calls | 0 |
 | final (exported) | False |
 <!--/AUTO:manifest-->
+
+## 8. Optional workflow-attribution experiment
+
+<!--AUTO:workflow-->
+Public samples are development data. The margin was selected after examining public development results. These figures do not establish hidden accuracy or calibrated confidence.
+
+| Variant | Status | Exact full answers | TP / FP / FN | Step P / R / F1 | Validation errors |
+|---|---:|---:|---|---|---:|
+| Evidence baseline | 32/32 | 10/32 | 159 / 0 / 34 | 1.0000 / 0.8238 / 0.9034 | 3 |
+| Joint preview (default margin) | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
+| Joint preview (no positive margin floor) | 32/32 | 18/32 | 173 / 1 / 20 | 0.9943 / 0.8964 / 0.9428 | 0 |
+| Anchor-only control | 32/32 | 15/32 | 166 / 0 / 27 | 1.0000 / 0.8601 / 0.9248 | 0 |
+
+The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. Schema validity does not establish evidence validity. The evidence baseline remains the default.
+
+Default settings: 90 minutes before / 10 minutes after reported_at; minimum counterfactual score margin 0.25; one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability.
+<!--/AUTO:workflow-->
+
+Details and at least three independent synthetic controls are recorded directly in `code/evaluation/workflow_report.md`; regenerate them with `python3 scripts/evaluate_workflow.py`.
+
+The new inference experiment is opt-in and cannot pass strict export. Its development gain comes from candidate attribution, not from changing the evidence-time rule. Two additional source/episode regressions were fixed: source cycles must remain reachable from an accepted identity root, and evidence from before an earlier request cannot be assigned to its investigation window. The fixture best-effort CLI test now uses a temporary artifact directory and asserts that root artifacts remain unchanged.

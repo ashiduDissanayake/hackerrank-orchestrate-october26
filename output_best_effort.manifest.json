@@ -6,7 +6,7 @@
  },
  "cases_with_unresolved_obligations": 26,
  "certified": false,
- "code_files": 43,
+ "code_files": 44,
  "code_files_sha256": {
   "code/ghostaudit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/account_proof.py": "a5530daf2d4c9958b5fdf9094c38025679165fe22e1772506def8f2a4711789a",
@@ -16,8 +16,8 @@
   "code/ghostaudit/coverage.py": "6d482df52a96c05ce13b32081ceddd077315c78859d875664f6b851f03f0f44e",
   "code/ghostaudit/coverage_rules.py": "2c59e417b29f8338ac53b38f52f0865de45e1aa653a40a473dd2dfb953829b38",
   "code/ghostaudit/data.py": "e7cf70d736a38ad43449a3b742ff2f9c9a365b29f563a4441c5f88da157fd490",
-  "code/ghostaudit/engine.py": "9bd5721db462c1886c6b9586a42c08929205810bf65ed0d7ee973272cac21315",
-  "code/ghostaudit/export.py": "c7ffe393d99177f48fd11fec3d51a4a1f8ed43a89c85cf30874524c8192124d6",
+  "code/ghostaudit/engine.py": "167e62f9eec890346568dcae204b0a0b93e75a1bf234d57c87a1cefd21696e0d",
+  "code/ghostaudit/export.py": "2471776ae8395f2c0ad71358f5f4e0867f044161220881fb153f2d256eb8da4f",
   "code/ghostaudit/extract/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/extract/common.py": "0c2be447605b1e4b4e836ed7698eb8d038c1e93106cc81bdd8fa252a559a145d",
   "code/ghostaudit/extract/handover.py": "94cc12179fd4e5777f60ea40f379e839cd7f60cd6b6f1652fa6313641f0a043b",
@@ -40,19 +40,20 @@
   "code/ghostaudit/image_transcriptions/evidence_46.json": "6fd29811c55f1ceaea21af99d6fb95ac2027d0e39a8047567f9e8bd7528ea03a",
   "code/ghostaudit/image_transcriptions/evidence_60.json": "5d5f8a76e472f4d54a51b71057135469e9903630c95192d20778c4dc750dccc0",
   "code/ghostaudit/intent.py": "c8d9df8b4c70bfc2e8804c1bc2d826213dcebf4d0b099bb73f6acd75bc505c4b",
-  "code/ghostaudit/linking.py": "e6adae9cf1b219e88f4568c5303cc08ed892b1f986308d399465ff0df3633a64",
+  "code/ghostaudit/linking.py": "2846aa120b40a01a1cc7e58777e11bcfeaea2f23933918a38571985c07183f36",
   "code/ghostaudit/normalize.py": "bb3b9d61967861c5d5bea00e23ef48505a612ad7646db9430d100652c8a6aae3",
   "code/ghostaudit/obligations.py": "f4ebb9d5d45b4b658c77d00e6a70fc0233f3edcf5243586dbb07edc7cb467f40",
   "code/ghostaudit/observations.py": "e8515ccc49b50d89595870004c3fad48906a6ad5121ed3e03bb3f8c71c6bbd7b",
   "code/ghostaudit/pipeline.py": "eda03418e258db492c8cf97ed6ac01c0237c97d5464eeeda58c2c972d613a013",
   "code/ghostaudit/planner.py": "d09eac353ba81fc146a485c5efc2c6189bd78a90ca217d358f72aa2ce49bdb72",
-  "code/ghostaudit/run.py": "b1b1786a0ca55234f021562bf883a7eeb60a512c6f5c4ac065adb441c60b1b9a",
+  "code/ghostaudit/run.py": "aaad144b51a846167820ea5d62b0681937e9d23a1ac3a43b1cd1217653685432",
   "code/ghostaudit/state.py": "9e299b66d28ecde76b762c287d0d8742f879028d5d43eae162f99c13a6b72185",
   "code/ghostaudit/validate.py": "674a4a05d7b5ade8102e79b2f308e6dc1d488f0a37468b754c0ef0fd4ba537b7",
-  "code/main.py": "f916f15487d96f67e47a41d80952990d1c8d7d35169d84c5dd72216086ca5f81",
+  "code/ghostaudit/workflow.py": "5fba5e19c55a78991a75ef9c044dc6ed4992b0de72ab0ae908d6fd429dabe86b",
+  "code/main.py": "87c99e83cd7467990ee56f49acd2ccc1e9cbb85aa9eed65fdacad2a67091b7dc",
   "code/requirements.txt": "79ed88acaf42c1382d794ba1fc1e23fc4b9f21a513d7b6cbc40380378f5862f5"
  },
- "code_sha256": "e4558d455cbff166117e345ea5182d0187915390705bf5bf6b3111890bd9cd15",
+ "code_sha256": "d7fcc1031d7dac2768276e1f1620316e0ce5a05a1e1d2116a33d8f1e6380dd19",
  "command": [
   "python3",
   "code/main.py",
@@ -70,20 +71,29 @@
   "png_extraction": "complete",
   "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)",
   "requests": "deletion_requests.csv",
-  "unknown_policy": "not_certified"
+  "unknown_policy": "not_certified",
+  "workflow_config": {
+   "after_seconds": 600,
+   "before_seconds": 5400,
+   "min_margin": 0.25,
+   "scoring": "contextual"
+  },
+  "workflow_mode": "evidence"
  },
  "contract_valid": false,
  "disclosure": "Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation.",
  "final": false,
  "git": {
-  "commit": "b2907a44c35d1c3060aed00cb33c7a70be316a1e",
+  "commit": "ab3bd22d53e878adec5da2f4b7c56bf7da2ca8a9",
   "dirty": true,
   "dirty_code_files": [],
   "dirty_files": [
    "README.md",
    "code/docs/DECISIONS.md",
    "code/evaluation/evaluation_report.md",
-   "code/docs/SAMPLE_DIFFERENCES.md"
+   "code/evaluation/usage_report.md",
+   "log.txt",
+   "code/evaluation/workflow_report.md"
   ]
  },
  "inputs_sha256": {
@@ -215,7 +225,7 @@
  ],
  "plan_gaps_accepted": false,
  "prompts": [],
- "python": "3.12.8",
+ "python": "3.12.14",
  "register_sha256": "9cd4f2ad80799376a9842e42537905d4fa59cd06868c8188906f7e7708c53a0b",
  "rows": 518,
  "runtime_model_calls": 0,
@@ -244,5 +254,7 @@
   "case_524: INCOMPLETE must contain at least one FINDING step",
   "case_530: INCOMPLETE must contain at least one FINDING step",
   "case_532: INCOMPLETE must contain at least one FINDING step"
- ]
+ ],
+ "workflow_inferences": {},
+ "workflow_inferred_link_count": 0
 }

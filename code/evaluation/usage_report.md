@@ -4,18 +4,18 @@ Single authoritative copy (`code/evaluation/usage_report.md`); `scripts/package.
 
 ## 1. The final full-dataset run
 
-The pipeline that produces `output.csv` is deterministic code (Python standard library plus the poppler `pdftotext` command). **It calls no language model at run time**: no provider, no API key, no network access.
+The pipeline that produces the provisional predictions is deterministic code (Python standard library plus the poppler `pdftotext` command). No certified root `output.csv` exists. **It calls no language model at run time**: no provider, no API key, no network access. The optional workflow preview also makes zero model calls, uses zero API input/output tokens, and has $0.00 model cost over all 518 requests ($0.00 per request). Its CSV is explicitly uncertified.
 
 <!--AUTO:manifest-->
 | field | value |
 |---|---|
 | command | `python3 code/main.py run` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified"}` |
-| producing commit (HEAD when the run was made) | `b2907a44c35d` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.25, "scoring": "contextual"}, "workflow_mode": "evidence"}` |
+| producing commit (HEAD when the run was made) | `ab3bd22d53e8` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 4 |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
 | output.csv sha256 | `b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf` |
-| code sha256 (43 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `e4558d455cbff166117e345ea5182d0187915390705bf5bf6b3111890bd9cd15` |
+| code sha256 (44 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `d7fcc1031d7dac2768276e1f1620316e0ce5a05a1e1d2116a33d8f1e6380dd19` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 147, 'INCOMPLETE': 361, 'NOT_APPLICABLE': 10} |
@@ -53,6 +53,8 @@ The manifest field `runtime_model_calls` is written by the code itself and is 0 
 Not counted: the `models.list()` requests (no tokens), and any silent SDK retry (none was observed; the SDK does not expose a retry count in the usage fields). No other script has called a paid API. No cache was used, so there are no cache hits or misses to report.
 
 ### 2.2 Coding-agent sessions (not measurable here)
+
+The workflow-attribution follow-up was implemented in Codex. This runtime exposes no authoritative exact model identifier or session token/cost totals, so no identifier, token count or cost is guessed. No project script made a paid API call during this follow-up. Historical Claude session details below describe earlier work.
 
 The code, tests and documents were developed in Claude Code sessions (models `claude-opus-5-5`, then `claude-sonnet-5-5`). The agent has no access to the token counts or cost of its own session, so **no figure is given and none is estimated**; the authoritative record of what was done is the root `log.txt`. This includes the visual inspection of the 11 PNG screenshots: the agent viewed each image with the session's image viewer and typed the visible records into `code/ghostaudit/image_transcriptions/*.json`. That is development-time preprocessing, not a call made by the project's code. Each transcription is bound to its image by sha256 and is cross-checked against local OCR (tesseract) in `code/tests/test_image_transcriptions.py`; a fresh install needs no model to reproduce the output because the transcriptions are part of the package.
 
