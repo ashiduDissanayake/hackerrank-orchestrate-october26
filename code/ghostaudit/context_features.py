@@ -62,3 +62,26 @@ def candidate_context(cv, proposal, request, context):
     adjustment = (float(bool(common)) - 2 * details["operation_after_report"]
                   + 2 * details["independently_compliant_context"] + 2 * affinity)
     return adjustment, details
+
+
+def account_context(cv, proposal, request, subject, anchors, context):
+    """Account-only interactions for optional ranking, never proof of ownership.
+
+    A clean case receives affinity only for a CURRENT explicit absent observation,
+    rather than every account missing from a broad inventory. Three independently
+    linked resources strengthen the existing anchor-distance feature. Both remain
+    modelling assumptions; neither changes state or creates an evidence chain.
+    """
+    from .state import copy_states
+    independent = len({a.resource_id for a in anchors})
+    strong = independent >= 3
+    states = copy_states(cv, proposal["resource_id"], "account_service", None, subject, "USER_PROFILE")
+    explicit = sorted({e.evidence_id for e in states.latest.values()
+                       if e.kind == "absent" and e.obs is not None and e.time >= request.requested_at})
+    present = states.present_copies()
+    affinity = bool(explicit) and not present and context["independently_compliant_context"]
+    adjustment = float(affinity) - (proposal["features"]["anchor_distance_hours"] if strong else 0)
+    return adjustment, {"independent_anchor_count": independent, "strong_anchor_context": strong,
+                        "anchor_activity_ids": sorted(a.activity_id for a in anchors),
+                        "explicit_absence_evidence_ids": explicit, "present_copies": present,
+                        "state_affinity_applied": affinity, "ownership_proven": False}

@@ -63,7 +63,7 @@ def main():
     parser.add_argument("--out", default=os.path.join(REPO, "runs", "analysis", "sample_differences.json"))
     parser.add_argument("--markdown")
     parser.add_argument("--workflow-mode", choices=["evidence", "joint"], default="evidence")
-    parser.add_argument("--workflow-scoring", choices=["contextual", "contextual_v2", "anchor"], default="contextual_v2")
+    parser.add_argument("--workflow-scoring", choices=["contextual", "contextual_v2", "contextual_v3", "anchor"], default="contextual_v3")
     parser.add_argument("--workflow-min-margin", type=float, default=0.0)
     args = parser.parse_args()
     out_path = args.out

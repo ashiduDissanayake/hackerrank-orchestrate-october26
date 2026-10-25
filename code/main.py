@@ -135,8 +135,8 @@ def main():
                                        help="joint: opt-in inference preview; never certifiable or exportable")
         sub.choices[name].add_argument("--workflow-min-margin", type=float, default=0.0,
                                        help="minimum counterfactual assignment-score margin (not a probability)")
-        sub.choices[name].add_argument("--workflow-scoring", default="contextual_v2", choices=["contextual", "contextual_v2", "anchor"],
-                                       help="contextual keeps the previous preview; anchor omits reported-outcome agreement")
+        sub.choices[name].add_argument("--workflow-scoring", default="contextual_v3", choices=["contextual", "contextual_v2", "contextual_v3", "anchor"],
+                                       help="contextual/contextual_v2 retain earlier previews; anchor omits reported-outcome agreement")
     sub.choices["candidate"].set_defaults(workflow_mode="joint")
     d = sub.choices["dump"]
     d.add_argument("--audit-at")

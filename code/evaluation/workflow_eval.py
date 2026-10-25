@@ -15,6 +15,7 @@ VARIANTS = (
     ("Joint preview (default margin)", "joint", WorkflowConfig()),
     ("Joint preview (quarter-point floor)", "joint", WorkflowConfig(min_margin=0.25)),
     ("Anchor-only control", "joint", WorkflowConfig(scoring="anchor", min_margin=0.25)),
+    ("Previous context v2", "joint", WorkflowConfig(scoring="contextual_v2")),
     ("Previous workflow context", "joint", WorkflowConfig(scoring="contextual", min_margin=0.25)),
 )
 
@@ -56,4 +57,7 @@ def markdown(records):
               "A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. "
               "The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. "
               "These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature."]
+    lines += ["", "Context v3 additionally gives +1 account affinity when independently linked context is compliant AND a current explicit absent observation exists with no known present copy. "
+              "Three distinct independently linked resources add one further anchor-distance term. Missing, stale, future and inventory-only absence supplies no affinity. "
+              "These interactions were selected using public development data; ownership remains inferred and strict export continues to refuse it."]
     return "\n".join(lines)

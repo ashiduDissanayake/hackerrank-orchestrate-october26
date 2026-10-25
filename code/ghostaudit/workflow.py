@@ -39,15 +39,15 @@ class WorkflowConfig:
     before_seconds: int = 5400
     after_seconds: int = 600
     min_margin: float = 0.0
-    scoring: str = "contextual_v2"  # prior contextual and result-free anchor controls remain available
+    scoring: str = "contextual_v3"  # prior contextual versions and the anchor control remain available
 
     def __post_init__(self):
         if self.before_seconds <= 0 or self.after_seconds < 0:
             raise ValueError("workflow windows must be positive before and nonnegative after")
         if not isfinite(self.min_margin) or self.min_margin < 0:
             raise ValueError("workflow minimum margin must be finite and nonnegative")
-        if self.scoring not in ("contextual", "contextual_v2", "anchor"):
-            raise ValueError("workflow scoring must be contextual, contextual_v2 or anchor")
+        if self.scoring not in ("contextual", "contextual_v2", "contextual_v3", "anchor"):
+            raise ValueError("workflow scoring must be contextual, contextual_v2, contextual_v3 or anchor")
 
     def to_dict(self):
         return asdict(self)
@@ -174,7 +174,7 @@ class WorkflowAttributor:
         cv, events = self._view(cutoff), self._window_events(request, cutoff)
         anchors = [a for a in events if a.resource_id in links.links]
         context = None
-        if self.config.scoring == "contextual_v2":
+        if self.config.scoring in ("contextual_v2", "contextual_v3"):
             from .context_features import ranking_context
             context_key = (request.case_id, cutoff)
             if context_key not in self._ranking_contexts:
@@ -190,14 +190,14 @@ class WorkflowAttributor:
                 continue
             if system != "account_service" and not obs:
                 continue
-            if (self.config.scoring == "contextual_v2" and system == "analytics_platform"
+            if (self.config.scoring in ("contextual_v2", "contextual_v3") and system == "analytics_platform"
                     and not any(o.present is True for o in obs)):
                 # An empty or failed lookup is not evidence of an anonymous
                 # policy record. Do not infer a new treated-record obligation
                 # from the worker claim alone. Explicit identity links remain
                 # the responsibility of the evidence engine.
                 continue
-            if self.config.scoring == "contextual_v2" and system == "analytics_platform":
+            if self.config.scoring in ("contextual_v2", "contextual_v3") and system == "analytics_platform":
                 from .state import copy_states
                 if not copy_states(cv, a.resource_id, system, None, subj, cat).present_copies():
                     continue
@@ -226,6 +226,11 @@ class WorkflowAttributor:
                 adjustment, details = candidate_context(cv, proposal, request, context)
                 proposal["score"] += adjustment
                 proposal["features"]["context"] = details
+                if self.config.scoring == "contextual_v3" and system == "account_service":
+                    from .context_features import account_context
+                    adjustment, details = account_context(cv, proposal, request, subj, anchors, context)
+                    proposal["score"] += adjustment
+                    proposal["features"]["account_context"] = details
             old = result.get(a.resource_id)
             if old is None or proposal["score"] > old["score"]:
                 result[a.resource_id] = proposal
