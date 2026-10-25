@@ -1,17 +1,18 @@
 # Workflow attribution experiment
 
-Public samples are development data. The margin was selected after examining public development results. These figures do not establish hidden accuracy or calibrated confidence.
+Public samples are development data. The context features, weights and margin were selected after examining public development results. These figures do not establish hidden accuracy or calibrated confidence.
 
 | Variant | Status | Exact full answers | TP / FP / FN | Step P / R / F1 | Validation errors |
 |---|---:|---:|---|---|---:|
 | Evidence baseline | 32/32 | 10/32 | 159 / 0 / 34 | 1.0000 / 0.8238 / 0.9034 | 3 |
-| Joint preview (default margin) | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
-| Joint preview (no positive margin floor) | 32/32 | 18/32 | 173 / 1 / 20 | 0.9943 / 0.8964 / 0.9428 | 0 |
+| Joint preview (default margin) | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
+| Joint preview (quarter-point floor) | 32/32 | 18/32 | 177 / 0 / 16 | 1.0000 / 0.9171 / 0.9568 | 0 |
 | Anchor-only control | 32/32 | 15/32 | 166 / 0 / 27 | 1.0000 / 0.8601 / 0.9248 | 0 |
+| Previous workflow context | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
 
 The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. Schema validity does not establish evidence validity. The evidence baseline remains the default.
 
-Default settings: 90 minutes before / 10 minutes after reported_at; minimum counterfactual score margin 0.25; one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability.
+Default settings: 90 minutes before / 10 minutes after reported_at; a strictly positive counterfactual score margin (ties abstain); one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability. The v2 context adds shared-file affinity (+1), a post-report-operation penalty (-2), independently compliant linked context (+2), and an anonymous-policy cadence feature (up to +2). A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature.
 
 ## Default-preview proposals
 
@@ -20,34 +21,38 @@ The sources below support the candidate operation and the independently assessed
 | Case | Proposed resource | Activity | Assignment-score margin |
 |---|---|---|---:|
 | case_01 | account_001 | activity_3342 | 3.990556 |
-| case_02 | account_002 | activity_3376 | 3.831667 |
+| case_02 | account_002 | activity_3376 | 1.831667 |
+| case_03 | analytics_9406 | activity_3852 | 0.008333 |
 | case_04 | analytics_901 | activity_3463 | 3.789444 |
 | case_07 | account_007 | activity_3590 | 3.955000 |
-| case_08 | account_008 | activity_3554 | 2.910556 |
+| case_08 | account_008 | activity_3554 | 0.910556 |
 | case_09 | account_3960 | activity_3703 | 1.843333 |
-| case_10 | account_010 | activity_3595 | 3.983056 |
+| case_10 | account_010 | activity_3595 | 1.983056 |
+| case_18 | account_5521 | activity_3732 | 0.747778 |
 | case_20 | account_5037 | activity_3734 | 0.497222 |
-| case_21 | account_6440 | activity_3661 | 1.390556 |
-| case_21 | analytics_5335 | activity_3665 | 1.000000 |
+| case_21 | account_6440 | activity_3661 | 2.000000 |
+| case_21 | analytics_5335 | activity_3665 | 3.000000 |
 | case_22 | account_4990 | activity_3573 | 2.000000 |
+| case_25 | analytics_1895 | activity_3602 | 1.043056 |
+| case_26 | analytics_4566 | activity_3603 | 1.764994 |
 | case_27 | account_3866 | activity_3530 | 2.000000 |
+| case_27 | analytics_4574 | activity_3533 | 2.978055 |
+| case_28 | analytics_6077 | activity_3534 | 2.978055 |
 | case_30 | account_4163 | activity_3465 | 1.856667 |
 
 ## Remaining default-preview differences
 
 | Case | Missing resources | Extra resources |
 |---|---|---|
-| case_03 | analytics_9406 | none |
 | case_04 | account_004 | none |
 | case_09 | audit_record_4902 | none |
-| case_18 | account_5521, audit_record_6645 | none |
+| case_18 | audit_record_6645 | none |
 | case_20 | audit_record_5569 | none |
 | case_23 | account_410, audit_record_4128 | none |
 | case_24 | audit_record_7095 | none |
-| case_25 | account_3136, analytics_1895 | none |
-| case_26 | account_5684, analytics_4566 | none |
-| case_27 | analytics_4574 | none |
-| case_28 | account_5482, analytics_6077 | none |
+| case_25 | account_3136 | none |
+| case_26 | account_5684 | none |
+| case_28 | account_5482 | none |
 | case_29 | account_7012, audit_record_3954 | none |
 | case_30 | audit_record_1707 | none |
 | case_31 | account_4857 | none |
@@ -72,5 +77,8 @@ These are fictional counterexamples in `code/tests/test_workflow.py`, not public
 - A source-reference cycle whose only identity root is rejected is removed by rooted reachability; a cycle with an independent valid root survives.
 - Evidence captured before an earlier request began cannot be assigned to that earlier request's investigation window.
 - The best-effort CLI accepts an artifact directory. Its fixture test uses a temporary directory and verifies that root prediction artifacts are unchanged.
+- Context v2 learns a candidate policy cadence from at least three identity-linked resources, adds shared-capture and observed-compliance features, and penalizes operations after the workflow report. These are explicitly uncertain attribution features.
+- The cadence feature is restricted to anonymous policy records; extending it to initial account operations produced wrong sample assignments and was rejected.
+- Independent context tests use a different inferred period, retain same-clock ambiguity, exclude future anchors and verify candidate-file uncertainty and overwrite protections.
 
 All runtime variants make zero model API calls. Coding-session usage is not available here and is not estimated.

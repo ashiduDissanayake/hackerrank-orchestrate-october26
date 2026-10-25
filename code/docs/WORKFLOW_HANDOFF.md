@@ -1,55 +1,58 @@
-# Workflow follow-up: measured gain and remaining boundaries
+# Workflow follow-up: current output and remaining evidence requirements
 
-Producing code: `ab3bd22d53e878adec5da2f4b7c56bf7da2ca8a9` (following `f342c2181f27dd3c1710da175f03c915b72e00b1`). No paid model API calls were made. The evidence-only default and its prediction CSV are unchanged.
+Producing code: `488c0e78fadb349701093b3ad6baf0fde6f20775`. The current repository-root `output.csv` was generated with the explicit `candidate` command. It is a 518-row prediction candidate with `certified=false`; three rows still fail semantic validation. The certification label is local bookkeeping, not a HackerRank credential.
 
 ## Public development results
 
-| Measure | Evidence default | Optional joint preview |
+| Measure | Previous joint preview | Current context v2 |
 |---|---:|---:|
 | Correct statuses | 32/32 | 32/32 |
-| Exact complete answers | 10/32 | 17/32 |
-| Matching / extra / missing steps | 159 / 0 / 34 | 172 / 0 / 21 |
-| Step precision / recall / F1 | 1.0000 / 0.8238 / 0.9034 | 1.0000 / 0.8912 / 0.9425 |
-| Schema validation errors | 3 | 0 |
+| Exact full answers | 17/32 | 19/32 |
+| Matching / extra / missing steps | 172 / 0 / 21 | 178 / 0 / 15 |
+| Step F1 | 0.9425 | 0.9596 |
+| Sample semantic validation errors | 0 | 0 |
 
-These are public examples used for development and threshold selection, not an independent test or hidden challenge accuracy. A zero-margin variant gives 18 exact answers but adds an incorrect step, so it is not the default. The result comes from inferred ownership, not newly discovered proof. It cannot pass strict export.
+This closes two additional full public answers and recovers six additional steps. The 13 differing answers contain 15 missing steps: three IDs have no participant occurrence, five audit records appear only in captures after the audit cutoff, and seven account IDs have unresolved ownership among competing workflows. Every resource, source and timestamp is listed in [WORKFLOW_GAPS.md](WORKFLOW_GAPS.md).
 
-## Full 518-request artifacts
+The public samples were used for development and threshold/feature selection; these figures are not an independent test or a hidden challenge score. Broader timing variants that introduced wrong-person assignments were rejected. The evidence-only default remains unchanged at 10/32 exact, 159 matching steps and zero extra steps.
 
-| Measure | Evidence default | Optional joint preview |
-|---|---:|---:|
-| Output COMPLETE / INCOMPLETE / NOT_APPLICABLE | 147 / 361 / 10 | 152 / 356 / 10 |
-| Status undetermined internally | 8 | 3 |
-| Established INCOMPLETE with unresolved plan items | 18 | 19 |
-| Cases with unresolved obligations | 26 | 22 |
-| Schema validation errors | 8 | 3 |
-| Certified | false | false |
+## Full 518-request output
 
-These counts are diagnostics, not accuracy. The preview records 225 inferred links across 204 cases and changes 197 CSV rows. Its five output-status changes are case_183, case_343, case_524, case_530 and case_532, conditionally COMPLETE under inferred ownership. That inference remains unproven. The three undetermined cases are case_55 (account and restore state), case_63 (marketing identity conflict), and case_345 (account coverage). Other unknown obligations still leave 19 remediation plans open. No post-audit evidence or arbitrary source precedence was introduced.
+| Measure | Current candidate |
+|---|---:|
+| COMPLETE / INCOMPLETE / NOT_APPLICABLE | 152 / 356 / 10 |
+| Internally undetermined statuses | 3 |
+| Established INCOMPLETE rows with unresolved plan items | 18 |
+| Cases with unresolved obligations | 21 |
+| Semantic validation errors | 3 |
+| Inferred workflow links | 286 |
 
-Root artifacts:
+These are diagnostics, not hidden accuracy. Undetermined cases: case_55, case_63, case_345. Their missing facts are:
 
-- `output_best_effort.csv` and its manifest/register: unchanged evidence-mode predictions; uncertified.
-- `output_workflow_preview.csv`: 518 experimental rows; SHA-256 `6b4b15bc3f9b37ef369a52b9e22c39e228deca09f9b027a4b950ff4a819c9897`.
-- `output_workflow_preview.manifest.json`: mode, assumptions, all inferred links and margins, producing commit and input/code/output hashes; `certified=false`.
-- `output_workflow_preview.unresolved.json`: exact missing facts and validation errors for the preview's 22 unresolved cases.
+- case_55: a post-request account/profile state and the restore-allowed or blocked state of backup_9287 at or before 2026-04-30T11:00Z.
+- case_63: an association or precedence rule resolving the conflicting subject identities for marketing_001.
+- case_345: a subject/request-to-account link or a complete profile-table capture between its request and audit.
 
-No certified root `output.csv` exists. Neither review CSV is a claim that the required evidence-backed submission is complete.
+No missing finding was invented to clear validation. The root CSV therefore exists, but it is not fully contract-conforming while these three errors remain. Eighteen further plans have open items; `output.unresolved.json` names every missing fact. The evidence-only mode still has eight undetermined statuses and 18 plan gaps.
 
-## Reproduce and investigate
+## Artifacts and reproduction
+
+- `output.csv`: requested filename, 518 data rows, exact columns `case_id,deletion_status,steps_json`; SHA-256 `9b3bdef08b89931dd98b18e5424eacb2688f02e426d0d0bf0a09e189d8a27421`.
+- `output.manifest.json`: producing code/input/output hashes, mode, all inferred links, all validation errors; `kind=submission_candidate`, `certified=false`, `final=false`.
+- `output.unresolved.json`: exact unknown obligations, emitted steps and validation errors.
+- `output_workflow_preview.*`: the same candidate bytes under the earlier review filename.
+- `output_best_effort.*`: unchanged evidence-only prediction bytes, with refreshed provenance.
 
 ```bash
-python3 code/main.py run
-python3 code/main.py best-effort
-python3 code/main.py run --workflow-mode joint --out output_workflow_preview.csv --diagnostics runs/workflow_preview/diagnostics.json
-python3 code/main.py verify output_workflow_preview.manifest.json
-python3 code/main.py explain case_345 --workflow-mode joint
+python3 code/main.py candidate
+python3 code/main.py verify output.manifest.json
 python3 scripts/evaluate_workflow.py
+python3 scripts/diagnose_sample_differences.py --workflow-mode joint --markdown code/docs/WORKFLOW_GAPS.md
 python3 code/evaluation/main.py all
 python3 scripts/write_reports.py
 python3 scripts/package.py --verify
 ```
 
-The explain output retains candidate rankings, competitor requests, alternative assignment scores and rejected low-margin matches. Margins are heuristic score differences, not calibrated probabilities. Additional independent controls cover assignment versus greedy matching, ties, identity conflicts, future evidence, unsupported success claims, stale profile snapshots and export boundaries. Existing frozen fixtures remain untouched. Python 3.12 was used for this follow-up; no new Python 3.14 validation is claimed.
+Context v2 uses shared-file affinity, a penalty for operations after the reported claim, independently assessed compliant context, and a policy clock estimated from at least three identity-linked resources. No period or case family is supplied. Account initiation events do not get the clock feature. Anonymous policy candidates require a currently present record; old presence followed by an absent lookup cannot supply one. Every accepted assignment must have a strictly positive counterfactual score margin, and every inference stays uncertified. These are modelling assumptions, not proof of ownership.
 
-Remaining work is evidentiary: establish ownership with an admissible identifier, lookup, catalog or source-reference chain for inferred resources; resolve the three undetermined cases and the 19 plan gaps with actual evidence; and obtain organizer clarification where the supplied artifacts cannot support an answer. Do not convert a preview hypothesis into certified evidence to clear a gate.
+Nine independent synthetic controls supplement the unchanged frozen fixtures. They include a different learned clock period, ambiguous equal clocks, future anchors, absent-only lookups, later absence, and candidate-artifact disclosures/overwrite protection. Python 3.12 was used; no new Python 3.14 validation is claimed. No paid model API call was made.

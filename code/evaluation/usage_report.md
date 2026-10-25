@@ -9,18 +9,18 @@ The pipeline that produces the provisional predictions is deterministic code (Py
 <!--AUTO:manifest-->
 | field | value |
 |---|---|
-| command | `python3 code/main.py run` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.25, "scoring": "contextual"}, "workflow_mode": "evidence"}` |
-| producing commit (HEAD when the run was made) | `ab3bd22d53e8` |
+| command | `python3 code/main.py candidate` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v2"}, "workflow_mode": "joint"}` |
+| producing commit (HEAD when the run was made) | `488c0e78fadb` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
-| output.csv sha256 | `b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf` |
-| code sha256 (44 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `d7fcc1031d7dac2768276e1f1620316e0ce5a05a1e1d2116a33d8f1e6380dd19` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 5 |
+| output.csv sha256 | `9b3bdef08b89931dd98b18e5424eacb2688f02e426d0d0bf0a09e189d8a27421` |
+| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `5ef1303c77e5a3688813f98512b89e91774ae3a9fdf82d03eaaf942c2e5fad61` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
-| statuses | {'COMPLETE': 147, 'INCOMPLETE': 361, 'NOT_APPLICABLE': 10} |
-| contract-valid | False (8 validation errors) |
-| UNDETERMINED cases | 8: case_55, case_63, case_183, case_343, case_345, case_524, case_530, case_532 |
+| statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |
+| contract-valid | False (3 validation errors) |
+| UNDETERMINED cases | 3: case_55, case_63, case_345 |
 | runtime model calls | 0 |
 | final (exported) | False |
 <!--/AUTO:manifest-->

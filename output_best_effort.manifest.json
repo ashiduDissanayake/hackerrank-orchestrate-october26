@@ -6,18 +6,19 @@
  },
  "cases_with_unresolved_obligations": 26,
  "certified": false,
- "code_files": 44,
+ "code_files": 45,
  "code_files_sha256": {
   "code/ghostaudit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/account_proof.py": "a5530daf2d4c9958b5fdf9094c38025679165fe22e1772506def8f2a4711789a",
   "code/ghostaudit/caseview.py": "2aa4b6cac1f66846f01171c36f8b740563e6a195c8b6d676a813a2292b34359e",
+  "code/ghostaudit/context_features.py": "15912d1798790d0f6a7ae430e9f0f9c408ff3a9262b14022cdeaf402bb0db861",
   "code/ghostaudit/contract.py": "6d96ec5d218c2e8346861aa96311db6c5e6b0837f68e2860d83163a414e77452",
   "code/ghostaudit/copies.py": "c75d778dac2029b19c4841f9d54c48cba883f49bdd15ae882f7455c199d2d09c",
   "code/ghostaudit/coverage.py": "6d482df52a96c05ce13b32081ceddd077315c78859d875664f6b851f03f0f44e",
   "code/ghostaudit/coverage_rules.py": "2c59e417b29f8338ac53b38f52f0865de45e1aa653a40a473dd2dfb953829b38",
   "code/ghostaudit/data.py": "e7cf70d736a38ad43449a3b742ff2f9c9a365b29f563a4441c5f88da157fd490",
   "code/ghostaudit/engine.py": "167e62f9eec890346568dcae204b0a0b93e75a1bf234d57c87a1cefd21696e0d",
-  "code/ghostaudit/export.py": "2471776ae8395f2c0ad71358f5f4e0867f044161220881fb153f2d256eb8da4f",
+  "code/ghostaudit/export.py": "af1c4b079cb92a23a1374d2530adafac42ecf5c9f23bc9cad9e04c85a5a9d378",
   "code/ghostaudit/extract/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/extract/common.py": "0c2be447605b1e4b4e836ed7698eb8d038c1e93106cc81bdd8fa252a559a145d",
   "code/ghostaudit/extract/handover.py": "94cc12179fd4e5777f60ea40f379e839cd7f60cd6b6f1652fa6313641f0a043b",
@@ -46,14 +47,14 @@
   "code/ghostaudit/observations.py": "e8515ccc49b50d89595870004c3fad48906a6ad5121ed3e03bb3f8c71c6bbd7b",
   "code/ghostaudit/pipeline.py": "eda03418e258db492c8cf97ed6ac01c0237c97d5464eeeda58c2c972d613a013",
   "code/ghostaudit/planner.py": "d09eac353ba81fc146a485c5efc2c6189bd78a90ca217d358f72aa2ce49bdb72",
-  "code/ghostaudit/run.py": "aaad144b51a846167820ea5d62b0681937e9d23a1ac3a43b1cd1217653685432",
+  "code/ghostaudit/run.py": "8d1d5aa9342e413d7ac2854b3a8e2b30eb029b0f412e729ae68bb16c91329352",
   "code/ghostaudit/state.py": "9e299b66d28ecde76b762c287d0d8742f879028d5d43eae162f99c13a6b72185",
   "code/ghostaudit/validate.py": "674a4a05d7b5ade8102e79b2f308e6dc1d488f0a37468b754c0ef0fd4ba537b7",
-  "code/ghostaudit/workflow.py": "5fba5e19c55a78991a75ef9c044dc6ed4992b0de72ab0ae908d6fd429dabe86b",
-  "code/main.py": "87c99e83cd7467990ee56f49acd2ccc1e9cbb85aa9eed65fdacad2a67091b7dc",
+  "code/ghostaudit/workflow.py": "e3249eb9b984ee072b3f951cd17cf0df1e1d16a7d9c10e340cb3d0c01e8c3978",
+  "code/main.py": "aad0962871509eed40cfcb378ec9e422ef0d5eb2b4c9d3246b5eafdbc70ccf81",
   "code/requirements.txt": "79ed88acaf42c1382d794ba1fc1e23fc4b9f21a513d7b6cbc40380378f5862f5"
  },
- "code_sha256": "d7fcc1031d7dac2768276e1f1620316e0ce5a05a1e1d2116a33d8f1e6380dd19",
+ "code_sha256": "5ef1303c77e5a3688813f98512b89e91774ae3a9fdf82d03eaaf942c2e5fad61",
  "command": [
   "python3",
   "code/main.py",
@@ -75,8 +76,8 @@
   "workflow_config": {
    "after_seconds": 600,
    "before_seconds": 5400,
-   "min_margin": 0.25,
-   "scoring": "contextual"
+   "min_margin": 0.0,
+   "scoring": "contextual_v2"
   },
   "workflow_mode": "evidence"
  },
@@ -84,16 +85,15 @@
  "disclosure": "Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation.",
  "final": false,
  "git": {
-  "commit": "ab3bd22d53e878adec5da2f4b7c56bf7da2ca8a9",
+  "commit": "488c0e78fadb349701093b3ad6baf0fde6f20775",
   "dirty": true,
   "dirty_code_files": [],
   "dirty_files": [
    "README.md",
-   "code/docs/DECISIONS.md",
    "code/evaluation/evaluation_report.md",
-   "code/evaluation/usage_report.md",
+   "code/evaluation/workflow_report.md",
    "log.txt",
-   "code/evaluation/workflow_report.md"
+   "code/docs/WORKFLOW_GAPS.md"
   ]
  },
  "inputs_sha256": {

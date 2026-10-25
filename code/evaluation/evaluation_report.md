@@ -80,7 +80,7 @@ Contract validation of the 32 public-sample rows: 3 errors. Each is a COMPLETE r
 ### 2.3 The 518 evaluation requests (diagnostics, not accuracy)
 
 <!--AUTO:eval-->
-Output statuses on the 518 evaluation requests (a diagnostic, NOT accuracy: there are no labels): COMPLETE 147, INCOMPLETE 361, NOT_APPLICABLE 10.
+Evidence-only default statuses on the 518 evaluation requests (a diagnostic, NOT accuracy: there are no labels): COMPLETE 147, INCOMPLETE 361, NOT_APPLICABLE 10.
 Internal states: COMPLETE 147, INCOMPLETE 353, NOT_APPLICABLE 10, UNDETERMINED 8.
 
 Obligation verdicts by reason (counts of obligations, all cases):
@@ -678,18 +678,18 @@ The run these numbers describe:
 <!--AUTO:manifest-->
 | field | value |
 |---|---|
-| command | `python3 code/main.py run` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.25, "scoring": "contextual"}, "workflow_mode": "evidence"}` |
-| producing commit (HEAD when the run was made) | `ab3bd22d53e8` |
+| command | `python3 code/main.py candidate` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v2"}, "workflow_mode": "joint"}` |
+| producing commit (HEAD when the run was made) | `488c0e78fadb` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
-| output.csv sha256 | `b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf` |
-| code sha256 (44 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `d7fcc1031d7dac2768276e1f1620316e0ce5a05a1e1d2116a33d8f1e6380dd19` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 5 |
+| output.csv sha256 | `9b3bdef08b89931dd98b18e5424eacb2688f02e426d0d0bf0a09e189d8a27421` |
+| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `5ef1303c77e5a3688813f98512b89e91774ae3a9fdf82d03eaaf942c2e5fad61` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
-| statuses | {'COMPLETE': 147, 'INCOMPLETE': 361, 'NOT_APPLICABLE': 10} |
-| contract-valid | False (8 validation errors) |
-| UNDETERMINED cases | 8: case_55, case_63, case_183, case_343, case_345, case_524, case_530, case_532 |
+| statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |
+| contract-valid | False (3 validation errors) |
+| UNDETERMINED cases | 3: case_55, case_63, case_345 |
 | runtime model calls | 0 |
 | final (exported) | False |
 <!--/AUTO:manifest-->
@@ -697,20 +697,29 @@ The run these numbers describe:
 ## 8. Optional workflow-attribution experiment
 
 <!--AUTO:workflow-->
-Public samples are development data. The margin was selected after examining public development results. These figures do not establish hidden accuracy or calibrated confidence.
+Public samples are development data. The context features, weights and margin were selected after examining public development results. These figures do not establish hidden accuracy or calibrated confidence.
 
 | Variant | Status | Exact full answers | TP / FP / FN | Step P / R / F1 | Validation errors |
 |---|---:|---:|---|---|---:|
 | Evidence baseline | 32/32 | 10/32 | 159 / 0 / 34 | 1.0000 / 0.8238 / 0.9034 | 3 |
-| Joint preview (default margin) | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
-| Joint preview (no positive margin floor) | 32/32 | 18/32 | 173 / 1 / 20 | 0.9943 / 0.8964 / 0.9428 | 0 |
+| Joint preview (default margin) | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
+| Joint preview (quarter-point floor) | 32/32 | 18/32 | 177 / 0 / 16 | 1.0000 / 0.9171 / 0.9568 | 0 |
 | Anchor-only control | 32/32 | 15/32 | 166 / 0 / 27 | 1.0000 / 0.8601 / 0.9248 | 0 |
+| Previous workflow context | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
 
 The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. Schema validity does not establish evidence validity. The evidence baseline remains the default.
 
-Default settings: 90 minutes before / 10 minutes after reported_at; minimum counterfactual score margin 0.25; one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability.
+Default settings: 90 minutes before / 10 minutes after reported_at; a strictly positive counterfactual score margin (ties abstain); one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability. The v2 context adds shared-file affinity (+1), a post-report-operation penalty (-2), independently compliant linked context (+2), and an anonymous-policy cadence feature (up to +2). A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature.
 <!--/AUTO:workflow-->
 
 Details and at least three independent synthetic controls are recorded directly in `code/evaluation/workflow_report.md`; regenerate them with `python3 scripts/evaluate_workflow.py`.
 
 The new inference experiment is opt-in and cannot pass strict export. Its development gain comes from candidate attribution, not from changing the evidence-time rule. Two additional source/episode regressions were fixed: source cycles must remain reachable from an accepted identity root, and evidence from before an earlier request cannot be assigned to its investigation window. The fixture best-effort CLI test now uses a temporary artifact directory and asserts that root artifacts remain unchanged.
+
+## 9. Requested prediction candidate and exact remaining requirements
+
+<!--AUTO:candidate-->
+The explicit `candidate` command writes repository-root `output.csv`, `output.manifest.json` and `output.unresolved.json`. The CSV contains 518 data rows and the required three columns. Its manifest records `kind=submission_candidate`, `certified=false`, 3 semantic validation errors, 3 undetermined statuses (case_55, case_63, case_345), and 18 established INCOMPLETE cases with unresolved plan items. No unknown obligation was turned into a finding to clear validation. This file is a disclosed candidate and is not fully contract-conforming while those errors remain. The certification label belongs to this implementation; it is not a HackerRank credential. `code/docs/WORKFLOW_GAPS.md` lists every remaining public-sample discrepancy and its exact evidence requirement.
+<!--/AUTO:candidate-->
+
+Context v2 adds independent synthetic controls directly in `code/tests/test_workflow_context.py`: a scheduler whose period must be inferred as 17 seconds from three fictional operations; two subjects with distinct clock phases that distinguish anonymous policy records; same-clock ambiguity that must remain unresolved; and post-cutoff identity anchors that must remain invisible. A further artifact control verifies that `output.csv` retains all unresolved rows/errors and cannot overwrite an existing certified file. These cases supplement the earlier frozen fixtures; they do not use public labels.

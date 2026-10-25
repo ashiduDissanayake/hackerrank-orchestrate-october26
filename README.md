@@ -33,6 +33,23 @@ python3 code/main.py best-effort              # review artifact when export must
 
 The CLI requires a subcommand (`python3 code/main.py` alone prints usage).
 
+## Requested output.csv candidate
+
+```bash
+python3 code/main.py candidate
+python3 code/main.py verify output.manifest.json
+```
+
+This explicit command writes `output.csv` with all 518 requests, plus `output.manifest.json` and `output.unresolved.json`. It defaults to the joint context-v2 predictor. Unresolved rows, semantic validation errors and inference assumptions remain visible in the sidecars; no finding is fabricated to clear validation. The file is a prediction candidate and remains incomplete while those errors exist. The `certified` flag is local bookkeeping, not a HackerRank submission credential. An existing certified output is protected from replacement.
+
+The CSV writer quotes the JSON cell correctly. For illustration only, a tiny file would look like this (the real output has 518 rows and real dataset IDs):
+
+```csv
+case_id,deletion_status,steps_json
+case_000,COMPLETE,"[{""step_no"":1,""phase"":""VERIFICATION"",""system_id"":""security_service"",""resource_id"":""audit_record_demo"",""operation"":""VERIFY_RECORD_PRESENT"",""state"":""PRESENT"",""evidence_id"":""evidence_demo""}]"
+case_001,NOT_APPLICABLE,[]
+```
+
 ## Optional workflow-attribution preview
 
 The default remains the evidence-only audit. An explicit experimental mode can propose otherwise unlinked account/analytics resources through a joint assignment of overlapping workflow requests. It preserves exact links, rejects contradictory identities, enforces the target audit cutoff for every competitor, leaves tied or low-margin assignments unresolved, and independently evaluates record state. It uses no model API.
@@ -48,11 +65,11 @@ python3 code/main.py verify output_workflow_preview.manifest.json
 python3 scripts/evaluate_workflow.py
 ```
 
-The preview improves the measured public result from 10/32 to 17/32 exact answers and from 159 to 172 matching steps, with no extra sample steps at the default margin. The threshold was selected using the public development set: this is not independent or hidden accuracy. The looser zero-margin variant gets 18/32 exact but introduces an incorrect sample step. Full metrics, remaining differences and synthetic controls are in [workflow_report.md](code/evaluation/workflow_report.md).
+Context v2 improves the public result from the prior preview’s 17/32 to 19/32 exact answers and from 172 to 178 matching steps, with no extra sample steps. The evidence-only default remains 10/32 exact (159 matching steps). Context weights and thresholds were selected using public development data; this is not independent or hidden accuracy. A quarter-point margin floor gives 18/32 exact. Broader timing variants that assigned records to the wrong person were rejected. Full metrics and synthetic controls are in [workflow_report.md](code/evaluation/workflow_report.md); every remaining expected step and its exact evidence requirement is in [WORKFLOW_GAPS.md](code/docs/WORKFLOW_GAPS.md).
 
 Every inferred link and run is marked `certified=false`. Margins measure a heuristic objective, not probabilities. The method assumes one additional orphan per system/request in a competing component; this is not a supplied data guarantee. It treats proximity and agreement of reported outcomes as attribution clues, never as proof that deletion succeeded. **Strict export always rejects inference mode**, including otherwise valid rows. No confirmed ownership or COMPLETE certification is claimed for these hypotheses.
 
-`--workflow-min-margin` controls abstention (default 0.25); `--workflow-scoring anchor` removes reported-outcome agreement as a sensitivity control. The mode never uses case-number priorities, sample answers, competitor predictions or post-cutoff artifacts. `best-effort --artifact-dir <directory>` can keep an alternative run's three review artifacts separate; fixture tests use this option rather than overwriting root predictions.
+`--workflow-min-margin` controls abstention (default 0: every accepted assignment must still have a strictly positive margin). Context v2 adds shared-file affinity, a post-report-operation penalty, independently compliant context and a clock estimated from at least three identity-linked policy resources. No fixed clock period or case-family rule is supplied. Initial account operations do not receive the clock feature. `--workflow-scoring contextual --workflow-min-margin 0.25` reproduces the previous preview, and `--workflow-scoring anchor --workflow-min-margin 0.25` is the result-free timing control. The mode never uses case-number priorities, sample answers, competitor predictions or post-cutoff artifacts. `best-effort --artifact-dir <directory>` can keep an alternative run's three review artifacts separate; fixture tests use this option rather than overwriting root predictions.
 
 ## Verify and test
 
@@ -93,7 +110,7 @@ Uncertainty is kept honest: an obligation can be COMPLIANT, a VIOLATION or UNKNO
 ## Layout
 
 ```text
-code/main.py                 CLI: run | export | best-effort | verify | explain | coverage | dump
+code/main.py                 CLI: run | export | candidate | best-effort | verify | explain | coverage | dump
 code/ghostaudit/             the engine (extract/, caseview, identity, linking, state, coverage_rules, obligations, account_proof, planner, validate, export, ...)
 code/evaluation/             scorer, labeled evaluation, frozen fixtures (synth_v1..v3 history; synth_v4 current), the two reports
 code/tests/                  unit, invariance, regression and cross-check tests

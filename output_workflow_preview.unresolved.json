@@ -38,7 +38,6 @@
   "case_184",
   "case_185",
   "case_186",
-  "case_256",
   "case_282",
   "case_344",
   "case_526",
@@ -366,9 +365,9 @@
    "unresolved": [
     {
      "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-08-22T06:00:00Z and audit_at 2026-09-01T06:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_12, 2026-08-19T10:00:00Z) predates the request); 3 deletion-worker activity rows in the request window name account resources, but they are claims shared with other requests and carry no identifier, so none is linked to the subject",
-     "reason": "unresolved_link",
-     "resource_id": null,
+     "information_gap": "account_2056 has only an inferred ownership assignment and no sufficient post-request account state: the primary copy's latest supporting profile-table capture (evidence_12, 2026-08-19T10:00:00Z) predates the request",
+     "reason": "inferred_profile_state_not_established",
+     "resource_id": "account_2056",
      "system_id": "account_service"
     }
    ],
@@ -649,80 +648,6 @@
      "reason": "unresolved_link",
      "resource_id": null,
      "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_256",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_24",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_4027",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "evidence_24",
-     "operation": "REPORT_EXPOSED_PII",
-     "phase": "FINDING",
-     "resource_id": "support_3772",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_4027",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "REDACT_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "support_3772",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "account_7542",
-     "system_id": "account_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_4027",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_PRESENT",
-     "phase": "VERIFICATION",
-     "resource_id": "audit_record_2453",
-     "system_id": "security_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_REDACTED",
-     "phase": "VERIFICATION",
-     "resource_id": "support_3772",
-     "system_id": "support_platform"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "ANALYTICS_PROFILE",
-     "information_gap": "analytics_6766 (ANALYTICS_PROFILE) is absent although policy requires a treated record to remain; the evidence does not show whether it was retained elsewhere",
-     "reason": "record_absent_where_treatment_expected",
-     "resource_id": "analytics_6766",
-     "system_id": "analytics_platform"
     }
    ],
    "validation_errors": []

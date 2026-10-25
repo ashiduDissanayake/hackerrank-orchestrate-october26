@@ -794,3 +794,151 @@ worktree=main
 parent_agent=none
 
 Runtime identity limitation: Codex is authoritative from the harness instructions. An exact runtime model identifier is not exposed by environment variables, harness configuration or available current-session metadata; none is guessed. The repository's exact-model logging requirement therefore cannot be fully satisfied here.
+
+## [2026-10-25T04:16:21.493359+00:00] Clarify required final prediction artifact
+
+User Prompt (verbatim, secrets redacted):
+that output.csv one is the thing that we need to create one right?
+
+Agent Response Summary:
+Confirmed that the final prediction deliverable is repository-root output.csv with exactly 518 case rows and the required three columns. Explained that existing review CSVs are uncertified and that the final validated output remains unfinished; code.zip and log.txt are the other stated upload artifacts.
+
+Actions:
+* Explained the submission contract from the supplied problem statement; appended this clarification to log.txt.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=dev/baseline
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: the harness identifies Codex, but does not expose an authoritative exact model identifier. None is guessed; the exact-model logging requirement cannot be fully satisfied in this runtime.
+
+## [2026-10-25T04:21:26.530150+00:00] Compare peer PR completion methods and submission requirements
+
+User Prompt (verbatim, secrets redacted):
+can't you see that from others PRs?
+
+Agent Response Summary:
+Retrieved the live official PR list and re-read the pinned PR12 and PR14 linking/state code and the official output contract. Re-scored their previously reproduced sample/full outputs with our common scorer/validator: both have 28/32 exact public answers and 518 full rows, with zero structural errors for PR12 and one for PR14; these are comparisons of saved peer runs, not new execution or official hidden scores. Identified concrete differences: timing/outcome-based ownership, case-order or timing-phase tie-breaks, and missing-state citation fallbacks; the peers label backup_9287 a restore risk, choose marketing_001 for the catalog subject, and assign account_8834 to case_345. Rechecked the three preview-unknown cases against participant data; evidence_71 includes account lookups but no complete profile scope, leaving ownership unresolved in our mode. Corrected earlier framing: certified is an internal guard label, not a HackerRank submission credential, and sample accuracy is separate from the required CSV structure; no peer prediction was used as an input to our predictions and no prediction code was changed.
+
+Actions:
+* Read: current official PR metadata; PR12 audit.py at 3b2f31e3; PR14 activity_links.py, engine.py and evaluation report at 9983fade; official problem_statement.md at 0eddbbd3.
+* Ran: common scorer and full-row validator on saved PR12/14 runs; joint-mode investigation of case_55, case_63 and case_345 using participant-facing data only.
+* The optional PR15 comparison stopped because its saved full-output path is absent; no fresh PR15 metric is claimed.
+* Appended this comparison and clarification to log.txt; no paid API call, remote post or prediction change.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=dev/baseline
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: Codex is authoritative from the harness instructions; the exact runtime model identifier is not exposed by the available runtime metadata, so no identifier is guessed. The exact-model logging requirement cannot be fully satisfied here.
+
+## [2026-10-25T04:52:07.128538+00:00] Work through sample gaps and produce requested output.csv candidate
+
+User Prompt (verbatim, secrets redacted):
+## Required Output
+
+Produce exactly one row in `output.csv` for every case in `deletion_requests.csv`:
+```
+case_id,deletion_status,steps_json
+
+```
+
+| **Column**        | **Meaning**                                                                  |
+| ----------------- | ---------------------------------------------------------------------------- |
+| `case_id`         | Case being audited                                                           |
+| `deletion_status` | `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE`                                |
+| `steps_json`      | Ordered JSON array of findings, remediation actions, and verification checks |
+
+The final file must contain exactly 518 data rows, sorted by `case_id`.
+
+Each object in `steps_json` must contain:
+
+{   "step_no": 1,   "phase": "FINDING",   "system_id": "account_service",   "resource_id": "account_005",   "operation": "REPORT_REMAINING_RECORD",   "state": "PRESENT",   "evidence_id": "evidence_01" }
+
+`phase` must be `FINDING`, `REMEDIATION`, or `VERIFICATION`. Step numbers start at `1` and increase consecutively. Array order is significant.
+
+For `COMPLETE`, include only verification steps proving the current state. For `INCOMPLETE`, include findings, the complete remediation plan, and the checks that must pass afterward. For `NOT_APPLICABLE`, use an empty JSON array (`[]`) because no deletion or deletion verification is authorized.
+
+A non-deletion row therefore has this form:
+
+case_000,NOT_APPLICABLE,[]
+
+The grader parses `steps_json` as JSON. JSON object-key order and whitespace are ignored; array order is not.
+
+## Allowed Operations
+
+| **Phase**      | **Operation**               | **State**    | **Meaning**                                                                                          |
+| -------------- | --------------------------- | ------------ | ---------------------------------------------------------------------------------------------------- |
+| `FINDING`      | `REPORT_REMAINING_RECORD`   | `PRESENT`    | A record that should have been deleted still exists.                                                 |
+| `FINDING`      | `REPORT_EXPOSED_PII`        | `PRESENT`    | A record may remain, but it still contains identifiers that should have been redacted or anonymized. |
+| `FINDING`      | `REPORT_ACTIVE_DATA_FLOW`   | `ACTIVE`     | An active process can copy or recreate the user's data.                                              |
+| `FINDING`      | `REPORT_RESTORE_RISK`       | `ACTIVE`     | A backup or restore path can bring deleted data back.                                                |
+| `REMEDIATION`  | `DISABLE_DATA_FLOW`         | `DISABLED`   | Stop the process that can copy or recreate the data.                                                 |
+| `REMEDIATION`  | `BLOCK_RESTORE`             | `BLOCKED`    | Prevent the affected backup from restoring the user's data.                                          |
+| `REMEDIATION`  | `DELETE_RECORD`            | `ABSENT`     | Remove the entire record.                                                                            |
+| `REMEDIATION`  | `REDACT_RECORD`            | `REDACTED`   | Keep the record but remove the identifying fields required by policy.                                |
+| `REMEDIATION`  | `ANONYMIZE_RECORD`         | `ANONYMIZED` | Keep the record after irreversibly unlinking it from the user.                                       |
+| `VERIFICATION` | `VERIFY_RECORD_ABSENT`     | `ABSENT`     | Confirm that a record no longer exists.                                                              |
+| `VERIFICATION` | `VERIFY_RECORD_PRESENT`    | `PRESENT`    | Confirm that a policy-required retained record still exists.                                         |
+| `VERIFICATION` | `VERIFY_RECORD_REDACTED`   | `REDACTED`   | Confirm that required identifying fields have been removed.                                          |
+| `VERIFICATION` | `VERIFY_RECORD_ANONYMIZED` | `ANONYMIZED` | Confirm that the record can no longer be linked to the user.                                         |
+| `VERIFICATION` | `VERIFY_DATA_FLOW_DISABLED` | `DISABLED`   | Confirm that the relevant data flow is inactive.                                                     |
+| `VERIFICATION` | `VERIFY_RESTORE_BLOCKED`   | `BLOCKED`    | Confirm that the affected data cannot be restored.                                                   |
+
+## Rules
+
+- Resolve the user’s current and historical identifiers.
+- Determine the resource state at `audit_at` using the available evidence. Reported workflow statuses and operation results are claims.
+- Apply `deletion_rules.csv` to every relevant record, including account tombstones, active data flows, and restore risks.
+- Order steps by phase: findings, remediation, then verification. Within each phase, follow the operation order in the table above, followed by `system_id` and `resource_id` in ascending order.
+- Findings and verification steps for `COMPLETE` cases must cite a `file_id`, `activity_id`, or `audit_id`. Proposed remediation and future verification steps for `INCOMPLETE` cases use an empty `evidence_id`.
+
+## Evaluation
+
+`output.csv` will be compared with hidden canonical answers. Scoring will consider the correctness of `deletion_status`, identity resolution, discovered records and risks, cited evidence, policy decisions, and the completeness and order of `steps_json`.
+
+Your `code.zip` must include `evaluation/evaluation_report.md` containing:
+
+- case-level status accuracy;
+- step-level and field-level accuracy;
+- sequence accuracy;
+- at least three additional evaluation cases created by your team; and
+- failures found and improvements made.
+
+
+
+what is the problem here there is a clear answer in here for that right?what exactly output.csv look like
+
+
+
+
+
+and there are clearly 15/32 to complete complete them and let me know when there is any requirement
+
+Agent Response Summary:
+Investigated all 15 non-exact public answers, tested multiple context variants and implemented the supported improvement: 17/32 -> 19/32 exact full answers, matching/extra/missing steps 172/0/21 -> 178/0/15; all 32 statuses still match. Context v2 learns a policy clock from identity-linked observations rather than a supplied period, combines it with shared-capture and independently assessed context, and preserves strict cutoffs, existing identity links and uncertainty; broader wrong-person variants were rejected. Added nine independent controls and fixed anonymous-record eligibility so absent-only lookups or later absence cannot create treated-record hypotheses. Created the requested root output.csv with exactly 518 rows, the required columns, valid JSON serialization and provenance/uncertainty sidecars; it still has three semantic errors (case_55, case_63, case_345) and 18 open plans, so it is a disclosed candidate rather than a fully contract-conforming final result. All 19 suites and 31 frozen fixtures pass, the extracted 216-file package reproduces all modes and the candidate hash, and the remaining public requirements are documented precisely: three IDs absent from participant evidence, five records captured after the audit, and seven ambiguous ownership links.
+
+Actions:
+* Edited: context_features.py; workflow, run, export and CLI; workflow evaluation/diagnosis scripts; report generation and package verification; new test_workflow_context.py; README, decision/handoff/gap documents and evaluation/usage reports.
+* Ran: failing-then-passing cadence/context, absent-only/later-absence eligibility and candidate-artifact controls; all 19 suites; 31 frozen fixtures; five-variant public evaluation; participant-only occurrence search for every residual step; strict and joint 518-case runs; both manifest verification paths; scripts/write_reports.py; scripts/package.py --verify.
+* Created: output.csv, output.manifest.json and output.unresolved.json; refreshed preview and best-effort provenance; code.zip (216 files, sha256 289359712c40359aa1dcbac958ca6fa2059d333144fd8968d45833a630d0873e).
+* Producing code commit: 488c0e78fadb349701093b3ad6baf0fde6f20775; output sha256 9b3bdef08b89931dd98b18e5424eacb2688f02e426d0d0bf0a09e189d8a27421; code sha256 5ef1303c77e5a3688813f98512b89e91774ae3a9fdf82d03eaaf942c2e5fad61 over 45 files; prediction code clean at run time. Evidence-only output remains b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf.
+* Checked official main (still 0eddbbd3) and comments on issues #11/#19 (none). No organizer truth, peer predictions or caches feed predictions; no case-number tie-break or post-audit evidence was added. No paid API call, issue post or contest upload was made. Prepared the authorized fast-forward remote merge after this log append and release commit.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=codex/workflow-context
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: the harness identifies Codex but exposes no authoritative exact model identifier in available environment/configuration/current-session metadata. None is guessed. The repository's exact-model logging requirement cannot be fully satisfied in this runtime.
