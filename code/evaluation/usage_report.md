@@ -11,11 +11,11 @@ The pipeline that produces the provisional predictions is deterministic code (Py
 |---|---|
 | command | `python3 code/main.py candidate` |
 | configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
-| producing commit (HEAD when the run was made) | `2edab59a72b8` |
+| producing commit (HEAD when the run was made) | `a4fad4354e31` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
-| output.csv sha256 | `f32fd414316b4511da8d2744fbdb1f6e7ddb7dbb115dac3c0a208506aa6f2ae9` |
-| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `0918ae6d02fda055dfe2b4087823f953025525a5e66c1c880bb805cb2012a642` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 1 |
+| output.csv sha256 | `9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce` |
+| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |

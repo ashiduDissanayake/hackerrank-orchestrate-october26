@@ -1,6 +1,6 @@
 # Workflow follow-up: current output and remaining evidence requirements
 
-Producing code: `2edab59a72b84a272439cc9ff1edb8e9826afc43`. The current repository-root `output.csv` was generated with the explicit `candidate` command. It is a 518-row prediction candidate with `certified=false`; three rows still fail semantic validation. The certification label is local bookkeeping, not a HackerRank credential.
+Producing code: `a4fad4354e310f3d30c7d8ac27e4f93d6fbca833`. The current repository-root `output.csv` was generated with the explicit `candidate` command. It is a 518-row prediction candidate with `certified=false`; three rows still fail semantic validation. The certification label is local bookkeeping, not a HackerRank credential.
 
 ## Public development results
 
@@ -37,11 +37,11 @@ No missing finding was invented to clear validation. The root CSV therefore exis
 
 ## Artifacts and reproduction
 
-- `output.csv`: requested filename, 518 data rows, exact columns `case_id,deletion_status,steps_json`; SHA-256 `f32fd414316b4511da8d2744fbdb1f6e7ddb7dbb115dac3c0a208506aa6f2ae9`.
+- `output.csv`: requested filename, 518 data rows, exact columns `case_id,deletion_status,steps_json`; SHA-256 `9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce`.
 - `output.manifest.json`: producing code/input/output hashes, mode, all inferred links, all validation errors; `kind=submission_candidate`, `certified=false`, `final=false`.
 - `output.unresolved.json`: exact unknown obligations, emitted steps and validation errors.
 - `output_workflow_preview.*`: the same candidate bytes under the earlier review filename.
-- `output_best_effort.*`: unchanged evidence-only prediction bytes, with refreshed provenance.
+- `output_best_effort.*`: evidence-only predictions, including the future-check coverage fix, with refreshed provenance.
 
 ```bash
 python3 code/main.py candidate
@@ -55,4 +55,10 @@ python3 scripts/package.py --verify
 
 Context v2 uses shared-file affinity, a penalty for operations after the reported claim, independently assessed compliant context, and a policy clock estimated from at least three identity-linked resources. No period or case family is supplied. Account initiation events do not get the clock feature. Anonymous policy candidates require a currently present record; old presence followed by an absent lookup cannot supply one. Context v3 adds account-state affinity only when independently linked context is compliant and a current explicit absence is observed with no known present copy; three distinct linked resources add anchor-distance weight. Every accepted assignment must have a strictly positive counterfactual score margin, and every inference stays uncertified. These are modelling assumptions, not proof of ownership.
 
-Twelve additional account-ranking, temporal, replica and ambiguity-witness controls supplement the previous context tests and unchanged frozen fixtures. All 20 suites and 31 frozen fixtures pass. They include a different learned clock period, ambiguous equal clocks, future anchors, absent-only lookups, later absence, and candidate-artifact disclosures/overwrite protection. Python 3.12 was used; no new Python 3.14 validation is claimed. No paid model API call was made.
+Twelve additional account-ranking, temporal, replica and ambiguity-witness controls supplement the previous context tests and unchanged frozen fixtures. All 21 suites and 31 frozen fixtures pass, including seven new future-verification controls and an updated source-reference integration expectation. They include a different learned clock period, ambiguous equal clocks, future anchors, absent-only lookups, later absence, and candidate-artifact disclosures/overwrite protection. Python 3.12 was used; no new Python 3.14 validation is claimed. No paid model API call was made.
+
+## Future-verification coverage fix
+
+The planner previously discarded every UNKNOWN obligation. For an already INCOMPLETE case with an established finding, a known resource, and a known policy target, the contract permits a future verification check with an empty evidence ID. That check does not establish the current state and does not authorize inventing a finding or destructive remediation.
+
+The candidate adds exactly nine such checks: an audit-retention check in case_34 and account-absence checks in cases 102, 144, 184, 282, 344, 526, 528 and 531. No existing step is removed and no status changes. Ownership conflicts, missing IDs/categories and excluded obligations still emit no check. The 18 open plans remain open because the current facts are still unknown. Public sample metrics stay 22/32 exact and 182/0/11 matching/extra/missing steps; this is a coverage improvement on the unlabeled requests, not a measured hidden-score gain.

@@ -990,3 +990,55 @@ worktree=main
 parent_agent=none
 
 Runtime identity limitation: Codex is authoritative from the harness instructions, but the available environment/configuration/current-session metadata does not expose an exact model identifier. None is guessed; the repository's exact-model logging requirement cannot be fully satisfied in this runtime.
+
+## [2026-10-25T06:05:52.231697+00:00] Next-phase plan: full-output verification coverage and evidence blockers
+
+User Prompt (verbatim, secrets redacted):
+what is the next plan
+
+Agent Response Summary:
+Reviewed the current gap report and the full candidate's unresolved register. Identified nine established-INCOMPLETE cases with known resource IDs but unknown current state, where a review may recover allowed future verification checks without asserting current absence/presence or creating findings; these are planning candidates, not nine automatically resolved cases. Proposed checking identity/policy and future-check coverage first, then addressing the three invalid rows (55, 63, 345) through their specific missing restore, ownership and profile facts and preparing an organizer clarification packet for the remaining data defects. The final step is full 32/518 evaluation, validation, reproducibility and packaging, preserving uncertainty and the existing evidence cutoff. Official issue #11/#19 comment lists were checked again and remain empty; nothing was posted and no prediction code or CSV was changed.
+
+Actions:
+* Read code/docs/WORKFLOW_GAPS.md, output.manifest.json and output.unresolved.json.
+* Enumerated nine potential future-verification gaps in cases 34, 102, 144, 184, 282, 344, 526, 528 and 531.
+* Read official issue #11/#19 comments through GitHub; no messages were sent.
+* Appended this plan to the shared log.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=dev/baseline
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: the harness identifies Codex, but available runtime metadata does not expose an authoritative exact model identifier. None is guessed; the repository's exact-model logging requirement cannot be fully satisfied here.
+
+## [2026-10-25T06:29:08.147167+00:00] Close future-verification omissions and regenerate candidate
+
+User Prompt (verbatim, secrets redacted):
+we are really really lagging behind why is this like that?
+why can't we complete this like others I need to win
+
+Agent Response Summary:
+Acknowledged that excessive internal gating and repeated investigation slowed delivery, and distinguished 32/32 public status accuracy from 22/32 exact full answers; public peer results do not establish official winners. Reproduced three missing future-verification expectations as failing tests, then changed the planner so established-INCOMPLETE cases include permitted future checks for known resources with unknown current state, without inventing findings or remediation. The candidate gains exactly nine checks, removes no prior step and changes no status; three semantic-invalid rows and 18 unresolved plans remain, and public metrics are unchanged. All 21 suites and 31 frozen fixtures pass, the extracted 220-file package reproduces the outputs, and the root candidate reproduces byte-for-byte. Prepared the code and release for a non-forced fast-forward to remote dev/baseline; the remote ref update follows this log verification, with no paid model call, issue post or contest upload.
+
+Actions:
+* Updated code/ghostaudit/planner.py, export.py documentation, test registration, seven synthetic future-verification controls and the source-reference integration expectation; frozen fixture labels unchanged.
+* Reviewed the pre-request snapshot constraint and marketing/backup evidence; did not relax evidence time or turn missing/contradictory facts into findings.
+* Producing code commit: a4fad4354e310f3d30c7d8ac27e4f93d6fbca833; code sha256 bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92 over 45 files.
+* Regenerated output.csv and review sidecars/reports. Candidate sha256 9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce; 518 rows, 152 COMPLETE / 356 INCOMPLETE / 10 NOT_APPLICABLE. Cases 55, 63 and 345 remain semantic-invalid.
+* Verified that exactly cases 34, 102, 144, 184, 282, 344, 526, 528 and 531 gain one future check; no status or previous step changes. Public result remains 182 matching / 0 extra / 11 missing steps, 22/32 exact answers (development data).
+* Ran all 21 suites, 31 fixtures, numeric-report checks, root manifest reproduction and scripts/package.py --verify. code.zip has 220 files; sha256 ed641e7c04e4d26150122774b2b681ddd5788e3cdf096f6c52b984a23fe8d481.
+* Updated README.md, WORKFLOW_HANDOFF.md, DECISIONS.md, evaluation reports and all root CSV/manifests/registers. No peer output or organizer-only truth was used as a prediction input; no dataset file was edited.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=codex/future-verification
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: Codex is authoritative from the harness instructions, but the available runtime/session metadata does not expose an exact model identifier. None is guessed; the repository's exact-model logging requirement cannot be fully satisfied here.

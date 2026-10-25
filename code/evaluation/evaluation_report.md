@@ -680,11 +680,11 @@ The run these numbers describe:
 |---|---|
 | command | `python3 code/main.py candidate` |
 | configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
-| producing commit (HEAD when the run was made) | `2edab59a72b8` |
+| producing commit (HEAD when the run was made) | `a4fad4354e31` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
-| output.csv sha256 | `f32fd414316b4511da8d2744fbdb1f6e7ddb7dbb115dac3c0a208506aa6f2ae9` |
-| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `0918ae6d02fda055dfe2b4087823f953025525a5e66c1c880bb805cb2012a642` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 1 |
+| output.csv sha256 | `9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce` |
+| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |
@@ -739,3 +739,14 @@ Additional fictional controls are implemented in `code/tests/test_account_rankin
 - **Ambiguity witnesses:** equal global assignments publish both alternatives; a weaker assignment is not marked equally optimal; a null assignment remains available when every proposed edge is worse.
 
 Queue-order calibration uses only explicit account ownership and in-window operations visible by the target cutoff: 72 FIFO and 70 reverse-order pairs across 125 batches (overlapping descriptive pairs, not independent trials). No queue-order rule was adopted. Alternate numeric references were inspected and belonged to other namespaces or unrelated subjects/activities, so no suffix-based ownership rule was added.
+
+
+## Future verification when current state is unknown
+
+The planner's blanket UNKNOWN filter discarded an allowed part of incomplete-case plans. Where a real finding already establishes INCOMPLETE, a known resource ID with a known policy target can receive a future verification check with empty evidence_id. This is different from asserting a current compliant state. The fix is narrowly limited to known account state gaps and required retained-record gaps; no findings or destructive remediation are generated for these unknowns. Missing identities, conflicting ownership, unresolved categories and excluded obligations still emit no step. Internal verdicts and export gates do not change.
+
+Seven synthetic planner controls cover account absence, retained presence, unresolved-only cases, missing category/identity, excluded obligations, COMPLETE evidence requirements and inferred ownership. Before the fix, three original controls failed and three passed. The source-reference integration test was updated to require an UNKNOWN verdict plus a future check rather than blanket omission; frozen fixture labels are unchanged. All 21 suites and 31 fixtures pass under Python 3.12.
+
+Compared with the previous candidate, exactly nine rows gain one future verification each (cases 34, 102, 144, 184, 282, 344, 526, 528, 531). No prior step disappears, no status changes, and no new current evidence claim is made. The candidate remains 152 COMPLETE / 356 INCOMPLETE / 10 NOT_APPLICABLE, with three semantic-invalid rows and 18 open plans. Public development scores remain 32/32 statuses, 22/32 exact, and 182/0/11 matching/extra/missing steps. Coverage on unlabeled cases is not an accuracy measurement.
+
+The review also considered allowing pre-request account snapshots to discharge absence. This was not adopted: these case-focused captures lack a demonstrated persistence/coverage guarantee, and no additional admissible fact resolves cases 55, 63 or 345. No future data, peer predictions, organizer-only files or paid model call was used.

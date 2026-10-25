@@ -71,6 +71,10 @@ Every inferred link and run is marked `certified=false`. Margins measure a heuri
 
 `--workflow-min-margin` controls abstention (default 0: every accepted assignment must still have a strictly positive margin). Context v2 adds shared-file affinity, a post-report-operation penalty, independently compliant context and a clock estimated from at least three identity-linked policy resources. Context v3 adds account-state affinity only for a current explicit absence in an otherwise compliant context, and extra anchor-distance weight when at least three distinct linked resources support the context. No fixed clock period or case-family rule is supplied. Initial account operations do not receive the clock feature. `--workflow-scoring contextual_v2` retains the 19/32 preview; `--workflow-scoring contextual --workflow-min-margin 0.25` retains the older 17/32 preview, and `--workflow-scoring anchor --workflow-min-margin 0.25` is the result-free timing control. The mode never uses case-number priorities, sample answers, competitor predictions or post-cutoff artifacts. `best-effort --artifact-dir <directory>` can keep an alternative run's three review artifacts separate; fixture tests use this option rather than overwriting root predictions.
 
+## Future verification of identified resources
+
+For a case already proved INCOMPLETE, the plan includes future checks for known account IDs and required retained records even when their current state is unknown. These checks use an empty evidence ID. They do not invent a current finding or remediation, resolve ownership conflicts, or certify an unknown case. The current candidate gains nine checks on the 518 requests; public sample metrics are unchanged. Unknown facts remain listed in the unresolved register.
+
 ## Phase 1 account-link results
 
 ```bash

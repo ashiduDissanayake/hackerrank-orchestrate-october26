@@ -135,6 +135,13 @@
      "phase": "VERIFICATION",
      "resource_id": "support_9538",
      "system_id": "support_platform"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_PRESENT",
+     "phase": "VERIFICATION",
+     "resource_id": "audit_record_3753",
+     "system_id": "security_service"
     }
    ],
    "internal_status": "INCOMPLETE",
@@ -348,6 +355,13 @@
      "evidence_id": "",
      "operation": "VERIFY_RECORD_ABSENT",
      "phase": "VERIFICATION",
+     "resource_id": "account_2056",
+     "system_id": "account_service"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
      "resource_id": "search_4586",
      "system_id": "search_service"
     },
@@ -454,6 +468,13 @@
      "evidence_id": "",
      "operation": "VERIFY_RECORD_ABSENT",
      "phase": "VERIFICATION",
+     "resource_id": "account_6826",
+     "system_id": "account_service"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
      "resource_id": "export_7992",
      "system_id": "export_service"
     }
@@ -502,6 +523,13 @@
      "phase": "REMEDIATION",
      "resource_id": "support_1892",
      "system_id": "support_platform"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
+     "resource_id": "account_9620",
+     "system_id": "account_service"
     },
     {
      "evidence_id": "",
@@ -671,6 +699,13 @@
     },
     {
      "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
+     "resource_id": "account_9763",
+     "system_id": "account_service"
+    },
+    {
+     "evidence_id": "",
      "operation": "VERIFY_RECORD_REDACTED",
      "phase": "VERIFICATION",
      "resource_id": "support_8370",
@@ -721,6 +756,13 @@
      "phase": "REMEDIATION",
      "resource_id": "search_5267",
      "system_id": "search_service"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
+     "resource_id": "account_486",
+     "system_id": "account_service"
     },
     {
      "evidence_id": "",
@@ -836,6 +878,13 @@
      "phase": "REMEDIATION",
      "resource_id": "analytics_131",
      "system_id": "analytics_platform"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
+     "resource_id": "account_1400",
+     "system_id": "account_service"
     },
     {
      "evidence_id": "",
@@ -1045,6 +1094,13 @@
      "evidence_id": "",
      "operation": "VERIFY_RECORD_ABSENT",
      "phase": "VERIFICATION",
+     "resource_id": "account_1184",
+     "system_id": "account_service"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
      "resource_id": "export_9388",
      "system_id": "export_service"
     },
@@ -1160,6 +1216,13 @@
      "phase": "REMEDIATION",
      "resource_id": "backup_3382",
      "system_id": "backup_service"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_ABSENT",
+     "phase": "VERIFICATION",
+     "resource_id": "account_3146",
+     "system_id": "account_service"
     },
     {
      "evidence_id": "",

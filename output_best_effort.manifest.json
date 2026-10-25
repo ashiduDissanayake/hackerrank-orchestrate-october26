@@ -18,7 +18,7 @@
   "code/ghostaudit/coverage_rules.py": "2c59e417b29f8338ac53b38f52f0865de45e1aa653a40a473dd2dfb953829b38",
   "code/ghostaudit/data.py": "e7cf70d736a38ad43449a3b742ff2f9c9a365b29f563a4441c5f88da157fd490",
   "code/ghostaudit/engine.py": "167e62f9eec890346568dcae204b0a0b93e75a1bf234d57c87a1cefd21696e0d",
-  "code/ghostaudit/export.py": "af1c4b079cb92a23a1374d2530adafac42ecf5c9f23bc9cad9e04c85a5a9d378",
+  "code/ghostaudit/export.py": "ba42fee98a17e94610054ebca59d51ee9d1c45a7ff180bda3009dd221960aa04",
   "code/ghostaudit/extract/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/extract/common.py": "0c2be447605b1e4b4e836ed7698eb8d038c1e93106cc81bdd8fa252a559a145d",
   "code/ghostaudit/extract/handover.py": "94cc12179fd4e5777f60ea40f379e839cd7f60cd6b6f1652fa6313641f0a043b",
@@ -46,7 +46,7 @@
   "code/ghostaudit/obligations.py": "f4ebb9d5d45b4b658c77d00e6a70fc0233f3edcf5243586dbb07edc7cb467f40",
   "code/ghostaudit/observations.py": "e8515ccc49b50d89595870004c3fad48906a6ad5121ed3e03bb3f8c71c6bbd7b",
   "code/ghostaudit/pipeline.py": "eda03418e258db492c8cf97ed6ac01c0237c97d5464eeeda58c2c972d613a013",
-  "code/ghostaudit/planner.py": "d09eac353ba81fc146a485c5efc2c6189bd78a90ca217d358f72aa2ce49bdb72",
+  "code/ghostaudit/planner.py": "1accbecde883270117929163f14c5f23c763bcc6ba3eb26e53dd756137ae751b",
   "code/ghostaudit/run.py": "8d1d5aa9342e413d7ac2854b3a8e2b30eb029b0f412e729ae68bb16c91329352",
   "code/ghostaudit/state.py": "9e299b66d28ecde76b762c287d0d8742f879028d5d43eae162f99c13a6b72185",
   "code/ghostaudit/validate.py": "674a4a05d7b5ade8102e79b2f308e6dc1d488f0a37468b754c0ef0fd4ba537b7",
@@ -54,7 +54,7 @@
   "code/main.py": "93dfc41c72ff853ac224a38be78306c0e3e3281feaa1eabbf77b1ec1324353bb",
   "code/requirements.txt": "79ed88acaf42c1382d794ba1fc1e23fc4b9f21a513d7b6cbc40380378f5862f5"
  },
- "code_sha256": "0918ae6d02fda055dfe2b4087823f953025525a5e66c1c880bb805cb2012a642",
+ "code_sha256": "bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92",
  "command": [
   "python3",
   "code/main.py",
@@ -85,16 +85,11 @@
  "disclosure": "Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation.",
  "final": false,
  "git": {
-  "commit": "2edab59a72b84a272439cc9ff1edb8e9826afc43",
+  "commit": "a4fad4354e310f3d30c7d8ac27e4f93d6fbca833",
   "dirty": true,
   "dirty_code_files": [],
   "dirty_files": [
-   "README.md",
-   "code/docs/WORKFLOW_GAPS.md",
-   "code/evaluation/evaluation_report.md",
-   "code/evaluation/workflow_report.md",
-   "log.txt",
-   "code/docs/ACCOUNT_LINK_PHASE1.md"
+   "log.txt"
   ]
  },
  "inputs_sha256": {
@@ -203,7 +198,7 @@
   "user_identities.csv": "63940e0fdc74a85e44463de3a6f18e3b27ff144f08e9981c732dfcfdadece9e6"
  },
  "kind": "best_effort",
- "output_sha256": "b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf",
+ "output_sha256": "0bfc8bcb3977cb2050dd6d89d287a021ff4807c7919b8b6a41f092e8dbc8262a",
  "plan_gap_cases": [
   "case_33",
   "case_34",
@@ -227,7 +222,7 @@
  "plan_gaps_accepted": false,
  "prompts": [],
  "python": "3.12.14",
- "register_sha256": "9cd4f2ad80799376a9842e42537905d4fa59cd06868c8188906f7e7708c53a0b",
+ "register_sha256": "b3925d179a9ee1a69ccc97b4e04de4be635abb9ef18c74f69f46f37d54297d01",
  "rows": 518,
  "runtime_model_calls": 0,
  "status_counts": {

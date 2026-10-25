@@ -140,6 +140,13 @@
      "phase": "VERIFICATION",
      "resource_id": "support_9538",
      "system_id": "support_platform"
+    },
+    {
+     "evidence_id": "",
+     "operation": "VERIFY_RECORD_PRESENT",
+     "phase": "VERIFICATION",
+     "resource_id": "audit_record_3753",
+     "system_id": "security_service"
     }
    ],
    "internal_status": "INCOMPLETE",
