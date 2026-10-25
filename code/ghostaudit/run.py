@@ -61,6 +61,9 @@ def diagnostics(results):
         if r.workflow_inferences:
             c["cases_with_workflow_inferences"] += 1
             c["workflow_inferred_links"] += len(r.workflow_inferences)
+        if r.decision_inferences:
+            c["cases_with_decision_inferences"] += 1
+            c["decision_inferences"] += len(r.decision_inferences)
         if r.conditions:
             c["cases_with_identity_conditions"] += 1
         for o in r.obligations:
@@ -87,6 +90,7 @@ def case_detail(r):
         "window_candidates": r.candidates[:10],
         "workflow_inferences": r.workflow_inferences,
         "workflow_decisions": r.workflow_decisions,
+        "decision_inferences": r.decision_inferences,
     }
 
 

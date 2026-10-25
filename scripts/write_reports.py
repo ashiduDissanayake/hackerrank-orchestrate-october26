@@ -129,7 +129,10 @@ def block_candidate():
             f"The CSV contains {m['rows']} data rows and the required three columns. Its manifest records `kind=submission_candidate`, "
             f"`certified=false`, {m['validation_error_count']} semantic validation errors, {len(m['undetermined_cases'])} undetermined statuses "
             f"({', '.join(m['undetermined_cases'])}), and {len(m['plan_gap_cases'])} established INCOMPLETE cases with unresolved plan items. "
-            "No unknown obligation was turned into a finding to clear validation. This file is a disclosed candidate and is not fully contract-conforming while those errors remain. "
+            f"The decision policy is `{m['config'].get('decision_policy', 'strict')}` with {m.get('decision_inference_count', 0)} explicitly recorded assumptions. "
+            "The submission policy predicts recoverable-backup risk, later catalog ownership, and persistence of clean complete snapshots. "
+            "These predictions retain their original unknowns and source IDs in decision_inferences; they are not observed facts or strict certification. "
+            "Zero validator errors establishes the checked schema/invariants, not canonical correctness or that every plan is complete. "
             "The certification label belongs to this implementation; it is not a HackerRank credential. "
             "`code/docs/WORKFLOW_GAPS.md` lists every remaining public-sample discrepancy and its exact evidence requirement.")
 

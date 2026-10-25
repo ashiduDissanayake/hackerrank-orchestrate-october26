@@ -102,6 +102,9 @@ def verify():
     subprocess.check_call([sys.executable, "code/main.py", "run", "--workflow-mode", "joint", "--out", preview_path,
                            "--diagnostics", "runs/workflow_preview/diagnostics.json"], cwd=REPO, stdout=subprocess.DEVNULL)
     preview_sha = hashlib.sha256(open(preview_path, "rb").read()).hexdigest()
+    candidate_path = os.path.join(REPO, "runs", "package_candidate")
+    subprocess.check_call([sys.executable, "code/main.py", "candidate", "--artifact-dir", candidate_path], cwd=REPO, stdout=subprocess.DEVNULL)
+    candidate_expected = json.load(open(os.path.join(candidate_path, "output.manifest.json")))["output_sha256"]
     with tempfile.TemporaryDirectory() as tmp:
         with zipfile.ZipFile(OUT) as z:
             names = z.namelist()
@@ -134,8 +137,11 @@ def verify():
         assert preview["workflow_inferred_link_count"] > 0, "preview must exercise workflow attribution"
         assert preview["output_sha256"] == preview_sha, "packaged workflow preview differs from the repository run"
         candidate = json.load(open(os.path.join(tmp, "runs", "candidate_release", "output.manifest.json")))
-        assert candidate["output_sha256"] == preview_sha and candidate["certified"] is False and candidate["final"] is False
+        assert candidate["output_sha256"] == candidate_expected and candidate["certified"] is False and candidate["final"] is False
+        assert candidate["validation_error_count"] == 0, "submission candidate failed validation"
+        assert candidate["config"]["decision_policy"] == "submission"
         print(f"  workflow preview sha256 matches repository: {preview_sha[:16]}...")
+        print(f"  submission candidate sha256 matches repository: {candidate_expected[:16]}...")
         # The extracted best-effort run must be uncertified and must never have produced the submission file.
         be = json.load(open(os.path.join(tmp, "output_best_effort.manifest.json")))
         assert be["certified"] is False and be["final"] is False, "best-effort output must be marked uncertified"
@@ -146,8 +152,9 @@ def verify():
     final_manifest = json.load(open(man)) if os.path.exists(man) else {}
     certified = (os.path.exists(root_final) and final_manifest.get("final") is True
                  and final_manifest.get("certified") is not False and not final_manifest.get("plan_gaps_accepted"))
-    print("CERTIFIED root output.csv: " + ("yes (exported through the gate)" if certified else
-          "NO. Package verification proves reproducibility of the code, not a valid submission CSV; the strict export gate still refuses while any case is UNDETERMINED."))
+    print("Strict evidence-only certification: " + ("yes" if certified else "no (submission predictions retain disclosed assumptions)."))
+    print(f"Root candidate validation errors: {final_manifest.get('validation_error_count', 'not generated')}; "
+          f"decision assumptions: {final_manifest.get('decision_inference_count', 0)}. Reproduction does not establish hidden accuracy.")
 
 
 if __name__ == "__main__":

@@ -106,6 +106,7 @@ def build_manifest(argv, config, ds, results, out_path, validation_errors):
     plan_gaps = [r.case_id for r in results if r.internal == "INCOMPLETE" and any(o.verdict == "UNKNOWN" for o in r.obligations)]
     carried = {r.case_id: [c["resource_id"] for c in r.carried_over] for r in results if r.carried_over}
     inferred = {r.case_id: r.workflow_inferences for r in results if getattr(r, "workflow_inferences", ())}
+    decisions = {r.case_id: r.decision_inferences for r in results if getattr(r, "decision_inferences", ())}
     counts = {}
     for r in results:
         counts[r.status] = counts.get(r.status, 0) + 1
@@ -130,6 +131,8 @@ def build_manifest(argv, config, ds, results, out_path, validation_errors):
         "carried_over_resources": carried,
         "workflow_inferences": inferred,
         "workflow_inferred_link_count": sum(len(v) for v in inferred.values()),
+        "decision_inferences": decisions,
+        "decision_inference_count": sum(len(v) for v in decisions.values()),
         "certified": False,
         "plan_gaps_accepted": False,
         "contract_valid": not validation_errors,
@@ -161,6 +164,8 @@ def gate(ds, results, out_path, manifest, allow_dirty=False, run_tests=True, all
         reasons.append(f"unknown_policy is {manifest['config'].get('unknown_policy')!r}; only 'not_certified' may be exported")
     if manifest["config"].get("workflow_mode", "evidence") != "evidence" or any(getattr(r, "workflow_inferences", ()) for r in results):
         reasons.append("workflow inference is an uncertified preview; inferred ownership cannot pass the strict export gate")
+    if manifest["config"].get("decision_policy", "strict") != "strict" or any(getattr(r, "decision_inferences", ()) for r in results):
+        reasons.append("submission decision assumptions cannot pass the strict evidence-only export gate")
     pending = [a for a in ds.manifest if a.file_path.endswith(".png")]
     if manifest["config"].get("png_extraction") != "complete" and pending:
         reasons.append(f"{len(pending)} PNG artifacts are not extracted yet (M5); the run cannot be final")
@@ -284,6 +289,7 @@ def _write_review_artifact(ds, results, errors, manifest, out_dir, names, kind):
     reg = unresolved_register(ds, results, errors)
     with open(paths[names[1]], "w", encoding="utf-8") as f:
         json.dump({"certified": False,
+                   "decision_inferences": {r.case_id: r.decision_inferences for r in results if getattr(r, "decision_inferences", ())},
                    "status_undetermined_cases": [e["case_id"] for e in reg if not e["status_determined"]],
                    "plan_gap_cases": [e["case_id"] for e in reg if e["status_determined"]],
                    "unresolved_cases": reg, "carried_over_to_earlier_requests": carried_over_register(results)}, f, indent=1, sort_keys=True, ensure_ascii=False)
@@ -294,9 +300,10 @@ def _write_review_artifact(ds, results, errors, manifest, out_dir, names, kind):
         "output_sha256": sha256_file(paths[names[0]]),
         "validation_errors": errors,
         "register_sha256": sha256_file(paths[names[1]]),
-        "disclosure": ("Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an "
-                       "unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, "
-                       "which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation."),
+        "disclosure": ("Prediction artifact, NOT a certified evidence-only result or a claim of hidden accuracy. "
+                       "decision_inferences lists explicit submission assumptions and their original unknowns; workflow_inferences lists ownership hypotheses. "
+                       "Remaining unknowns and every validator error are retained. Zero validator errors establishes format and checked invariants, "
+                       "not that every inference or plan matches the canonical answer."),
     })
     write_manifest(manifest, paths[names[2]])
     return paths, reg

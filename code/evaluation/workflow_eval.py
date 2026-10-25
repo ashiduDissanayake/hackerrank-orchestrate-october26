@@ -22,8 +22,10 @@ VARIANTS = (
 
 def measure(root):
     records = []
-    for name, mode, cfg in VARIANTS:
-        ds, store, results = run.run_dataset(root, "sample_deletion_requests.csv", workflow_mode=mode, workflow_config=cfg)
+    variants = [(n, m, c, "strict") for n, m, c in VARIANTS]
+    variants.append(("Submission predictor", "joint", WorkflowConfig(), "submission"))
+    for name, mode, cfg, policy in variants:
+        ds, store, results = run.run_dataset(root, "sample_deletion_requests.csv", workflow_mode=mode, workflow_config=cfg, decision_policy=policy)
         # Labels are consulted only after candidate selection and state evaluation finish.
         metrics = score(load_output(os.path.join(root, "sample_output.csv")),
                         {r.case_id: {"status": r.status, "steps": r.steps} for r in results})
@@ -31,9 +33,10 @@ def measure(root):
             path = os.path.join(tmp, "output.csv")
             run.write_output(results, path)
             errors = export.validate_output(ds, path)
-        records.append({"name": name, "mode": mode, "config": cfg.to_dict(), "metrics": metrics,
+        records.append({"name": name, "mode": mode, "config": cfg.to_dict(), "decision_policy": policy, "metrics": metrics,
                         "validation_errors": errors,
-                        "inferences": {r.case_id: r.workflow_inferences for r in results if r.workflow_inferences}})
+                        "inferences": {r.case_id: r.workflow_inferences for r in results if r.workflow_inferences},
+                        "decision_inferences": {r.case_id: r.decision_inferences for r in results if r.decision_inferences}})
     return records
 
 
@@ -60,4 +63,7 @@ def markdown(records):
     lines += ["", "Context v3 additionally gives +1 account affinity when independently linked context is compliant AND a current explicit absent observation exists with no known present copy. "
               "Three distinct independently linked resources add one further anchor-distance term. Missing, stale, future and inventory-only absence supplies no affinity. "
               "These interactions were selected using public development data; ownership remains inferred and strict export continues to refuse it."]
+    lines += ["", "The submission predictor additionally applies explicit recoverable-archive risk, later stable catalog ownership and clean-snapshot persistence assumptions. "
+              "Original unknown reasons, source IDs and assumptions are retained in decision_inferences; those are predictions rather than observed permissions or identity aliases. "
+              "This policy is evaluated separately and never passes the strict evidence-only export gate."]
     return "\n".join(lines)

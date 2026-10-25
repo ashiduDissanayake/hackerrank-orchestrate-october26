@@ -64,6 +64,7 @@ class CaseResult:
     carried_over: list = field(default_factory=list)    # resources scoped to an EARLIER request of the same subject (never silently dropped)
     workflow_inferences: list = field(default_factory=list)  # optional heuristic proposals, never certified evidence
     workflow_decisions: list = field(default_factory=list)
+    decision_inferences: list = field(default_factory=list)  # submission assumptions, separate from observed evidence
 
 
 def carried_over_from(ln, req, earlier):
@@ -81,7 +82,9 @@ def carried_over_from(ln, req, earlier):
 
 
 def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_weak=False, require_row=False, pre_request_exclusion=True, weak_promotion=True,
-               earlier_requests=(), episode_scoping=True, view_cls=CaseView, workflow_inferences=(), workflow_decisions=()):
+               earlier_requests=(), episode_scoping=True, view_cls=CaseView, workflow_inferences=(), workflow_decisions=(), decision_policy="strict"):
+    if decision_policy not in ("strict", "submission"):
+        raise ValueError("decision policy must be strict or submission")
     intent = classify(req.request_text)
     if not intent.deletion:
         return CaseResult(req.case_id, "NOT_APPLICABLE", "NOT_APPLICABLE", [], intent)
@@ -144,10 +147,15 @@ def audit_case(req, store, ident, rules, unknown_policy="not_certified", allow_w
             if proof is not None:
                 ob.detail["proof"] = proof_summary(proof)
         obs.append(ob)
+    decisions = []
+    if decision_policy == "submission":
+        from .prediction import resolve
+        obs, decisions = resolve(req, cv, subj, obs, lr.links, actions)
     res = CaseResult(req.case_id, "", "", [], intent, subj, lr.links, lr.rejected, obs,
                      [o for o in obs if o.verdict == "UNKNOWN"], list(subj.conditions), cands, carried)
     res.workflow_inferences = inferred
     res.workflow_decisions = list(workflow_decisions)
+    res.decision_inferences = decisions
     violations = [o for o in obs if o.verdict == "VIOLATION"]
     if subj.user_id is None:
         res.internal, res.status, res.steps = "UNDETERMINED", "INCOMPLETE", []
