@@ -5,14 +5,17 @@ Public samples are development data. The context features, weights and margin we
 | Variant | Status | Exact full answers | TP / FP / FN | Step P / R / F1 | Validation errors |
 |---|---:|---:|---|---|---:|
 | Evidence baseline | 32/32 | 10/32 | 159 / 0 / 34 | 1.0000 / 0.8238 / 0.9034 | 3 |
-| Joint preview (default margin) | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
-| Joint preview (quarter-point floor) | 32/32 | 18/32 | 177 / 0 / 16 | 1.0000 / 0.9171 / 0.9568 | 0 |
+| Joint preview (default margin) | 32/32 | 22/32 | 182 / 0 / 11 | 1.0000 / 0.9430 / 0.9707 | 0 |
+| Joint preview (quarter-point floor) | 32/32 | 21/32 | 181 / 0 / 12 | 1.0000 / 0.9378 / 0.9679 | 0 |
 | Anchor-only control | 32/32 | 15/32 | 166 / 0 / 27 | 1.0000 / 0.8601 / 0.9248 | 0 |
+| Previous context v2 | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
 | Previous workflow context | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
 
 The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. Schema validity does not establish evidence validity. The evidence baseline remains the default.
 
 Default settings: 90 minutes before / 10 minutes after reported_at; a strictly positive counterfactual score margin (ties abstain); one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability. The v2 context adds shared-file affinity (+1), a post-report-operation penalty (-2), independently compliant linked context (+2), and an anonymous-policy cadence feature (up to +2). A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature.
+
+Context v3 additionally gives +1 account affinity when independently linked context is compliant AND a current explicit absent observation exists with no known present copy. Three distinct independently linked resources add one further anchor-distance term. Missing, stale, future and inventory-only absence supplies no affinity. These interactions were selected using public development data; ownership remains inferred and strict export continues to refuse it.
 
 ## Default-preview proposals
 
@@ -30,14 +33,18 @@ The sources below support the candidate operation and the independently assessed
 | case_10 | account_010 | activity_3595 | 1.983056 |
 | case_18 | account_5521 | activity_3732 | 0.747778 |
 | case_20 | account_5037 | activity_3734 | 0.497222 |
-| case_21 | account_6440 | activity_3661 | 2.000000 |
+| case_21 | account_6440 | activity_3661 | 3.000000 |
 | case_21 | analytics_5335 | activity_3665 | 3.000000 |
 | case_22 | account_4990 | activity_3573 | 2.000000 |
+| case_25 | account_3136 | activity_3597 | 0.337778 |
 | case_25 | analytics_1895 | activity_3602 | 1.043056 |
+| case_26 | account_5684 | activity_3600 | 0.337778 |
 | case_26 | analytics_4566 | activity_3603 | 1.764994 |
 | case_27 | account_3866 | activity_3530 | 2.000000 |
 | case_27 | analytics_4574 | activity_3533 | 2.978055 |
+| case_28 | account_5482 | activity_3529 | 0.654444 |
 | case_28 | analytics_6077 | activity_3534 | 2.978055 |
+| case_29 | account_7012 | activity_3532 | 0.654444 |
 | case_30 | account_4163 | activity_3465 | 1.856667 |
 
 ## Remaining default-preview differences
@@ -50,10 +57,7 @@ The sources below support the candidate operation and the independently assessed
 | case_20 | audit_record_5569 | none |
 | case_23 | account_410, audit_record_4128 | none |
 | case_24 | audit_record_7095 | none |
-| case_25 | account_3136 | none |
-| case_26 | account_5684 | none |
-| case_28 | account_5482 | none |
-| case_29 | account_7012, audit_record_3954 | none |
+| case_29 | audit_record_3954 | none |
 | case_30 | audit_record_1707 | none |
 | case_31 | account_4857 | none |
 | case_32 | account_8858 | none |

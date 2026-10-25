@@ -10,12 +10,12 @@ The pipeline that produces the provisional predictions is deterministic code (Py
 | field | value |
 |---|---|
 | command | `python3 code/main.py candidate` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v2"}, "workflow_mode": "joint"}` |
-| producing commit (HEAD when the run was made) | `488c0e78fadb` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
+| producing commit (HEAD when the run was made) | `2edab59a72b8` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 5 |
-| output.csv sha256 | `9b3bdef08b89931dd98b18e5424eacb2688f02e426d0d0bf0a09e189d8a27421` |
-| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `5ef1303c77e5a3688813f98512b89e91774ae3a9fdf82d03eaaf942c2e5fad61` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
+| output.csv sha256 | `f32fd414316b4511da8d2744fbdb1f6e7ddb7dbb115dac3c0a208506aa6f2ae9` |
+| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `0918ae6d02fda055dfe2b4087823f953025525a5e66c1c880bb805cb2012a642` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |

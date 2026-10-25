@@ -11,7 +11,7 @@
   "code/ghostaudit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/account_proof.py": "a5530daf2d4c9958b5fdf9094c38025679165fe22e1772506def8f2a4711789a",
   "code/ghostaudit/caseview.py": "2aa4b6cac1f66846f01171c36f8b740563e6a195c8b6d676a813a2292b34359e",
-  "code/ghostaudit/context_features.py": "15912d1798790d0f6a7ae430e9f0f9c408ff3a9262b14022cdeaf402bb0db861",
+  "code/ghostaudit/context_features.py": "660fe4bd0d22fb0afe662658f2415c81a6b64c95a29e5780629a4f0df70e0f47",
   "code/ghostaudit/contract.py": "6d96ec5d218c2e8346861aa96311db6c5e6b0837f68e2860d83163a414e77452",
   "code/ghostaudit/copies.py": "c75d778dac2029b19c4841f9d54c48cba883f49bdd15ae882f7455c199d2d09c",
   "code/ghostaudit/coverage.py": "6d482df52a96c05ce13b32081ceddd077315c78859d875664f6b851f03f0f44e",
@@ -50,11 +50,11 @@
   "code/ghostaudit/run.py": "8d1d5aa9342e413d7ac2854b3a8e2b30eb029b0f412e729ae68bb16c91329352",
   "code/ghostaudit/state.py": "9e299b66d28ecde76b762c287d0d8742f879028d5d43eae162f99c13a6b72185",
   "code/ghostaudit/validate.py": "674a4a05d7b5ade8102e79b2f308e6dc1d488f0a37468b754c0ef0fd4ba537b7",
-  "code/ghostaudit/workflow.py": "e3249eb9b984ee072b3f951cd17cf0df1e1d16a7d9c10e340cb3d0c01e8c3978",
-  "code/main.py": "aad0962871509eed40cfcb378ec9e422ef0d5eb2b4c9d3246b5eafdbc70ccf81",
+  "code/ghostaudit/workflow.py": "710aa30487056bd9971f7809f03434e65af436ca212677550ffb30c0b6495d3e",
+  "code/main.py": "93dfc41c72ff853ac224a38be78306c0e3e3281feaa1eabbf77b1ec1324353bb",
   "code/requirements.txt": "79ed88acaf42c1382d794ba1fc1e23fc4b9f21a513d7b6cbc40380378f5862f5"
  },
- "code_sha256": "5ef1303c77e5a3688813f98512b89e91774ae3a9fdf82d03eaaf942c2e5fad61",
+ "code_sha256": "0918ae6d02fda055dfe2b4087823f953025525a5e66c1c880bb805cb2012a642",
  "command": [
   "python3",
   "code/main.py",
@@ -77,7 +77,7 @@
    "after_seconds": 600,
    "before_seconds": 5400,
    "min_margin": 0.0,
-   "scoring": "contextual_v2"
+   "scoring": "contextual_v3"
   },
   "workflow_mode": "joint"
  },
@@ -85,15 +85,16 @@
  "disclosure": "Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation.",
  "final": false,
  "git": {
-  "commit": "488c0e78fadb349701093b3ad6baf0fde6f20775",
+  "commit": "2edab59a72b84a272439cc9ff1edb8e9826afc43",
   "dirty": true,
   "dirty_code_files": [],
   "dirty_files": [
    "README.md",
+   "code/docs/WORKFLOW_GAPS.md",
    "code/evaluation/evaluation_report.md",
    "code/evaluation/workflow_report.md",
    "log.txt",
-   "code/docs/WORKFLOW_GAPS.md"
+   "code/docs/ACCOUNT_LINK_PHASE1.md"
   ]
  },
  "inputs_sha256": {
@@ -202,7 +203,7 @@
   "user_identities.csv": "63940e0fdc74a85e44463de3a6f18e3b27ff144f08e9981c732dfcfdadece9e6"
  },
  "kind": "submission_candidate",
- "output_sha256": "9b3bdef08b89931dd98b18e5424eacb2688f02e426d0d0bf0a09e189d8a27421",
+ "output_sha256": "f32fd414316b4511da8d2744fbdb1f6e7ddb7dbb115dac3c0a208506aa6f2ae9",
  "plan_gap_cases": [
   "case_33",
   "case_34",
@@ -261,6 +262,15 @@
     ],
     "event_time": "2026-08-04T05:11:22Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8105555555555556,
      "context": {
@@ -299,6 +309,15 @@
     ],
     "event_time": "2026-08-24T05:00:08Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9977777777777778,
      "context": {
@@ -335,6 +354,15 @@
     ],
     "event_time": "2026-08-19T11:03:36Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.94,
      "context": {
@@ -410,6 +438,15 @@
     ],
     "event_time": "2026-08-13T10:56:13Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0630555555555556,
      "context": {
@@ -429,10 +466,57 @@
     "system_id": "account_service"
    }
   ],
+  "case_110": [
+   {
+    "activity_id": "activity_3202",
+    "alternative_score": 10.2575,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_110",
+     "case_111",
+     "case_112"
+    ],
+    "contending_case_ids": [
+     "case_110",
+     "case_111",
+     "case_112"
+    ],
+    "event_time": "2026-08-10T11:05:15Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 0.9125,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.9125,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.150555555555556,
+    "resource_id": "account_7578",
+    "score": 2.175,
+    "system_id": "account_service"
+   }
+  ],
   "case_111": [
    {
     "activity_id": "activity_3201",
-    "alternative_score": 8.810833333333331,
+    "alternative_score": 8.408055555555556,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -448,6 +532,15 @@
     ],
     "event_time": "2026-08-10T10:54:01Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0997222222222223,
      "context": {
@@ -461,7 +554,7 @@
      "report_distance_hours": 1.0997222222222223,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0000000000000036,
+    "margin": 2.0,
     "resource_id": "account_9314",
     "score": 3.8005555555555555,
     "system_id": "account_service"
@@ -506,6 +599,68 @@
    }
   ],
   "case_112": [
+   {
+    "activity_id": "activity_3203",
+    "alternative_score": 10.2575,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_110",
+     "case_111",
+     "case_112"
+    ],
+    "contending_case_ids": [
+     "case_110",
+     "case_111",
+     "case_112"
+    ],
+    "event_time": "2026-08-10T11:14:17Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_3206",
+       "activity_3207",
+       "activity_3208"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_3206",
+      "activity_3207",
+      "activity_3208"
+     ],
+     "anchor_distance_hours": 0.4027777777777778,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_3206",
+        "activity_3207",
+        "activity_3208"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 56,
+       "reference_epoch_seconds": 1786361907
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.7619444444444444,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.150555555555556,
+    "resource_id": "account_2259",
+    "score": 4.4325,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_3205",
     "alternative_score": 11.480277777823572,
@@ -622,6 +777,15 @@
     ],
     "event_time": "2026-08-02T09:52:18Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1283333333333334,
      "context": {
@@ -663,6 +827,15 @@
     ],
     "event_time": "2026-07-30T10:01:49Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9697222222222223,
      "context": {
@@ -744,6 +917,15 @@
     ],
     "event_time": "2026-07-30T10:10:51Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8191666666666667,
      "context": {
@@ -781,6 +963,15 @@
     ],
     "event_time": "2026-07-27T09:59:37Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.006388888888889,
      "context": {
@@ -818,6 +1009,15 @@
     ],
     "event_time": "2026-07-27T09:48:23Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1936111111111112,
      "context": {
@@ -858,6 +1058,15 @@
     ],
     "event_time": "2026-08-13T10:56:13Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.06305555555555556,
      "context": {
@@ -894,6 +1103,15 @@
     ],
     "event_time": "2026-08-08T08:46:41Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2219444444444445,
      "context": {
@@ -930,6 +1148,15 @@
     ],
     "event_time": "2026-08-08T09:06:57Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8841666666666667,
      "context": {
@@ -968,6 +1195,15 @@
     ],
     "event_time": "2026-08-05T09:15:59Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7336111111111111,
      "context": {
@@ -1008,6 +1244,15 @@
     ],
     "event_time": "2026-08-02T08:53:32Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1077777777777778,
      "context": {
@@ -1048,6 +1293,15 @@
     ],
     "event_time": "2026-08-02T09:02:34Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9572222222222222,
      "context": {
@@ -1087,6 +1341,15 @@
     ],
     "event_time": "2026-07-30T08:51:20Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1444444444444444,
      "context": {
@@ -1126,6 +1389,15 @@
     ],
     "event_time": "2026-07-30T09:11:05Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8152777777777778,
      "context": {
@@ -1164,6 +1436,15 @@
     ],
     "event_time": "2026-07-28T07:03:14Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9461111111111111,
      "context": {
@@ -1186,7 +1467,7 @@
   "case_149": [
    {
     "activity_id": "activity_2904",
-    "alternative_score": 17.862222222222226,
+    "alternative_score": 19.02611111111111,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 6,
     "certified": false,
@@ -1205,6 +1486,15 @@
     ],
     "event_time": "2026-07-22T07:10:04Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8322222222222222,
      "context": {
@@ -1227,7 +1517,7 @@
   "case_150": [
    {
     "activity_id": "activity_2903",
-    "alternative_score": 17.20388888888889,
+    "alternative_score": 17.556944444444447,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 6,
     "certified": false,
@@ -1246,6 +1536,17 @@
     ],
     "event_time": "2026-07-22T06:59:49Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_86"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0030555555555556,
      "context": {
@@ -1261,9 +1562,9 @@
      "report_distance_hours": 1.0030555555555556,
      "reported_outcome_agrees": true
     },
-    "margin": 0.9938888888888897,
+    "margin": 1.8047222222222175,
     "resource_id": "account_3897",
-    "score": 4.993888888888889,
+    "score": 5.993888888888889,
     "system_id": "account_service"
    },
    {
@@ -1313,7 +1614,7 @@
   "case_151": [
    {
     "activity_id": "activity_2901",
-    "alternative_score": 16.59444444444444,
+    "alternative_score": 17.55694444444444,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 6,
     "certified": false,
@@ -1332,6 +1633,21 @@
     ],
     "event_time": "2026-07-22T06:48:06Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_2908",
+       "activity_2909",
+       "activity_2911"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_86"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_2908",
       "activity_2909",
@@ -1360,9 +1676,9 @@
      "report_distance_hours": 1.1983333333333333,
      "reported_outcome_agrees": true
     },
-    "margin": 1.6033333333333388,
+    "margin": 1.8047222222222246,
     "resource_id": "account_874",
-    "score": 4.9655555555555555,
+    "score": 5.129444444444444,
     "system_id": "account_service"
    },
    {
@@ -1440,6 +1756,17 @@
     ],
     "event_time": "2026-07-19T07:08:50Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_86"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8527777777777777,
      "context": {
@@ -1455,9 +1782,9 @@
      "report_distance_hours": 0.8527777777777777,
      "reported_outcome_agrees": true
     },
-    "margin": 1.2944444444444443,
+    "margin": 2.2944444444444443,
     "resource_id": "account_8854",
-    "score": 5.294444444444444,
+    "score": 6.294444444444444,
     "system_id": "account_service"
    }
   ],
@@ -1480,6 +1807,15 @@
     ],
     "event_time": "2026-07-14T05:46:23Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2269444444444444,
      "context": {
@@ -1499,10 +1835,74 @@
     "system_id": "account_service"
    }
   ],
+  "case_155": [
+   {
+    "activity_id": "activity_2757",
+    "alternative_score": 10.390833333333333,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_155",
+     "case_156",
+     "case_157"
+    ],
+    "contending_case_ids": [
+     "case_155",
+     "case_156",
+     "case_157"
+    ],
+    "event_time": "2026-07-11T06:15:10Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_2760",
+       "activity_2761",
+       "activity_2763"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_2760",
+      "activity_2761",
+      "activity_2763"
+     ],
+     "anchor_distance_hours": 0.39416666666666667,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_2760",
+        "activity_2761",
+        "activity_2763"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 30,
+       "reference_epoch_seconds": 1783751929
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.7472222222222222,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.14194444444444443,
+    "resource_id": "account_2154",
+    "score": 4.464444444444444,
+    "system_id": "account_service"
+   }
+  ],
   "case_156": [
    {
     "activity_id": "activity_2755",
-    "alternative_score": 9.080277777777777,
+    "alternative_score": 8.68611111111111,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -1521,6 +1921,15 @@
     ],
     "event_time": "2026-07-11T05:55:24Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0766666666666667,
      "context": {
@@ -1537,6 +1946,56 @@
     "margin": 1.8466666666666676,
     "resource_id": "account_2362",
     "score": 1.8466666666666667,
+    "system_id": "account_service"
+   }
+  ],
+  "case_157": [
+   {
+    "activity_id": "activity_2756",
+    "alternative_score": 10.390833333333333,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_155",
+     "case_156",
+     "case_157"
+    ],
+    "contending_case_ids": [
+     "case_155",
+     "case_156",
+     "case_157",
+     "case_170",
+     "case_171",
+     "case_172"
+    ],
+    "event_time": "2026-07-11T06:06:39Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 0.8891666666666667,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.8891666666666667,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.14194444444444443,
+    "resource_id": "account_1992",
+    "score": 4.221666666666667,
     "system_id": "account_service"
    }
   ],
@@ -1559,6 +2018,15 @@
     ],
     "event_time": "2026-07-08T06:04:26Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9261111111111111,
      "context": {
@@ -1597,6 +2065,15 @@
     ],
     "event_time": "2026-07-08T05:53:12Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1133333333333333,
      "context": {
@@ -1635,6 +2112,15 @@
     ],
     "event_time": "2026-07-08T06:13:28Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7755555555555556,
      "context": {
@@ -1669,6 +2155,15 @@
     ],
     "event_time": "2026-07-05T06:02:44Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9544444444444444,
      "context": {
@@ -1707,6 +2202,15 @@
     ],
     "event_time": "2026-07-25T05:51:01Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1497222222222223,
      "context": {
@@ -1784,6 +2288,15 @@
     ],
     "event_time": "2026-07-17T05:09:34Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8405555555555555,
      "context": {
@@ -1872,6 +2385,15 @@
     ],
     "event_time": "2026-07-11T04:45:25Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2430555555555556,
      "context": {
@@ -1912,6 +2434,15 @@
     ],
     "event_time": "2026-07-11T05:05:41Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9052777777777777,
      "context": {
@@ -1934,7 +2465,7 @@
   "case_173": [
    {
     "activity_id": "activity_2641",
-    "alternative_score": 13.564722222222223,
+    "alternative_score": 13.165833333333332,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -1955,6 +2486,15 @@
     ],
     "event_time": "2026-07-03T10:54:27Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0925,
      "context": {
@@ -1974,7 +2514,123 @@
     "system_id": "account_service"
    }
   ],
+  "case_174": [
+   {
+    "activity_id": "activity_2642",
+    "alternative_score": 13.523888888888887,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_173",
+     "case_174",
+     "case_175",
+     "case_188",
+     "case_190"
+    ],
+    "contending_case_ids": [
+     "case_173",
+     "case_174",
+     "case_175",
+     "case_188",
+     "case_189",
+     "case_190"
+    ],
+    "event_time": "2026-07-03T11:03:58Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 0.9338888888888889,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.9338888888888889,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.1708333333333325,
+    "resource_id": "account_246",
+    "score": 2.1322222222222225,
+    "system_id": "account_service"
+   }
+  ],
   "case_175": [
+   {
+    "activity_id": "activity_2643",
+    "alternative_score": 13.523888888888887,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_173",
+     "case_174",
+     "case_175",
+     "case_188",
+     "case_190"
+    ],
+    "contending_case_ids": [
+     "case_173",
+     "case_174",
+     "case_175"
+    ],
+    "event_time": "2026-07-03T11:14:13Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_2645",
+       "activity_2646",
+       "activity_2647"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_2645",
+      "activity_2646",
+      "activity_2647"
+     ],
+     "anchor_distance_hours": 0.3988888888888889,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_2645",
+        "activity_2646",
+        "activity_2647"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 56,
+       "reference_epoch_seconds": 1783078689
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.7630555555555556,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.1708333333333325,
+    "resource_id": "account_6659",
+    "score": 4.439166666666666,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_2644",
     "alternative_score": 3.0549999999999997,
@@ -2029,7 +2685,7 @@
   "case_176": [
    {
     "activity_id": "activity_2596",
-    "alternative_score": 10.606944444444444,
+    "alternative_score": 10.3725,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 2,
     "certified": false,
@@ -2048,6 +2704,15 @@
     ],
     "event_time": "2026-06-30T10:52:43Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.121388888888889,
      "context": {
@@ -2061,7 +2726,7 @@
      "report_distance_hours": 1.121388888888889,
      "reported_outcome_agrees": true
     },
-    "margin": 1.08,
+    "margin": 0.8950000000000014,
     "resource_id": "account_9877",
     "score": 1.757222222222222,
     "system_id": "account_service"
@@ -2070,7 +2735,7 @@
   "case_178": [
    {
     "activity_id": "activity_2599",
-    "alternative_score": 9.686944444444446,
+    "alternative_score": 9.267500000000002,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 2,
     "certified": false,
@@ -2089,6 +2754,15 @@
     ],
     "event_time": "2026-06-30T11:01:15Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9791666666666666,
      "context": {
@@ -2102,7 +2776,7 @@
      "report_distance_hours": 0.9791666666666666,
      "reported_outcome_agrees": true
     },
-    "margin": 1.9999999999999982,
+    "margin": 2.0,
     "resource_id": "account_1090",
     "score": 4.041666666666667,
     "system_id": "account_service"
@@ -2165,6 +2839,15 @@
     ],
     "event_time": "2026-06-27T10:50:31Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1580555555555556,
      "context": {
@@ -2203,6 +2886,15 @@
     ],
     "event_time": "2026-06-27T11:10:47Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8202777777777778,
      "context": {
@@ -2241,6 +2933,15 @@
     ],
     "event_time": "2026-06-27T10:59:32Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0077777777777779,
      "context": {
@@ -2275,6 +2976,15 @@
     ],
     "event_time": "2026-07-14T10:48:18Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.195,
      "context": {
@@ -2311,6 +3021,17 @@
     ],
     "event_time": "2026-07-09T10:08:03Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_83"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8658333333333333,
      "context": {
@@ -2326,16 +3047,16 @@
      "report_distance_hours": 0.8658333333333333,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 3.0,
     "resource_id": "account_4854",
-    "score": 5.2683333333333335,
+    "score": 6.2683333333333335,
     "system_id": "account_service"
    }
   ],
   "case_184": [
    {
     "activity_id": "activity_2728",
-    "alternative_score": 5.2683333333333335,
+    "alternative_score": 6.2683333333333335,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 2,
     "certified": false,
@@ -2349,6 +3070,15 @@
     ],
     "event_time": "2026-07-09T09:57:49Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0363888888888888,
      "context": {
@@ -2371,7 +3101,7 @@
   "case_188": [
    {
     "activity_id": "activity_2638",
-    "alternative_score": 13.200555555555557,
+    "alternative_score": 14.200555555555557,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 4,
     "certified": false,
@@ -2389,6 +3119,15 @@
     ],
     "event_time": "2026-07-03T10:15:52Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7355555555555555,
      "context": {
@@ -2429,6 +3168,17 @@
     ],
     "event_time": "2026-07-03T09:53:23Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_83"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1102777777777777,
      "context": {
@@ -2444,9 +3194,9 @@
      "report_distance_hours": 1.1102777777777777,
      "reported_outcome_agrees": true
     },
-    "margin": 1.7794444444444455,
+    "margin": 2.7794444444444455,
     "resource_id": "account_7063",
-    "score": 4.779444444444445,
+    "score": 5.779444444444445,
     "system_id": "account_service"
    },
    {
@@ -2494,6 +3244,73 @@
    }
   ],
   "case_191": [
+   {
+    "activity_id": "activity_2592",
+    "alternative_score": 13.496111111111112,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 4,
+    "certified": false,
+    "component_case_ids": [
+     "case_176",
+     "case_177",
+     "case_178",
+     "case_191",
+     "case_192"
+    ],
+    "contending_case_ids": [
+     "case_191",
+     "case_192"
+    ],
+    "event_time": "2026-06-30T10:13:39Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_2594",
+       "activity_2595",
+       "activity_2597"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_83"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_2594",
+      "activity_2595",
+      "activity_2597"
+     ],
+     "anchor_distance_hours": 0.41944444444444445,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_2594",
+        "activity_2595",
+        "activity_2597"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 30,
+       "reference_epoch_seconds": 1782815929
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": [
+       "evidence_83"
+      ]
+     },
+     "report_distance_hours": 0.7725,
+     "reported_outcome_agrees": true
+    },
+    "margin": 1.1875000000000018,
+    "resource_id": "account_9317",
+    "score": 6.3886111111111115,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_2593",
     "alternative_score": 1.0444444444444443,
@@ -2547,6 +3364,54 @@
     "resource_id": "analytics_5614",
     "score": 7.16249380516919,
     "system_id": "analytics_platform"
+   }
+  ],
+  "case_192": [
+   {
+    "activity_id": "activity_2591",
+    "alternative_score": 13.603611111111114,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 4,
+    "certified": false,
+    "component_case_ids": [
+     "case_176",
+     "case_177",
+     "case_178",
+     "case_191",
+     "case_192"
+    ],
+    "contending_case_ids": [
+     "case_191",
+     "case_192"
+    ],
+    "event_time": "2026-06-30T10:02:24Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 0.96,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.96,
+     "reported_outcome_agrees": true
+    },
+    "margin": 1.08,
+    "resource_id": "account_6608",
+    "score": 2.08,
+    "system_id": "account_service"
    }
   ],
   "case_193": [
@@ -2607,6 +3472,15 @@
     ],
     "event_time": "2026-06-22T09:11:25Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8097222222222222,
      "context": {
@@ -2646,6 +3520,15 @@
     ],
     "event_time": "2026-06-19T09:09:43Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8380555555555556,
      "context": {
@@ -2685,6 +3568,15 @@
     ],
     "event_time": "2026-06-19T08:58:29Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0252777777777777,
      "context": {
@@ -2720,6 +3612,15 @@
     ],
     "event_time": "2026-06-16T09:07:01Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8830555555555556,
      "context": {
@@ -2786,7 +3687,7 @@
   "case_204": [
    {
     "activity_id": "activity_2562",
-    "alternative_score": 6.842499999999999,
+    "alternative_score": 6.435555555555555,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -2802,6 +3703,19 @@
     ],
     "event_time": "2026-06-28T07:54:33Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_2566",
+       "activity_2567",
+       "activity_2569"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_2566",
       "activity_2567",
@@ -2828,9 +3742,9 @@
      "report_distance_hours": 1.0908333333333333,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 1.6708333333333334,
     "resource_id": "account_9268",
-    "score": 4.173055555555555,
+    "score": 3.436944444444444,
     "system_id": "account_service"
    },
    {
@@ -2906,6 +3820,15 @@
     ],
     "event_time": "2026-06-25T08:03:04Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9488888888888889,
      "context": {
@@ -2986,6 +3909,15 @@
     ],
     "event_time": "2026-06-22T08:01:22Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9772222222222222,
      "context": {
@@ -3029,6 +3961,15 @@
     ],
     "event_time": "2026-06-22T08:49:27Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.17583333333333334,
      "context": {
@@ -3069,6 +4010,15 @@
     ],
     "event_time": "2026-06-19T08:47:15Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.2125,
      "context": {
@@ -3089,6 +4039,72 @@
    }
   ],
   "case_213": [
+   {
+    "activity_id": "activity_2355",
+    "alternative_score": 11.309444444444445,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 2,
+    "certified": false,
+    "component_case_ids": [
+     "case_213",
+     "case_214",
+     "case_227",
+     "case_228",
+     "case_229"
+    ],
+    "contending_case_ids": [
+     "case_213",
+     "case_214",
+     "case_227",
+     "case_228",
+     "case_229"
+    ],
+    "event_time": "2026-06-14T07:08:09Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_2357",
+       "activity_2359",
+       "activity_2361"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_2357",
+      "activity_2359",
+      "activity_2361"
+     ],
+     "anchor_distance_hours": 0.5069444444444444,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_2357",
+        "activity_2359",
+        "activity_2361"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 30,
+       "reference_epoch_seconds": 1781422714
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.8641666666666666,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.3291666666666657,
+    "resource_id": "account_4752",
+    "score": 4.121944444444444,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_2356",
     "alternative_score": 3.0361111111111114,
@@ -3137,6 +4153,57 @@
     "resource_id": "analytics_4460",
     "score": 7.158327138502524,
     "system_id": "analytics_platform"
+   }
+  ],
+  "case_214": [
+   {
+    "activity_id": "activity_2353",
+    "alternative_score": 11.309444444444445,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 2,
+    "certified": false,
+    "component_case_ids": [
+     "case_213",
+     "case_214",
+     "case_227",
+     "case_228",
+     "case_229"
+    ],
+    "contending_case_ids": [
+     "case_213",
+     "case_214",
+     "case_227",
+     "case_228",
+     "case_229"
+    ],
+    "event_time": "2026-06-14T06:48:24Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 1.1933333333333334,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 1.1933333333333334,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.3291666666666657,
+    "resource_id": "account_6674",
+    "score": 1.6133333333333333,
+    "system_id": "account_service"
    }
   ],
   "case_215": [
@@ -3202,6 +4269,15 @@
     ],
     "event_time": "2026-06-11T07:06:55Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8847222222222222,
      "context": {
@@ -3240,6 +4316,15 @@
     ],
     "event_time": "2026-06-08T07:04:14Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9294444444444444,
      "context": {
@@ -3274,6 +4359,15 @@
     ],
     "event_time": "2026-06-05T06:53:29Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1086111111111112,
      "context": {
@@ -3315,6 +4409,15 @@
     ],
     "event_time": "2026-06-25T07:52:20Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.12777777777777777,
      "context": {
@@ -3334,10 +4437,57 @@
     "system_id": "account_service"
    }
   ],
+  "case_224": [
+   {
+    "activity_id": "activity_2403",
+    "alternative_score": 13.10611111111111,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_224",
+     "case_225",
+     "case_226"
+    ],
+    "contending_case_ids": [
+     "case_224",
+     "case_225",
+     "case_226"
+    ],
+    "event_time": "2026-06-17T05:51:47Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 1.1369444444444445,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 1.1369444444444445,
+     "reported_outcome_agrees": true
+    },
+    "margin": 1.0,
+    "resource_id": "account_7605",
+    "score": 1.726111111111111,
+    "system_id": "account_service"
+   }
+  ],
   "case_231": [
    {
     "activity_id": "activity_2300",
-    "alternative_score": 13.188055555555554,
+    "alternative_score": 13.15638888888889,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 6,
     "certified": false,
@@ -3356,6 +4506,21 @@
     ],
     "event_time": "2026-06-11T06:07:39Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_2302",
+       "activity_2303",
+       "activity_2305"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_80"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_2302",
       "activity_2303",
@@ -3384,9 +4549,9 @@
      "report_distance_hours": 0.8725,
      "reported_outcome_agrees": true
     },
-    "margin": 2.1200000000000028,
+    "margin": 2.6322222222222216,
     "resource_id": "account_7324",
-    "score": 5.608055555555556,
+    "score": 6.088611111111111,
     "system_id": "account_service"
    },
    {
@@ -3518,6 +4683,15 @@
     ],
     "event_time": "2026-06-03T05:05:25Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9097222222222222,
      "context": {
@@ -3608,6 +4782,15 @@
     ],
     "event_time": "2026-05-31T05:14:55Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7513888888888889,
      "context": {
@@ -3687,6 +4870,15 @@
     ],
     "event_time": "2026-06-03T11:06:08Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8977777777777778,
      "context": {
@@ -3724,6 +4916,15 @@
     ],
     "event_time": "2026-06-03T11:15:09Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7475,
      "context": {
@@ -3758,6 +4959,15 @@
     ],
     "event_time": "2026-05-26T10:13:56Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7677777777777778,
      "context": {
@@ -3833,6 +5043,15 @@
     ],
     "event_time": "2026-05-23T10:02:13Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9630555555555556,
      "context": {
@@ -3874,6 +5093,15 @@
     ],
     "event_time": "2026-05-23T09:51:58Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.133888888888889,
      "context": {
@@ -3912,6 +5140,15 @@
     ],
     "event_time": "2026-05-23T10:11:15Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8125,
      "context": {
@@ -3987,6 +5224,15 @@
     ],
     "event_time": "2026-05-17T09:58:48Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.02,
      "context": {
@@ -4060,6 +5306,15 @@
     ],
     "event_time": "2026-06-06T10:07:20Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8777777777777778,
      "context": {
@@ -4199,6 +5454,17 @@
     ],
     "event_time": "2026-05-15T07:59:28Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_77"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.008888888888889,
      "context": {
@@ -4214,9 +5480,9 @@
      "report_distance_hours": 1.008888888888889,
      "reported_outcome_agrees": true
     },
-    "margin": 3.044999999999998,
+    "margin": 4.044999999999998,
     "resource_id": "account_6575",
-    "score": 4.982222222222222,
+    "score": 5.982222222222222,
     "system_id": "account_service"
    },
    {
@@ -4256,10 +5522,62 @@
     "system_id": "analytics_platform"
    }
   ],
+  "case_275": [
+   {
+    "activity_id": "activity_1847",
+    "alternative_score": 17.446666666666665,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_275",
+     "case_276",
+     "case_277",
+     "case_290",
+     "case_291"
+    ],
+    "contending_case_ids": [
+     "case_275",
+     "case_276",
+     "case_277",
+     "case_290",
+     "case_291",
+     "case_292"
+    ],
+    "event_time": "2026-05-12T07:48:44Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 1.1877777777777778,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 1.1877777777777778,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.3227777777777767,
+    "resource_id": "account_2352",
+    "score": 1.6244444444444444,
+    "system_id": "account_service"
+   }
+  ],
   "case_276": [
    {
     "activity_id": "activity_1851",
-    "alternative_score": 14.455555555555552,
+    "alternative_score": 15.94833333333333,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -4280,6 +5598,17 @@
     ],
     "event_time": "2026-05-12T08:08:30Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_77"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8583333333333333,
      "context": {
@@ -4295,9 +5624,9 @@
      "report_distance_hours": 0.8583333333333333,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 1.8211111111111116,
     "resource_id": "account_4853",
-    "score": 5.283333333333333,
+    "score": 6.283333333333333,
     "system_id": "account_service"
    },
    {
@@ -4343,6 +5672,77 @@
    }
   ],
   "case_277": [
+   {
+    "activity_id": "activity_1850",
+    "alternative_score": 16.61888888888889,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_275",
+     "case_276",
+     "case_277",
+     "case_290",
+     "case_291"
+    ],
+    "contending_case_ids": [
+     "case_275",
+     "case_276",
+     "case_277",
+     "case_290",
+     "case_291",
+     "case_292"
+    ],
+    "event_time": "2026-05-12T07:57:46Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_1854",
+       "activity_1855",
+       "activity_1856"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_77"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_1854",
+      "activity_1855",
+      "activity_1856"
+     ],
+     "anchor_distance_hours": 0.6861111111111111,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_1854",
+        "activity_1855",
+        "activity_1856"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 30,
+       "reference_epoch_seconds": 1778575136
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": [
+       "evidence_77"
+      ]
+     },
+     "report_distance_hours": 1.0372222222222223,
+     "reported_outcome_agrees": true
+    },
+    "margin": 1.1505555555555524,
+    "resource_id": "account_731",
+    "score": 5.5905555555555555,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_1853",
     "alternative_score": 19.60249380517041,
@@ -4417,6 +5817,15 @@
     ],
     "event_time": "2026-05-09T07:55:32Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0744444444444445,
      "context": {
@@ -4451,6 +5860,15 @@
     ],
     "event_time": "2026-05-06T08:15:48Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7366666666666667,
      "context": {
@@ -4488,6 +5906,15 @@
     ],
     "event_time": "2026-05-26T08:04:33Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9241666666666667,
      "context": {
@@ -4562,6 +5989,15 @@
     ],
     "event_time": "2026-05-18T07:13:06Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7816666666666666,
      "context": {
@@ -4645,6 +6081,15 @@
     ],
     "event_time": "2026-05-15T07:11:24Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.81,
      "context": {
@@ -4687,6 +6132,15 @@
     ],
     "event_time": "2026-05-15T07:00:39Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9891666666666666,
      "context": {
@@ -4729,6 +6183,15 @@
     ],
     "event_time": "2026-05-15T06:49:55Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1680555555555556,
      "context": {
@@ -4769,6 +6232,15 @@
     ],
     "event_time": "2026-05-12T07:09:41Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8386111111111111,
      "context": {
@@ -4809,6 +6281,15 @@
     ],
     "event_time": "2026-05-12T06:58:27Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0258333333333334,
      "context": {
@@ -4891,7 +6372,7 @@
   "case_296": [
    {
     "activity_id": "activity_1668",
-    "alternative_score": 12.365833333333331,
+    "alternative_score": 11.975277777777777,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -4911,6 +6392,15 @@
     ],
     "event_time": "2026-05-01T06:05:17Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9119444444444444,
      "context": {
@@ -4933,7 +6423,7 @@
   "case_297": [
    {
     "activity_id": "activity_1670",
-    "alternative_score": 13.20638888888889,
+    "alternative_score": 12.470277777777778,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -4951,6 +6441,19 @@
     ],
     "event_time": "2026-05-01T06:14:47Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_1672",
+       "activity_1674",
+       "activity_1676"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_1672",
       "activity_1674",
@@ -4977,9 +6480,9 @@
      "report_distance_hours": 0.7536111111111111,
      "reported_outcome_agrees": true
     },
-    "margin": 0.15944444444444095,
+    "margin": 0.504999999999999,
     "resource_id": "account_4880",
-    "score": 4.855833333333333,
+    "score": 4.465277777777778,
     "system_id": "account_service"
    },
    {
@@ -5094,6 +6597,15 @@
     ],
     "event_time": "2026-05-15T06:01:21Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9775,
      "context": {
@@ -5131,6 +6643,15 @@
     ],
     "event_time": "2026-05-07T04:59:09Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0141666666666667,
      "context": {
@@ -5168,6 +6689,15 @@
     ],
     "event_time": "2026-05-07T04:48:54Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.185,
      "context": {
@@ -5189,8 +6719,8 @@
   ],
   "case_308": [
    {
-    "activity_id": "activity_1715",
-    "alternative_score": 15.643333333333334,
+    "activity_id": "activity_1720",
+    "alternative_score": 15.31111111111111,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 6,
     "certified": false,
@@ -5203,18 +6733,34 @@
      "case_310"
     ],
     "contending_case_ids": [
+     "case_293",
+     "case_294",
+     "case_295",
      "case_308",
      "case_309",
      "case_310"
     ],
-    "event_time": "2026-05-04T04:57:26Z",
+    "event_time": "2026-05-04T05:45:01Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_1719",
+       "activity_1721",
+       "activity_1722"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_1719",
       "activity_1721",
       "activity_1722"
      ],
-     "anchor_distance_hours": 0.6861111111111111,
+     "anchor_distance_hours": 0.001388888888888889,
      "context": {
       "cadence": {
        "anchor_activity_ids": [
@@ -5232,12 +6778,12 @@
       "operation_after_report": false,
       "shared_file_ids": []
      },
-     "report_distance_hours": 1.0427777777777778,
+     "report_distance_hours": 0.24972222222222223,
      "reported_outcome_agrees": true
     },
-    "margin": 0.022777777777777786,
-    "resource_id": "account_8647",
-    "score": 4.271111111111111,
+    "margin": 0.3308333333333344,
+    "resource_id": "account_9091",
+    "score": 5.7475,
     "system_id": "account_service"
    },
    {
@@ -5301,7 +6847,7 @@
   "case_309": [
    {
     "activity_id": "activity_1714",
-    "alternative_score": 15.126666666666667,
+    "alternative_score": 15.1025,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 6,
     "certified": false,
@@ -5320,6 +6866,15 @@
     ],
     "event_time": "2026-05-04T04:46:11Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2302777777777778,
      "context": {
@@ -5386,7 +6941,7 @@
   "case_310": [
    {
     "activity_id": "activity_1716",
-    "alternative_score": 14.451111111111112,
+    "alternative_score": 14.426944444444445,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 6,
     "certified": false,
@@ -5405,6 +6960,15 @@
     ],
     "event_time": "2026-05-04T05:06:27Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8925,
      "context": {
@@ -5447,6 +7011,15 @@
     ],
     "event_time": "2026-05-01T05:54:03Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.09916666666666667,
      "context": {
@@ -5486,6 +7059,15 @@
     ],
     "event_time": "2026-05-01T05:15:58Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7338888888888889,
      "context": {
@@ -5524,6 +7106,17 @@
     ],
     "event_time": "2026-04-26T11:04:44Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_74"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9211111111111111,
      "context": {
@@ -5539,9 +7132,9 @@
      "report_distance_hours": 0.9211111111111111,
      "reported_outcome_agrees": true
     },
-    "margin": 5.157777777777778,
+    "margin": 6.157777777777778,
     "resource_id": "account_8264",
-    "score": 5.157777777777778,
+    "score": 6.157777777777778,
     "system_id": "account_service"
    },
    {
@@ -5583,6 +7176,60 @@
    }
   ],
   "case_314": [
+   {
+    "activity_id": "activity_1562",
+    "alternative_score": 13.917222222222222,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_314",
+     "case_315",
+     "case_316",
+     "case_329",
+     "case_330"
+    ],
+    "contending_case_ids": [
+     "case_314",
+     "case_315",
+     "case_316",
+     "case_329",
+     "case_330",
+     "case_331"
+    ],
+    "event_time": "2026-04-23T10:53:01Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_74"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 1.1163888888888889,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": [
+       "evidence_74"
+      ]
+     },
+     "report_distance_hours": 1.1163888888888889,
+     "reported_outcome_agrees": true
+    },
+    "margin": 1.0,
+    "resource_id": "account_591",
+    "score": 5.767222222222222,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_1565",
     "alternative_score": 12.215827138502524,
@@ -5627,7 +7274,7 @@
   "case_315": [
    {
     "activity_id": "activity_1564",
-    "alternative_score": 11.917222222222222,
+    "alternative_score": 12.917222222222222,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -5645,6 +7292,15 @@
     ],
     "event_time": "2026-04-23T11:13:17Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7786111111111111,
      "context": {
@@ -5661,6 +7317,58 @@
     "margin": 2.0,
     "resource_id": "account_782",
     "score": 2.4427777777777777,
+    "system_id": "account_service"
+   }
+  ],
+  "case_316": [
+   {
+    "activity_id": "activity_1563",
+    "alternative_score": 13.917222222222222,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_314",
+     "case_315",
+     "case_316",
+     "case_329",
+     "case_330"
+    ],
+    "contending_case_ids": [
+     "case_314",
+     "case_315",
+     "case_316",
+     "case_329",
+     "case_330",
+     "case_331"
+    ],
+    "event_time": "2026-04-23T11:02:33Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 0.9575,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.9575,
+     "reported_outcome_agrees": true
+    },
+    "margin": 1.0,
+    "resource_id": "account_9523",
+    "score": 2.085,
     "system_id": "account_service"
    }
   ],
@@ -5685,6 +7393,17 @@
     ],
     "event_time": "2026-04-20T11:00:49Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_74"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9863888888888889,
      "context": {
@@ -5700,9 +7419,9 @@
      "report_distance_hours": 0.9863888888888889,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 3.0,
     "resource_id": "account_2088",
-    "score": 5.027222222222222,
+    "score": 6.027222222222222,
     "system_id": "account_service"
    },
    {
@@ -5760,6 +7479,15 @@
     ],
     "event_time": "2026-04-17T10:49:06Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1816666666666666,
      "context": {
@@ -5796,6 +7524,15 @@
     ],
     "event_time": "2026-04-17T11:09:51Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8358333333333333,
      "context": {
@@ -5830,6 +7567,17 @@
     ],
     "event_time": "2026-05-07T10:58:37Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_74"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0230555555555556,
      "context": {
@@ -5845,9 +7593,9 @@
      "report_distance_hours": 1.0230555555555556,
      "reported_outcome_agrees": true
     },
-    "margin": 4.953888888888889,
+    "margin": 5.953888888888889,
     "resource_id": "account_9354",
-    "score": 4.953888888888889,
+    "score": 5.953888888888889,
     "system_id": "account_service"
    },
    {
@@ -5956,6 +7704,15 @@
     ],
     "event_time": "2026-04-29T09:56:25Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0597222222222222,
      "context": {
@@ -6096,6 +7853,15 @@
     ],
     "event_time": "2026-04-23T10:14:57Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7508333333333334,
      "context": {
@@ -6136,6 +7902,15 @@
     ],
     "event_time": "2026-04-23T10:03:43Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9380555555555555,
      "context": {
@@ -6232,6 +8007,15 @@
     ],
     "event_time": "2026-04-20T10:12:14Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7961111111111111,
      "context": {
@@ -6254,7 +8038,7 @@
   "case_335": [
    {
     "activity_id": "activity_1406",
-    "alternative_score": 15.625555555555556,
+    "alternative_score": 14.149166666666666,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -6273,6 +8057,19 @@
     ],
     "event_time": "2026-04-12T09:10:31Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_1408",
+       "activity_1409",
+       "activity_1411"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_1408",
       "activity_1409",
@@ -6299,9 +8096,9 @@
      "report_distance_hours": 0.8247222222222222,
      "reported_outcome_agrees": true
     },
-    "margin": 1.9999999999999982,
+    "margin": 2.1875,
     "resource_id": "account_8892",
-    "score": 4.705833333333333,
+    "score": 4.2363888888888885,
     "system_id": "account_service"
    },
    {
@@ -6375,6 +8172,15 @@
     ],
     "event_time": "2026-04-09T09:08:48Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8533333333333334,
      "context": {
@@ -6449,6 +8255,15 @@
     ],
     "event_time": "2026-04-06T09:06:36Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.89,
      "context": {
@@ -6490,6 +8305,15 @@
     ],
     "event_time": "2026-04-26T09:54:12Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.09666666666666666,
      "context": {
@@ -6524,6 +8348,17 @@
     ],
     "event_time": "2026-04-21T08:15:38Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_71"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7394444444444445,
      "context": {
@@ -6539,9 +8374,9 @@
      "report_distance_hours": 0.7394444444444445,
      "reported_outcome_agrees": true
     },
-    "margin": 5.521111111111111,
+    "margin": 6.521111111111111,
     "resource_id": "account_1949",
-    "score": 5.521111111111111,
+    "score": 6.521111111111111,
     "system_id": "account_service"
    },
    {
@@ -6582,7 +8417,7 @@
   "case_344": [
    {
     "activity_id": "activity_1491",
-    "alternative_score": 10.416666666666668,
+    "alternative_score": 12.253333333333334,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -6598,6 +8433,15 @@
     ],
     "event_time": "2026-04-18T08:04:54Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9183333333333333,
      "context": {
@@ -6611,7 +8455,7 @@
      "report_distance_hours": 0.9183333333333333,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 2.163333333333334,
     "resource_id": "account_486",
     "score": 2.163333333333333,
     "system_id": "account_service"
@@ -6641,6 +8485,15 @@
     ],
     "event_time": "2026-04-15T08:50:45Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.15416666666666667,
      "context": {
@@ -6663,7 +8516,7 @@
   "case_350": [
    {
     "activity_id": "activity_1398",
-    "alternative_score": 14.254166666666666,
+    "alternative_score": 14.43472222222222,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 5,
     "certified": false,
@@ -6682,6 +8535,15 @@
     ],
     "event_time": "2026-04-12T08:00:29Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9919444444444444,
      "context": {
@@ -6704,7 +8566,7 @@
   "case_351": [
    {
     "activity_id": "activity_1397",
-    "alternative_score": 14.415833333333333,
+    "alternative_score": 14.371944444444445,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 5,
     "certified": false,
@@ -6723,6 +8585,21 @@
     ],
     "event_time": "2026-04-12T07:49:45Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_1401",
+       "activity_1402",
+       "activity_1404"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_71"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_1401",
       "activity_1402",
@@ -6751,9 +8628,9 @@
      "report_distance_hours": 1.1708333333333334,
      "reported_outcome_agrees": true
     },
-    "margin": 0.8544444444444448,
+    "margin": 1.078888888888887,
     "resource_id": "account_5059",
-    "score": 5.009722222222222,
+    "score": 5.190277777777777,
     "system_id": "account_service"
    },
    {
@@ -6817,7 +8694,7 @@
   "case_352": [
    {
     "activity_id": "activity_1399",
-    "alternative_score": 13.953611111111108,
+    "alternative_score": 14.134166666666665,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 5,
     "certified": false,
@@ -6836,6 +8713,15 @@
     ],
     "event_time": "2026-04-12T08:09:30Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8416666666666667,
      "context": {
@@ -6849,7 +8735,7 @@
      "report_distance_hours": 0.8416666666666667,
      "reported_outcome_agrees": true
     },
-    "margin": 1.31666666666667,
+    "margin": 1.3166666666666664,
     "resource_id": "account_6215",
     "score": 2.3166666666666664,
     "system_id": "account_service"
@@ -6876,6 +8762,15 @@
     ],
     "event_time": "2026-04-04T06:58:16Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.028888888888889,
      "context": {
@@ -6916,6 +8811,15 @@
     ],
     "event_time": "2026-04-04T06:47:01Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.216388888888889,
      "context": {
@@ -6992,6 +8896,15 @@
     ],
     "event_time": "2026-04-01T06:56:33Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0575,
      "context": {
@@ -7031,6 +8944,15 @@
     ],
     "event_time": "2026-04-01T07:05:04Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9155555555555556,
      "context": {
@@ -7069,6 +8991,15 @@
     ],
     "event_time": "2026-03-29T07:14:35Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7569444444444444,
      "context": {
@@ -7111,6 +9042,15 @@
     ],
     "event_time": "2026-04-15T07:51:58Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.1338888888888889,
      "context": {
@@ -7232,6 +9172,15 @@
     ],
     "event_time": "2026-03-27T04:55:28Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0755555555555556,
      "context": {
@@ -7268,6 +9217,15 @@
     ],
     "event_time": "2026-03-24T04:53:46Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.103888888888889,
      "context": {
@@ -7304,6 +9262,15 @@
     ],
     "event_time": "2026-03-21T05:13:32Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7744444444444445,
      "context": {
@@ -7422,6 +9389,15 @@
     ],
     "event_time": "2026-04-07T04:49:23Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1769444444444443,
      "context": {
@@ -7598,6 +9574,15 @@
     ],
     "event_time": "2026-03-16T09:52:43Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.121388888888889,
      "context": {
@@ -7637,6 +9622,15 @@
     ],
     "event_time": "2026-03-16T10:12:30Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7916666666666666,
      "context": {
@@ -7758,6 +9752,15 @@
     ],
     "event_time": "2026-03-10T10:08:07Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8647222222222222,
      "context": {
@@ -7792,6 +9795,15 @@
     ],
     "event_time": "2026-03-07T09:57:52Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0355555555555556,
      "context": {
@@ -7829,6 +9841,15 @@
     ],
     "event_time": "2026-03-27T09:46:09Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2308333333333332,
      "context": {
@@ -7863,6 +9884,15 @@
     ],
     "event_time": "2026-03-22T09:06:53Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8852777777777778,
      "context": {
@@ -7938,6 +9968,15 @@
     ],
     "event_time": "2026-03-16T08:53:26Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1094444444444445,
      "context": {
@@ -8010,7 +10049,7 @@
   "case_423": [
    {
     "activity_id": "activity_952",
-    "alternative_score": 7.852222222222222,
+    "alternative_score": 9.852222222222222,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 2,
     "certified": false,
@@ -8024,6 +10063,17 @@
     ],
     "event_time": "2026-03-11T07:03:09Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_68"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9475,
      "context": {
@@ -8041,14 +10091,14 @@
     },
     "margin": 2.0,
     "resource_id": "account_2420",
-    "score": 5.105,
+    "score": 6.105,
     "system_id": "account_service"
    }
   ],
   "case_424": [
    {
     "activity_id": "activity_951",
-    "alternative_score": 7.852222222222222,
+    "alternative_score": 9.852222222222222,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 2,
     "certified": false,
@@ -8062,6 +10112,17 @@
     ],
     "event_time": "2026-03-11T06:52:25Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_68"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1263888888888889,
      "context": {
@@ -8079,7 +10140,7 @@
     },
     "margin": 2.0,
     "resource_id": "account_2696",
-    "score": 4.747222222222222,
+    "score": 5.747222222222222,
     "system_id": "account_service"
    }
   ],
@@ -8103,6 +10164,17 @@
     ],
     "event_time": "2026-03-08T06:50:12Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_68"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1633333333333333,
      "context": {
@@ -8118,9 +10190,9 @@
      "report_distance_hours": 1.1633333333333333,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 3.0,
     "resource_id": "account_8461",
-    "score": 4.673333333333334,
+    "score": 5.673333333333334,
     "system_id": "account_service"
    },
    {
@@ -8164,7 +10236,7 @@
   "case_428": [
    {
     "activity_id": "activity_849",
-    "alternative_score": 12.529444444444444,
+    "alternative_score": 13.529444444444444,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 5,
     "certified": false,
@@ -8182,6 +10254,15 @@
     ],
     "event_time": "2026-03-05T07:10:28Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8255555555555556,
      "context": {
@@ -8222,6 +10303,17 @@
     ],
     "event_time": "2026-03-05T06:48:59Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_68"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1836111111111112,
      "context": {
@@ -8237,9 +10329,9 @@
      "report_distance_hours": 1.1836111111111112,
      "reported_outcome_agrees": true
     },
-    "margin": 0.6327777777777772,
+    "margin": 1.6327777777777772,
     "resource_id": "account_6006",
-    "score": 4.632777777777777,
+    "score": 5.632777777777777,
     "system_id": "account_service"
    }
   ],
@@ -8263,6 +10355,15 @@
     ],
     "event_time": "2026-03-02T07:08:46Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8538888888888889,
      "context": {
@@ -8302,6 +10403,15 @@
     ],
     "event_time": "2026-03-02T06:57:32Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.041111111111111,
      "context": {
@@ -8383,6 +10493,15 @@
     ],
     "event_time": "2026-02-28T05:09:26Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8427777777777777,
      "context": {
@@ -8423,6 +10542,15 @@
     ],
     "event_time": "2026-02-25T05:46:47Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.22027777777777777,
      "context": {
@@ -8505,6 +10633,15 @@
     ],
     "event_time": "2026-02-22T04:56:29Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0586111111111112,
      "context": {
@@ -8549,6 +10686,15 @@
     ],
     "event_time": "2026-02-22T05:55:18Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.07833333333333334,
      "context": {
@@ -8590,6 +10736,15 @@
     ],
     "event_time": "2026-02-22T05:05:59Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9002777777777777,
      "context": {
@@ -8627,6 +10782,15 @@
     ],
     "event_time": "2026-02-19T04:54:45Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0875,
      "context": {
@@ -8705,6 +10869,15 @@
     ],
     "event_time": "2026-02-14T11:03:47Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9369444444444445,
      "context": {
@@ -8743,6 +10916,15 @@
     ],
     "event_time": "2026-02-11T11:12:49Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7863888888888889,
      "context": {
@@ -8781,6 +10963,15 @@
     ],
     "event_time": "2026-02-08T10:50:22Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1605555555555556,
      "context": {
@@ -8857,6 +11048,15 @@
     ],
     "event_time": "2026-02-08T11:10:38Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8227777777777778,
      "context": {
@@ -8895,6 +11095,17 @@
     ],
     "event_time": "2026-02-08T10:59:54Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_478"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 1,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [
       "activity_478"
      ],
@@ -8931,6 +11142,15 @@
     ],
     "event_time": "2026-02-05T10:48:40Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1888888888888889,
      "context": {
@@ -8965,6 +11185,15 @@
     ],
     "event_time": "2026-02-25T11:08:25Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8597222222222223,
      "context": {
@@ -8999,6 +11228,21 @@
     ],
     "event_time": "2026-02-20T09:57:12Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_660",
+       "activity_661",
+       "activity_662"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_65"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_660",
       "activity_661",
@@ -9027,9 +11271,9 @@
      "report_distance_hours": 1.0466666666666666,
      "reported_outcome_agrees": true
     },
-    "margin": 5.267222222222222,
+    "margin": 5.581111111111111,
     "resource_id": "account_1698",
-    "score": 5.267222222222222,
+    "score": 5.581111111111111,
     "system_id": "account_service"
    },
    {
@@ -9082,6 +11326,71 @@
   ],
   "case_464": [
    {
+    "activity_id": "activity_602",
+    "alternative_score": 6.0663888888888895,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 2,
+    "certified": false,
+    "component_case_ids": [
+     "case_464",
+     "case_466"
+    ],
+    "contending_case_ids": [
+     "case_464",
+     "case_465",
+     "case_466"
+    ],
+    "event_time": "2026-02-17T09:46:56Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_607",
+       "activity_608",
+       "activity_609"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_65"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_607",
+      "activity_608",
+      "activity_609"
+     ],
+     "anchor_distance_hours": 0.8530555555555556,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_607",
+        "activity_608",
+        "activity_609"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 56,
+       "reference_epoch_seconds": 1771324687
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": [
+       "evidence_65"
+      ]
+     },
+     "report_distance_hours": 1.2177777777777778,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.8580555555555556,
+    "resource_id": "account_2480",
+    "score": 5.0761111111111115,
+    "system_id": "account_service"
+   },
+   {
     "activity_id": "activity_606",
     "alternative_score": 4.053888888888888,
     "basis": "inferred_workflow_assignment",
@@ -9133,6 +11442,52 @@
     "system_id": "analytics_platform"
    }
   ],
+  "case_466": [
+   {
+    "activity_id": "activity_603",
+    "alternative_score": 6.0663888888888895,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 2,
+    "certified": false,
+    "component_case_ids": [
+     "case_464",
+     "case_466"
+    ],
+    "contending_case_ids": [
+     "case_464",
+     "case_465",
+     "case_466"
+    ],
+    "event_time": "2026-02-17T09:55:27Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 1.0758333333333334,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 1.0758333333333334,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.8580555555555556,
+    "resource_id": "account_7503",
+    "score": 1.8483333333333332,
+    "system_id": "account_service"
+   }
+  ],
   "case_467": [
    {
     "activity_id": "activity_563",
@@ -9155,6 +11510,17 @@
     ],
     "event_time": "2026-02-14T10:15:43Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_65"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.7380555555555556,
      "context": {
@@ -9170,16 +11536,16 @@
      "report_distance_hours": 0.7380555555555556,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0000000000000018,
+    "margin": 3.0000000000000018,
     "resource_id": "account_2437",
-    "score": 5.523888888888889,
+    "score": 6.523888888888889,
     "system_id": "account_service"
    }
   ],
   "case_468": [
    {
     "activity_id": "activity_562",
-    "alternative_score": 14.232777777777779,
+    "alternative_score": 15.232777777777779,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 4,
     "certified": false,
@@ -9199,6 +11565,15 @@
     ],
     "event_time": "2026-02-14T10:04:30Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.925,
      "context": {
@@ -9221,7 +11596,7 @@
   "case_469": [
    {
     "activity_id": "activity_561",
-    "alternative_score": 15.043333333333335,
+    "alternative_score": 16.043333333333337,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 4,
     "certified": false,
@@ -9241,6 +11616,15 @@
     ],
     "event_time": "2026-02-14T09:53:16Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1122222222222222,
      "context": {
@@ -9254,13 +11638,65 @@
      "report_distance_hours": 1.1122222222222222,
      "reported_outcome_agrees": true
     },
-    "margin": 1.1894444444444456,
+    "margin": 1.1894444444444439,
     "resource_id": "account_6645",
     "score": 1.7755555555555556,
     "system_id": "account_service"
    }
   ],
   "case_470": [
+   {
+    "activity_id": "activity_517",
+    "alternative_score": 15.429444444444448,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 5,
+    "certified": false,
+    "component_case_ids": [
+     "case_455",
+     "case_456",
+     "case_457",
+     "case_470",
+     "case_471",
+     "case_472"
+    ],
+    "contending_case_ids": [
+     "case_470",
+     "case_471",
+     "case_472"
+    ],
+    "event_time": "2026-02-11T10:13:02Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_65"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 0.7827777777777778,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": [
+       "evidence_65"
+      ]
+     },
+     "report_distance_hours": 0.7827777777777778,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.9999999999999982,
+    "resource_id": "account_7023",
+    "score": 6.434444444444445,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_518",
     "alternative_score": 4.056666666666667,
@@ -9306,10 +11742,60 @@
     "system_id": "analytics_platform"
    }
   ],
+  "case_471": [
+   {
+    "activity_id": "activity_516",
+    "alternative_score": 16.35277777777778,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 5,
+    "certified": false,
+    "component_case_ids": [
+     "case_455",
+     "case_456",
+     "case_457",
+     "case_470",
+     "case_471",
+     "case_472"
+    ],
+    "contending_case_ids": [
+     "case_470",
+     "case_471",
+     "case_472"
+    ],
+    "event_time": "2026-02-11T10:02:18Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 0.9616666666666667,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 0.9616666666666667,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.07666666666666444,
+    "resource_id": "account_9034",
+    "score": 2.076666666666666,
+    "system_id": "account_service"
+   }
+  ],
   "case_472": [
    {
     "activity_id": "activity_515",
-    "alternative_score": 14.710555555555558,
+    "alternative_score": 15.710555555555558,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 5,
     "certified": false,
@@ -9328,6 +11814,15 @@
     ],
     "event_time": "2026-02-11T09:51:34Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1405555555555555,
      "context": {
@@ -9341,7 +11836,7 @@
      "report_distance_hours": 1.1405555555555555,
      "reported_outcome_agrees": true
     },
-    "margin": 0.7188888888888894,
+    "margin": 0.7188888888888876,
     "resource_id": "account_1957",
     "score": 1.718888888888889,
     "system_id": "account_service"
@@ -9365,6 +11860,17 @@
     ],
     "event_time": "2026-02-03T09:11:20Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_410"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 1,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [
       "activity_410"
      ],
@@ -9407,6 +11913,15 @@
     ],
     "event_time": "2026-02-03T09:00:35Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9902777777777778,
      "context": {
@@ -9446,6 +11961,15 @@
     ],
     "event_time": "2026-01-31T09:09:37Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8397222222222223,
      "context": {
@@ -9485,6 +12009,15 @@
     ],
     "event_time": "2026-01-31T08:47:09Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2141666666666666,
      "context": {
@@ -9507,7 +12040,7 @@
   "case_479": [
    {
     "activity_id": "activity_318",
-    "alternative_score": 6.0275,
+    "alternative_score": 5.52,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -9523,6 +12056,15 @@
     ],
     "event_time": "2026-01-28T09:07:54Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8683333333333333,
      "context": {
@@ -9536,13 +12078,75 @@
      "report_distance_hours": 0.8683333333333333,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 1.8047222222222228,
     "resource_id": "account_5582",
     "score": 2.2633333333333336,
     "system_id": "account_service"
    }
   ],
   "case_480": [
+   {
+    "activity_id": "activity_315",
+    "alternative_score": 7.153611111111111,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_479",
+     "case_480",
+     "case_481"
+    ],
+    "contending_case_ids": [
+     "case_479",
+     "case_480",
+     "case_481"
+    ],
+    "event_time": "2026-01-28T08:56:11Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_320",
+       "activity_322",
+       "activity_323"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
+     "anchor_activity_ids": [
+      "activity_320",
+      "activity_322",
+      "activity_323"
+     ],
+     "anchor_distance_hours": 0.7027777777777777,
+     "context": {
+      "cadence": {
+       "anchor_activity_ids": [
+        "activity_320",
+        "activity_322",
+        "activity_323"
+       ],
+       "fit_tolerance_seconds": 1,
+       "period_seconds": 56,
+       "reference_epoch_seconds": 1769593101
+      },
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": true,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 1.063611111111111,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.1711111111111112,
+    "resource_id": "account_2465",
+    "score": 3.5308333333333337,
+    "system_id": "account_service"
+   },
    {
     "activity_id": "activity_319",
     "alternative_score": 4.0616666666666665,
@@ -9595,6 +12199,53 @@
     "system_id": "analytics_platform"
    }
   ],
+  "case_481": [
+   {
+    "activity_id": "activity_314",
+    "alternative_score": 7.153611111111111,
+    "basis": "inferred_workflow_assignment",
+    "candidate_count": 3,
+    "certified": false,
+    "component_case_ids": [
+     "case_479",
+     "case_480",
+     "case_481"
+    ],
+    "contending_case_ids": [
+     "case_479",
+     "case_480",
+     "case_481"
+    ],
+    "event_time": "2026-01-28T08:45:55Z",
+    "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
+     "anchor_activity_ids": [],
+     "anchor_distance_hours": 1.2347222222222223,
+     "context": {
+      "cadence": null,
+      "cadence_affinity": 0.0,
+      "cadence_distance_seconds": null,
+      "independently_compliant_context": false,
+      "operation_after_report": false,
+      "shared_file_ids": []
+     },
+     "report_distance_hours": 1.2347222222222223,
+     "reported_outcome_agrees": true
+    },
+    "margin": 0.1711111111111112,
+    "resource_id": "account_9449",
+    "score": 1.5305555555555554,
+    "system_id": "account_service"
+   }
+  ],
   "case_482": [
    {
     "activity_id": "activity_560",
@@ -9615,6 +12266,15 @@
     ],
     "event_time": "2026-02-14T09:05:41Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9052777777777777,
      "context": {
@@ -9653,6 +12313,15 @@
     ],
     "event_time": "2026-02-06T08:03:28Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9422222222222222,
      "context": {
@@ -9734,6 +12403,15 @@
     ],
     "event_time": "2026-09-12T11:04:43Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.07861111111111112,
      "context": {
@@ -9772,6 +12450,15 @@
     ],
     "event_time": "2026-01-31T07:48:19Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1947222222222222,
      "context": {
@@ -9812,6 +12499,15 @@
     ],
     "event_time": "2026-01-26T07:08:04Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8655555555555555,
      "context": {
@@ -9889,6 +12585,15 @@
     ],
     "event_time": "2026-01-23T06:57:20Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0444444444444445,
      "context": {
@@ -9970,6 +12675,15 @@
     ],
     "event_time": "2026-01-23T06:46:36Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2233333333333334,
      "context": {
@@ -10013,6 +12727,15 @@
     ],
     "event_time": "2026-01-23T07:06:52Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8855555555555555,
      "context": {
@@ -10052,6 +12775,15 @@
     ],
     "event_time": "2026-01-20T06:55:38Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0727777777777778,
      "context": {
@@ -10129,6 +12861,15 @@
     ],
     "event_time": "2026-01-20T07:15:54Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.735,
      "context": {
@@ -10164,6 +12905,15 @@
     ],
     "event_time": "2026-01-17T06:53:56Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1011111111111112,
      "context": {
@@ -10201,6 +12951,15 @@
     ],
     "event_time": "2026-02-06T07:02:28Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9588888888888889,
      "context": {
@@ -10239,6 +12998,15 @@
     ],
     "event_time": "2026-01-29T05:51:15Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1458333333333333,
      "context": {
@@ -10279,6 +13047,15 @@
     ],
     "event_time": "2026-01-26T05:49:03Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1825,
      "context": {
@@ -10319,6 +13096,15 @@
     ],
     "event_time": "2026-01-26T06:09:49Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8363888888888888,
      "context": {
@@ -10359,6 +13145,15 @@
     ],
     "event_time": "2026-01-26T05:58:06Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0316666666666667,
      "context": {
@@ -10402,6 +13197,15 @@
     ],
     "event_time": "2026-01-23T06:57:20Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.044444444444444446,
      "context": {
@@ -10501,6 +13305,15 @@
     ],
     "event_time": "2026-01-23T06:07:08Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8811111111111111,
      "context": {
@@ -10541,6 +13354,15 @@
     ],
     "event_time": "2026-01-20T06:55:38Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.07277777777777777,
      "context": {
@@ -10698,6 +13520,17 @@
     ],
     "event_time": "2026-01-18T11:08:50Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_62"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8527777777777777,
      "context": {
@@ -10713,16 +13546,16 @@
      "report_distance_hours": 0.8527777777777777,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 3.0,
     "resource_id": "account_704",
-    "score": 5.294444444444444,
+    "score": 6.294444444444444,
     "system_id": "account_service"
    }
   ],
   "case_526": [
    {
     "activity_id": "activity_196",
-    "alternative_score": 5.294444444444444,
+    "alternative_score": 6.294444444444444,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 2,
     "certified": false,
@@ -10737,6 +13570,15 @@
     ],
     "event_time": "2026-01-18T10:46:53Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.218611111111111,
      "context": {
@@ -10775,6 +13617,15 @@
     ],
     "event_time": "2026-01-15T10:55:23Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0769444444444445,
      "context": {
@@ -10797,7 +13648,7 @@
   "case_530": [
    {
     "activity_id": "activity_90",
-    "alternative_score": 10.739444444444445,
+    "alternative_score": 12.177499999999998,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -10813,6 +13664,17 @@
     ],
     "event_time": "2026-01-12T11:04:53Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_62"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9186111111111112,
      "context": {
@@ -10828,9 +13690,9 @@
      "report_distance_hours": 0.9186111111111112,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 2.142500000000002,
     "resource_id": "account_6169",
-    "score": 5.1627777777777775,
+    "score": 6.1627777777777775,
     "system_id": "account_service"
    },
    {
@@ -10875,7 +13737,7 @@
   "case_531": [
    {
     "activity_id": "activity_89",
-    "alternative_score": 10.967222222222222,
+    "alternative_score": 12.547777777777778,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -10891,6 +13753,15 @@
     ],
     "event_time": "2026-01-12T10:53:10Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.113888888888889,
      "context": {
@@ -10913,7 +13784,7 @@
   "case_532": [
    {
     "activity_id": "activity_91",
-    "alternative_score": 10.739444444444445,
+    "alternative_score": 12.177499999999998,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -10929,6 +13800,21 @@
     ],
     "event_time": "2026-01-12T11:13:26Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_94",
+       "activity_95",
+       "activity_96"
+      ],
+      "explicit_absence_evidence_ids": [
+       "evidence_62"
+      ],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_94",
       "activity_95",
@@ -10957,9 +13843,9 @@
      "report_distance_hours": 0.7761111111111111,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 2.142500000000002,
     "resource_id": "account_470",
-    "score": 5.804444444444444,
+    "score": 6.385,
     "system_id": "account_service"
    },
    {
@@ -11035,6 +13921,15 @@
     ],
     "event_time": "2026-09-01T09:01:56Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9677777777777777,
      "context": {
@@ -11073,6 +13968,17 @@
     ],
     "event_time": "2026-09-08T11:03:04Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_3722"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 1,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [
       "activity_3722"
      ],
@@ -11117,6 +14023,15 @@
     ],
     "event_time": "2026-09-05T10:52:20Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1277777777777778,
      "context": {
@@ -11139,7 +14054,7 @@
   "case_57": [
    {
     "activity_id": "activity_3501",
-    "alternative_score": 8.30638888888889,
+    "alternative_score": 7.8325,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 3,
     "certified": false,
@@ -11157,6 +14072,19 @@
     ],
     "event_time": "2026-08-29T08:59:43Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_3506",
+       "activity_3508",
+       "activity_3509"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_3506",
       "activity_3508",
@@ -11183,9 +14111,9 @@
      "report_distance_hours": 1.0047222222222223,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 1.8211111111111116,
     "resource_id": "account_1298",
-    "score": 4.342499999999999,
+    "score": 3.6897222222222217,
     "system_id": "account_service"
    },
    {
@@ -11302,6 +14230,15 @@
     ],
     "event_time": "2026-09-12T09:54:10Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.09722222222222222,
      "context": {
@@ -11324,7 +14261,7 @@
   "case_64": [
    {
     "activity_id": "activity_3704",
-    "alternative_score": 4.716666666666667,
+    "alternative_score": 3.992777777777778,
     "basis": "inferred_workflow_assignment",
     "candidate_count": 2,
     "certified": false,
@@ -11338,6 +14275,19 @@
     ],
     "event_time": "2026-09-07T08:15:34Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [
+       "activity_3706",
+       "activity_3707",
+       "activity_3708"
+      ],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 3,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": true
+     },
      "anchor_activity_ids": [
       "activity_3706",
       "activity_3707",
@@ -11364,9 +14314,9 @@
      "report_distance_hours": 0.7405555555555555,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 2.3377777777777777,
     "resource_id": "account_565",
-    "score": 4.873333333333333,
+    "score": 4.487222222222222,
     "system_id": "account_service"
    },
    {
@@ -11438,6 +14388,15 @@
     ],
     "event_time": "2026-09-04T08:04:19Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9280555555555555,
      "context": {
@@ -11476,6 +14435,15 @@
     ],
     "event_time": "2026-09-04T07:53:05Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1152777777777778,
      "context": {
@@ -11517,6 +14485,15 @@
     ],
     "event_time": "2026-09-01T08:02:37Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9563888888888888,
      "context": {
@@ -11556,6 +14533,15 @@
     ],
     "event_time": "2026-08-29T08:00:56Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.9844444444444445,
      "context": {
@@ -11595,6 +14581,15 @@
     ],
     "event_time": "2026-08-29T07:49:42Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1716666666666666,
      "context": {
@@ -11677,6 +14672,15 @@
     ],
     "event_time": "2026-08-21T07:07:47Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 0.8702777777777778,
      "context": {
@@ -11768,6 +14772,15 @@
     ],
     "event_time": "2026-08-18T06:45:48Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.2366666666666666,
      "context": {
@@ -11955,6 +14968,15 @@
     ],
     "event_time": "2026-08-13T04:55:02Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": false,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.0827777777777778,
      "context": {
@@ -11993,6 +15015,17 @@
     ],
     "event_time": "2026-08-10T04:53:18Z",
     "features": {
+     "account_context": {
+      "anchor_activity_ids": [],
+      "explicit_absence_evidence_ids": [
+       "evidence_89"
+      ],
+      "independent_anchor_count": 0,
+      "ownership_proven": false,
+      "present_copies": [],
+      "state_affinity_applied": true,
+      "strong_anchor_context": false
+     },
      "anchor_activity_ids": [],
      "anchor_distance_hours": 1.1116666666666666,
      "context": {
@@ -12008,9 +15041,9 @@
      "report_distance_hours": 1.1116666666666666,
      "reported_outcome_agrees": true
     },
-    "margin": 2.0,
+    "margin": 3.0,
     "resource_id": "account_6813",
-    "score": 4.776666666666667,
+    "score": 5.776666666666667,
     "system_id": "account_service"
    },
    {
@@ -12052,5 +15085,5 @@
    }
   ]
  },
- "workflow_inferred_link_count": 286
+ "workflow_inferred_link_count": 307
 }

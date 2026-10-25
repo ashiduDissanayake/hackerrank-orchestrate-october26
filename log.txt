@@ -942,3 +942,51 @@ worktree=main
 parent_agent=none
 
 Runtime identity limitation: the harness identifies Codex but exposes no authoritative exact model identifier in available environment/configuration/current-session metadata. None is guessed. The repository's exact-model logging requirement cannot be fully satisfied in this runtime.
+
+## [2026-10-25T05:11:15.684659+00:00] Plan for the 13 remaining public sample differences
+
+User Prompt (verbatim, secrets redacted):
+what is the plan to close the other 13 to cover
+
+Agent Response Summary:
+Grouped the 13 non-exact public cases into seven unresolved account associations, five late-captured audit records and three absent resource IDs; cases 23 and 29 overlap the first two groups. Proposed a bounded targeted pass over admissible request, trace, historical-identity and source-reference links, measured on all samples and synthetic counterexamples; resolving the seven account steps could raise exact answers from 19/32 to 24/32, not a guaranteed result. The other eight public cases require earlier/missing participant evidence or organizer clarification under the current cutoff rule. Separated that sample work from the three semantically invalid full-run rows and 18 open plans, followed by full validation/reproduction/package checks. Rechecked official issues #11 and #19; neither has comments, and no message was posted.
+
+Actions:
+* Read code/docs/WORKFLOW_GAPS.md and current git state at 6e5e459.
+* Read official issue #11/#19 comments through GitHub; both lists are empty.
+* Explained the work order and evidence requirements; no prediction code or CSV was changed.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=dev/baseline
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: the harness identifies Codex but available runtime metadata does not expose an authoritative exact model identifier. None is guessed; the repository's exact-model logging requirement cannot be fully satisfied here.
+
+## [2026-10-25T05:51:36.374167+00:00] Account-link phase 1 implementation and investigation
+
+User Prompt (verbatim, secrets redacted):
+okay then cover the first phase
+
+Agent Response Summary:
+Investigated the seven remaining account associations through current/historical identifiers, raw alternate references, request/trace fields and admissible resource evidence. Implemented guarded context-v3 interactions that recover the public account matches for cases 25, 26, 28 and 29: exact answers 19/32 -> 22/32, matching/extra/missing steps 178/0/15 -> 182/0/11; ownership remains inferred and the public data was used for development. Added a label-free account audit that enumerates equal-score global alternatives for the remaining cases 23, 31 and 32; a descriptive calibration found FIFO 72 and reverse order 70 across 125 explicitly linked batches, so no queue-order, case-number or suffix-based allocation was adopted. All 20 suites and the unchanged 31 frozen fixtures pass, with 12 new ranking/state/temporal/ambiguity controls; the extracted 219-file package reproduces strict, joint and candidate outputs byte-for-byte. Regenerated all 518 candidate rows and reports, preserving the three semantic errors (cases 55, 63, 345) and 18 open plans, and prepared the authorized remote fast-forward merge after this append.
+
+Actions:
+* Edited: context_features.py, workflow.py, main.py, evaluation runner/variants, sample-diagnosis CLI and workflow report generator; README, handoff/decision/evaluation/usage documents and regenerated prediction/provenance files.
+* Created: code/tests/test_account_ranking.py (12 controls), scripts/audit_account_links.py and code/docs/ACCOUNT_LINK_PHASE1.md (four accepted inferences, exact remaining alternatives and source-field inspection).
+* Ran: raw numeric/alias source search; label-free queue calibration; bounded anchor/state interaction experiments (anchor-only wrong-person variant rejected); all 20 suites; 31 fixtures; six-variant public evaluation; account ambiguity audit; residual-step diagnosis; full strict/joint/candidate runs; report regeneration; manifest verification; extracted-package tests and reproduction.
+* Producing code commit: 2edab59a72b84a272439cc9ff1edb8e9826afc43. Candidate output sha256 f32fd414316b4511da8d2744fbdb1f6e7ddb7dbb115dac3c0a208506aa6f2ae9; code sha256 0918ae6d02fda055dfe2b4087823f953025525a5e66c1c880bb805cb2012a642 over 45 files; code clean at producing run. Evidence-only output remains b4d4cc5dc57e67f61d82a0d383974607be09687087219e065bf6ec51bf5aecbf.
+* code.zip: 219 files; sha256 34ec6237f5de93f26bc9764826a9ca556b3220a91f2919f21a12f38c7989bfe4. No paid model API call, organizer/peer prediction input, future evidence, issue post or contest upload.
+
+Context:
+tool=Codex
+model=not_exposed_by_runtime
+branch=codex/account-link-phase1
+repo_root=/workspace/scratch/5350025af71c/ghost_workflow_repo
+worktree=main
+parent_agent=none
+
+Runtime identity limitation: Codex is authoritative from the harness instructions, but the available environment/configuration/current-session metadata does not expose an exact model identifier. None is guessed; the repository's exact-model logging requirement cannot be fully satisfied in this runtime.

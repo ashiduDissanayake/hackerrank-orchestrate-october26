@@ -679,12 +679,12 @@ The run these numbers describe:
 | field | value |
 |---|---|
 | command | `python3 code/main.py candidate` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v2"}, "workflow_mode": "joint"}` |
-| producing commit (HEAD when the run was made) | `488c0e78fadb` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
+| producing commit (HEAD when the run was made) | `2edab59a72b8` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 5 |
-| output.csv sha256 | `9b3bdef08b89931dd98b18e5424eacb2688f02e426d0d0bf0a09e189d8a27421` |
-| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `5ef1303c77e5a3688813f98512b89e91774ae3a9fdf82d03eaaf942c2e5fad61` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 6 |
+| output.csv sha256 | `f32fd414316b4511da8d2744fbdb1f6e7ddb7dbb115dac3c0a208506aa6f2ae9` |
+| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `0918ae6d02fda055dfe2b4087823f953025525a5e66c1c880bb805cb2012a642` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
 | statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |
@@ -702,14 +702,17 @@ Public samples are development data. The context features, weights and margin we
 | Variant | Status | Exact full answers | TP / FP / FN | Step P / R / F1 | Validation errors |
 |---|---:|---:|---|---|---:|
 | Evidence baseline | 32/32 | 10/32 | 159 / 0 / 34 | 1.0000 / 0.8238 / 0.9034 | 3 |
-| Joint preview (default margin) | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
-| Joint preview (quarter-point floor) | 32/32 | 18/32 | 177 / 0 / 16 | 1.0000 / 0.9171 / 0.9568 | 0 |
+| Joint preview (default margin) | 32/32 | 22/32 | 182 / 0 / 11 | 1.0000 / 0.9430 / 0.9707 | 0 |
+| Joint preview (quarter-point floor) | 32/32 | 21/32 | 181 / 0 / 12 | 1.0000 / 0.9378 / 0.9679 | 0 |
 | Anchor-only control | 32/32 | 15/32 | 166 / 0 / 27 | 1.0000 / 0.8601 / 0.9248 | 0 |
+| Previous context v2 | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
 | Previous workflow context | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
 
 The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. Schema validity does not establish evidence validity. The evidence baseline remains the default.
 
 Default settings: 90 minutes before / 10 minutes after reported_at; a strictly positive counterfactual score margin (ties abstain); one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability. The v2 context adds shared-file affinity (+1), a post-report-operation penalty (-2), independently compliant linked context (+2), and an anonymous-policy cadence feature (up to +2). A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature.
+
+Context v3 additionally gives +1 account affinity when independently linked context is compliant AND a current explicit absent observation exists with no known present copy. Three distinct independently linked resources add one further anchor-distance term. Missing, stale, future and inventory-only absence supplies no affinity. These interactions were selected using public development data; ownership remains inferred and strict export continues to refuse it.
 <!--/AUTO:workflow-->
 
 Details and at least three independent synthetic controls are recorded directly in `code/evaluation/workflow_report.md`; regenerate them with `python3 scripts/evaluate_workflow.py`.
@@ -723,3 +726,16 @@ The explicit `candidate` command writes repository-root `output.csv`, `output.ma
 <!--/AUTO:candidate-->
 
 Context v2 adds independent synthetic controls directly in `code/tests/test_workflow_context.py`: a scheduler whose period must be inferred as 17 seconds from three fictional operations; two subjects with distinct clock phases that distinguish anonymous policy records; same-clock ambiguity that must remain unresolved; and post-cutoff identity anchors that must remain invisible. A further artifact control verifies that `output.csv` retains all unresolved rows/errors and cannot overwrite an existing certified file. These cases supplement the earlier frozen fixtures; they do not use public labels.
+
+## 10. Phase 1 account-link interactions
+
+The label-free investigation and equally optimal assignment witnesses are recorded in `code/docs/ACCOUNT_LINK_PHASE1.md` and reproduced by `python3 scripts/audit_account_links.py`. Four of seven previously ambiguous account matches are accepted as inferences under context v3. This closes three full public answers and adds four matching steps; the public-development gain is 19/32 -> 22/32 exact and 178/0/15 -> 182/0/11 matching/extra/missing steps. No hidden accuracy or proven ownership is claimed. Cases 23, 31 and 32 retain multiple score-optimal alternatives.
+
+Additional fictional controls are implemented in `code/tests/test_account_ranking.py`:
+
+- **Joint state affinity:** two equally timed requests and two unowned profile operations are tied in v2. One case has independently compliant linked records and one profile has a current explicit absent lookup. V3 ranks that pair while the unobserved profile remains an ownership hypothesis; claims do not become state evidence.
+- **Independent anchors:** two unowned profiles are both observed absent. Three stable-reference-linked policy resources support one request. V3 uses that independent context to distinguish the assignments, including after request renaming and input shuffling.
+- **Temporal and replica controls:** a lookup captured after the cutoff, one predating the request, a broad inventory omission, later presence and a populated replica supply no absence affinity. Four retries of one resource do not count as three independent anchors.
+- **Ambiguity witnesses:** equal global assignments publish both alternatives; a weaker assignment is not marked equally optimal; a null assignment remains available when every proposed edge is worse.
+
+Queue-order calibration uses only explicit account ownership and in-window operations visible by the target cutoff: 72 FIFO and 70 reverse-order pairs across 125 batches (overlapping descriptive pairs, not independent trials). No queue-order rule was adopted. Alternate numeric references were inspected and belonged to other namespaces or unrelated subjects/activities, so no suffix-based ownership rule was added.

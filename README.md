@@ -40,7 +40,7 @@ python3 code/main.py candidate
 python3 code/main.py verify output.manifest.json
 ```
 
-This explicit command writes `output.csv` with all 518 requests, plus `output.manifest.json` and `output.unresolved.json`. It defaults to the joint context-v2 predictor. Unresolved rows, semantic validation errors and inference assumptions remain visible in the sidecars; no finding is fabricated to clear validation. The file is a prediction candidate and remains incomplete while those errors exist. The `certified` flag is local bookkeeping, not a HackerRank submission credential. An existing certified output is protected from replacement.
+This explicit command writes `output.csv` with all 518 requests, plus `output.manifest.json` and `output.unresolved.json`. It defaults to the joint context-v3 predictor. Unresolved rows, semantic validation errors and inference assumptions remain visible in the sidecars; no finding is fabricated to clear validation. The file is a prediction candidate and remains incomplete while those errors exist. The `certified` flag is local bookkeeping, not a HackerRank submission credential. An existing certified output is protected from replacement.
 
 The CSV writer quotes the JSON cell correctly. For illustration only, a tiny file would look like this (the real output has 518 rows and real dataset IDs):
 
@@ -65,11 +65,19 @@ python3 code/main.py verify output_workflow_preview.manifest.json
 python3 scripts/evaluate_workflow.py
 ```
 
-Context v2 improves the public result from the prior preview’s 17/32 to 19/32 exact answers and from 172 to 178 matching steps, with no extra sample steps. The evidence-only default remains 10/32 exact (159 matching steps). Context weights and thresholds were selected using public development data; this is not independent or hidden accuracy. A quarter-point margin floor gives 18/32 exact. Broader timing variants that assigned records to the wrong person were rejected. Full metrics and synthetic controls are in [workflow_report.md](code/evaluation/workflow_report.md); every remaining expected step and its exact evidence requirement is in [WORKFLOW_GAPS.md](code/docs/WORKFLOW_GAPS.md).
+Context v3 improves the public result from context v2’s 19/32 to 22/32 exact answers and from 178 to 182 matching steps, with no extra sample steps. The evidence-only default remains 10/32 exact (159 matching steps). Context weights and thresholds were selected using public development data; this is not independent or hidden accuracy. A quarter-point margin floor gives 21/32 exact. Broader timing variants that assigned records to the wrong person were rejected. Full metrics and synthetic controls are in [workflow_report.md](code/evaluation/workflow_report.md); every remaining expected step and its exact evidence requirement is in [WORKFLOW_GAPS.md](code/docs/WORKFLOW_GAPS.md).
 
 Every inferred link and run is marked `certified=false`. Margins measure a heuristic objective, not probabilities. The method assumes one additional orphan per system/request in a competing component; this is not a supplied data guarantee. It treats proximity and agreement of reported outcomes as attribution clues, never as proof that deletion succeeded. **Strict export always rejects inference mode**, including otherwise valid rows. No confirmed ownership or COMPLETE certification is claimed for these hypotheses.
 
-`--workflow-min-margin` controls abstention (default 0: every accepted assignment must still have a strictly positive margin). Context v2 adds shared-file affinity, a post-report-operation penalty, independently compliant context and a clock estimated from at least three identity-linked policy resources. No fixed clock period or case-family rule is supplied. Initial account operations do not receive the clock feature. `--workflow-scoring contextual --workflow-min-margin 0.25` reproduces the previous preview, and `--workflow-scoring anchor --workflow-min-margin 0.25` is the result-free timing control. The mode never uses case-number priorities, sample answers, competitor predictions or post-cutoff artifacts. `best-effort --artifact-dir <directory>` can keep an alternative run's three review artifacts separate; fixture tests use this option rather than overwriting root predictions.
+`--workflow-min-margin` controls abstention (default 0: every accepted assignment must still have a strictly positive margin). Context v2 adds shared-file affinity, a post-report-operation penalty, independently compliant context and a clock estimated from at least three identity-linked policy resources. Context v3 adds account-state affinity only for a current explicit absence in an otherwise compliant context, and extra anchor-distance weight when at least three distinct linked resources support the context. No fixed clock period or case-family rule is supplied. Initial account operations do not receive the clock feature. `--workflow-scoring contextual_v2` retains the 19/32 preview; `--workflow-scoring contextual --workflow-min-margin 0.25` retains the older 17/32 preview, and `--workflow-scoring anchor --workflow-min-margin 0.25` is the result-free timing control. The mode never uses case-number priorities, sample answers, competitor predictions or post-cutoff artifacts. `best-effort --artifact-dir <directory>` can keep an alternative run's three review artifacts separate; fixture tests use this option rather than overwriting root predictions.
+
+## Phase 1 account-link results
+
+```bash
+python3 scripts/audit_account_links.py
+```
+
+The label-free account audit compares the previous/current models, checks admissible join fields, and enumerates equally optimal global assignments. Four of seven previously ambiguous account matches are now accepted as inferences: cases 25, 26, 28 and 29. Cases 23, 31 and 32 still have multiple equally optimal targets. The report includes explicit alternative assignments and a queue-order calibration on already linked accounts; FIFO/reverse request ordering was unsupported and was not added. See [ACCOUNT_LINK_PHASE1.md](code/docs/ACCOUNT_LINK_PHASE1.md). These model-selected associations remain uncertified.
 
 ## Verify and test
 
