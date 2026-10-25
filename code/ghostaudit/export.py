@@ -2,8 +2,8 @@
 
 A run manifest records everything needed to regenerate a CSV byte-for-byte: the exact command, configuration,
 sha256 of every input file and of the code that ran, the git commit and whether the tree was dirty, plus the output
-hash and the unresolved-case register. `export` is the only command that writes the submission path (repo-root
-output.csv) and only when every gate passes.
+hash and the unresolved-case register. `export` writes the submission path only when every internal gate passes;
+`candidate` can write an explicitly uncertified root output.csv with all errors and unknowns disclosed in sidecars.
 """
 import csv
 import hashlib

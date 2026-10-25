@@ -70,7 +70,12 @@ class SourceReferenceReachesPolicy(unittest.TestCase):
         res = run(search_doc(World()))                      # no account snapshot or lookup at all
         o = accts(res)["account_6"]
         self.assertEqual(o.verdict, "UNKNOWN")
-        self.assertNotIn("account_6", [s["resource_id"] for s in res.steps])
+        # The source link establishes the id and its deletion policy, not its
+        # current state. After fixing the proven search violation, test that
+        # account's final state without fabricating a finding or deletion.
+        checks = [s for s in res.steps if s["resource_id"] == "account_6"]
+        self.assertEqual([(s["phase"], s["operation"], s["evidence_id"]) for s in checks],
+                         [("VERIFICATION", "VERIFY_RECORD_ABSENT", "")])
 
     def test_unresolvable_category_is_an_explicit_unknown(self):
         res = run(search_doc(World().snap("evidence_1", SNAP, "primary", [OTHER]), src="zz_77"))

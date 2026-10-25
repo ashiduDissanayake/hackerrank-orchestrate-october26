@@ -8,6 +8,12 @@ REMEDIATE = {"DELETE": "DELETE_RECORD", "REDACT": "REDACT_RECORD", "ANONYMIZE": 
 VERIFY = {"DELETE": "VERIFY_RECORD_ABSENT", "REDACT": "VERIFY_RECORD_REDACTED", "ANONYMIZE": "VERIFY_RECORD_ANONYMIZED",
           "DISABLE": "VERIFY_DATA_FLOW_DISABLED", "BLOCK_RESTORE": "VERIFY_RESTORE_BLOCKED", "RETAIN": "VERIFY_RECORD_PRESENT"}
 
+# These are current-STATE gaps with an already identified resource and policy
+# target. A future check may test that target after proven violations are fixed.
+# Missing identity, conflicting ownership and unresolved policy are excluded.
+FUTURE_CHECKABLE = {"no_admissible_evidence": "DELETE", "inferred_profile_state_not_established": "DELETE",
+                    "retained_record_not_found": "RETAIN"}
+
 
 def _step(phase, ob, op, evidence):
     from .contract import OP_STATE
@@ -16,14 +22,20 @@ def _step(phase, ob, op, evidence):
 
 
 def plan(obligations, status):
-    """status is COMPLETE or INCOMPLETE. Resolved obligations only (UNKNOWN ones never produce steps)."""
+    """Current findings need evidence; future checks may cover known IDs with unknown current state."""
     steps = []
+    has_finding = any(o.verdict == "VIOLATION" and o.resource_id and o.system_id and o.action in FIND
+                      and not o.detail.get("no_obligation") and not o.detail.get("no_step") for o in obligations)
     for ob in obligations:
-        if ob.verdict == "UNKNOWN" or ob.resource_id is None or ob.system_id is None:
+        if ob.resource_id is None or ob.system_id is None:
             continue
         if ob.detail.get("no_obligation") or ob.detail.get("no_step"):
             continue
         key = ob.action
+        if ob.verdict == "UNKNOWN":
+            if status == "INCOMPLETE" and has_finding and ob.category and FUTURE_CHECKABLE.get(ob.reason) == key:
+                steps.append(_step("VERIFICATION", ob, VERIFY[key], ""))
+            continue
         if status == "COMPLETE":
             if ob.verdict == "COMPLIANT":
                 steps.append(_step("VERIFICATION", ob, VERIFY[key], ob.evidence_id))
