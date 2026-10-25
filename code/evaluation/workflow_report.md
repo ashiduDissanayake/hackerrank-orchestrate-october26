@@ -10,12 +10,15 @@ Public samples are development data. The context features, weights and margin we
 | Anchor-only control | 32/32 | 15/32 | 166 / 0 / 27 | 1.0000 / 0.8601 / 0.9248 | 0 |
 | Previous context v2 | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
 | Previous workflow context | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
+| Submission predictor | 32/32 | 22/32 | 182 / 0 / 11 | 1.0000 / 0.9430 / 0.9707 | 0 |
 
 The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. Schema validity does not establish evidence validity. The evidence baseline remains the default.
 
 Default settings: 90 minutes before / 10 minutes after reported_at; a strictly positive counterfactual score margin (ties abstain); one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability. The v2 context adds shared-file affinity (+1), a post-report-operation penalty (-2), independently compliant linked context (+2), and an anonymous-policy cadence feature (up to +2). A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature.
 
 Context v3 additionally gives +1 account affinity when independently linked context is compliant AND a current explicit absent observation exists with no known present copy. Three distinct independently linked resources add one further anchor-distance term. Missing, stale, future and inventory-only absence supplies no affinity. These interactions were selected using public development data; ownership remains inferred and strict export continues to refuse it.
+
+The submission predictor additionally applies explicit recoverable-archive risk, later stable catalog ownership and clean-snapshot persistence assumptions. Original unknown reasons, source IDs and assumptions are retained in decision_inferences; those are predictions rather than observed permissions or identity aliases. This policy is evaluated separately and never passes the strict evidence-only export gate.
 
 ## Default-preview proposals
 
@@ -84,5 +87,6 @@ These are fictional counterexamples in `code/tests/test_workflow.py`, not public
 - Context v2 learns a candidate policy cadence from at least three identity-linked resources, adds shared-capture and observed-compliance features, and penalizes operations after the workflow report. These are explicitly uncertain attribution features.
 - The cadence feature is restricted to anonymous policy records; extending it to initial account operations produced wrong sample assignments and was rejected.
 - Independent context tests use a different inferred period, retain same-clock ambiguity, exclude future anchors and verify candidate-file uncertainty and overwrite protections.
+- Context v3 combines current explicit account absence with otherwise compliant linked context and strengthens distance from at least three distinct linked resources. Future/stale lookups, inventory-only omission and known present copies do not supply affinity. The label-free phase-1 audit retains equal-score witnesses for unresolved assignments.
 
 All runtime variants make zero model API calls. Coding-session usage is not available here and is not estimated.

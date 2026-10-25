@@ -26,6 +26,7 @@
   }
  ],
  "certified": false,
+ "decision_inferences": {},
  "plan_gap_cases": [
   "case_33",
   "case_34",

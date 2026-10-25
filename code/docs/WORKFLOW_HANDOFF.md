@@ -1,64 +1,54 @@
-# Workflow follow-up: current output and remaining evidence requirements
+# Submission closeout
 
-Producing code: `a4fad4354e310f3d30c7d8ac27e4f93d6fbca833`. The current repository-root `output.csv` was generated with the explicit `candidate` command. It is a 518-row prediction candidate with `certified=false`; three rows still fail semantic validation. The certification label is local bookkeeping, not a HackerRank credential.
+Producing code: `7f307e866962792d1997138539730454f027523e`. Repository-root `output.csv` contains 518 predictions and passes the existing validator with zero errors. It uses joint context-v3 workflow attribution plus `decision_policy=submission`. This is a prediction release with disclosed assumptions, not an evidence-only certificate or a claim of hidden accuracy.
 
-## Public development results
-
-| Measure | Previous context v2 | Current context v3 |
-|---|---:|---:|
-| Correct statuses | 32/32 | 32/32 |
-| Exact full answers | 19/32 | 22/32 |
-| Matching / extra / missing steps | 178 / 0 / 15 | 182 / 0 / 11 |
-| Step F1 | 0.9596 | 0.9707 |
-| Sample semantic validation errors | 0 | 0 |
-
-This phase recovers four account matches (cases 25, 26, 28 and 29), closing three additional full public answers. The remaining 10 differing answers contain 11 missing steps: three IDs have no participant occurrence, five audit records appear only in captures after the audit cutoff, and three account associations remain ambiguous (cases 23, 31 and 32). The new matches remain ownership inferences. Exact alternative-assignment witnesses and the label-free audit are in [ACCOUNT_LINK_PHASE1.md](ACCOUNT_LINK_PHASE1.md). Every resource, source and timestamp is listed in [WORKFLOW_GAPS.md](WORKFLOW_GAPS.md).
-
-The public samples were used for development and threshold/feature selection; these figures are not an independent test or a hidden challenge score. Broader timing variants that introduced wrong-person assignments were rejected. The evidence-only default remains unchanged at 10/32 exact, 159 matching steps and zero extra steps.
-
-## Full 518-request output
-
-| Measure | Current candidate |
-|---|---:|
-| COMPLETE / INCOMPLETE / NOT_APPLICABLE | 152 / 356 / 10 |
-| Internally undetermined statuses | 3 |
-| Established INCOMPLETE rows with unresolved plan items | 18 |
-| Cases with unresolved obligations | 21 |
-| Semantic validation errors | 3 |
-| Inferred workflow links | 307 |
-
-These are diagnostics, not hidden accuracy. Undetermined cases: case_55, case_63, case_345. Their missing facts are:
-
-- case_55: a post-request account/profile state and the restore-allowed or blocked state of backup_9287 at or before 2026-04-30T11:00Z.
-- case_63: an association or precedence rule resolving the conflicting subject identities for marketing_001.
-- case_345: a subject/request-to-account link or a complete profile-table capture between its request and audit.
-
-No missing finding was invented to clear validation. The root CSV therefore exists, but it is not fully contract-conforming while these three errors remain. Eighteen further plans have open items; `output.unresolved.json` names every missing fact. The evidence-only mode still has eight undetermined statuses and 18 plan gaps.
-
-## Artifacts and reproduction
-
-- `output.csv`: requested filename, 518 data rows, exact columns `case_id,deletion_status,steps_json`; SHA-256 `9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce`.
-- `output.manifest.json`: producing code/input/output hashes, mode, all inferred links, all validation errors; `kind=submission_candidate`, `certified=false`, `final=false`.
-- `output.unresolved.json`: exact unknown obligations, emitted steps and validation errors.
-- `output_workflow_preview.*`: the same candidate bytes under the earlier review filename.
-- `output_best_effort.*`: evidence-only predictions, including the future-check coverage fix, with refreshed provenance.
+## Reproduce and package
 
 ```bash
 python3 code/main.py candidate
 python3 code/main.py verify output.manifest.json
-python3 scripts/evaluate_workflow.py
-python3 scripts/diagnose_sample_differences.py --workflow-mode joint --markdown code/docs/WORKFLOW_GAPS.md
-python3 code/evaluation/main.py all
 python3 scripts/write_reports.py
 python3 scripts/package.py --verify
 ```
 
-Context v2 uses shared-file affinity, a penalty for operations after the reported claim, independently assessed compliant context, and a policy clock estimated from at least three identity-linked resources. No period or case family is supplied. Account initiation events do not get the clock feature. Anonymous policy candidates require a currently present record; old presence followed by an absent lookup cannot supply one. Context v3 adds account-state affinity only when independently linked context is compliant and a current explicit absence is observed with no known present copy; three distinct linked resources add anchor-distance weight. Every accepted assignment must have a strictly positive counterfactual score margin, and every inference stays uncertified. These are modelling assumptions, not proof of ownership.
+The separate submission files are `output.csv`, `code.zip`, and the authentic root `log.txt`. The ZIP excludes the participant corpus, credentials, caches, nested archives and transcript. It includes runnable sources, setup instructions and the required evaluation and usage reports.
 
-Twelve additional account-ranking, temporal, replica and ambiguity-witness controls supplement the previous context tests and unchanged frozen fixtures. All 21 suites and 31 frozen fixtures pass, including seven new future-verification controls and an updated source-reference integration expectation. They include a different learned clock period, ambiguous equal clocks, future anchors, absent-only lookups, later absence, and candidate-artifact disclosures/overwrite protection. Python 3.12 was used; no new Python 3.14 validation is claimed. No paid model API call was made.
+## Results
 
-## Future-verification coverage fix
+| Measure | Submission predictor |
+|---|---:|
+| Rows | 518 |
+| COMPLETE / INCOMPLETE / NOT_APPLICABLE | 153 / 355 / 10 |
+| Validator errors | 0 |
+| Internally undetermined predictions | 0 |
+| Explicit decision assumptions | 16 across 15 cases |
+| INCOMPLETE cases with unresolved plan facts | 6 |
+| Workflow ownership inferences | 307 |
+| Public statuses | 32/32 |
+| Public exact full answers | 22/32 |
+| Public matching / extra / missing steps | 182 / 0 / 11 |
+| Public step precision / recall / F1 | 1.0000 / 0.9430 / 0.9707 |
 
-The planner previously discarded every UNKNOWN obligation. For an already INCOMPLETE case with an established finding, a known resource, and a known policy target, the contract permits a future verification check with an empty evidence ID. That check does not establish the current state and does not authorize inventing a finding or destructive remediation.
+The public samples were reused for development, not held out. The new decision assumptions do not change any public answer, so public results provide no direct validation of those assumptions. The fifteen independent fictional controls exercise positive decisions and temporal, ownership, scope and certification counterexamples. All 22 suites and the unchanged 31 frozen fixtures pass under Python 3.12. No paid API call was made.
 
-The candidate adds exactly nine such checks: an audit-retention check in case_34 and account-absence checks in cases 102, 144, 184, 282, 344, 526, 528 and 531. No existing step is removed and no status changes. Ownership conflicts, missing IDs/categories and excluded obligations still emit no check. The 18 open plans remain open because the current facts are still unknown. Public sample metrics stay 22/32 exact and 182/0/11 matching/extra/missing steps; this is a coverage improvement on the unlabeled requests, not a measured hidden-score gain.
+## Submission decisions
+
+| Rule | Evidence used | Explicit assumption |
+|---|---|---|
+| recoverable_archive_risk | Present archive, storage path, verified checksum, drill history, unexpired retention | A usable archive remains a recreation risk unless blocking is evidenced; restore permission itself is not observed |
+| later_catalog_owner | Later mapping matching stable user_id and verified email, earlier present resource | The later owner association outranks earlier foreign contact fields when no competing stable owner or newer contact evidence is shown; identities are not merged |
+| clean_snapshot_persistence | Complete clean primary/profile capture and accounted-for copies, no admissible subject profile ever observed | Absence persists to audit_at even when the capture predates the request; no account ID is invented |
+
+Case_55 predicts INCOMPLETE using the archive risk and snapshot-persistence assumptions. Case_63 predicts INCOMPLETE using later catalog ownership. Case_345 predicts COMPLETE using snapshot persistence and its evidence-backed retained audit record. Every affected case, original unknown reason, evidence ID and assumption is included in `output.manifest.json` and `output.unresolved.json`. No post-audit artifact, case-number rule, peer prediction or organizer-only truth is used.
+
+## Remaining evidence limits
+
+Six established-INCOMPLETE cases retain open plan facts: case_34 (audit_record_3753 is not currently observed), and cases 526, 527, 528, 529 and 531 (account evidence is insufficient at their cutoffs). Future checks are included for known IDs; missing IDs are not invented. The status is already INCOMPLETE because other violations are established. Zero validation errors does not prove these plans match every hidden canonical step.
+
+The public residual remains eleven missing steps across ten cases: three IDs have no participant occurrence, five audit IDs occur only after the cutoff, and three account associations have equally optimal alternatives. `WORKFLOW_GAPS.md` and `ACCOUNT_LINK_PHASE1.md` give the exact sources and witnesses. Official main was rechecked at `0eddbbd33f682eae0a2770d67412af8a3cf4af20`; no participant dataset update was found.
+
+## Comparison and provenance
+
+Plain `run` preserves evidence-only decisions. `run --workflow-mode joint --decision-policy strict` reproduces the previous workflow preview. `candidate --decision-policy strict` can also generate that comparison, but correctly exits non-zero because three rows remain invalid under abstention. The strict export gate rejects every submission assumption even if configuration is falsified; an internal certification flag is not a HackerRank credential.
+
+Candidate SHA-256: `8dc3ae5f75d4fb5a3237a1214f9896ded7c66ebe7da8dc26850c8e21afafaef1`. Code SHA-256: `5a7b08771c8bd95065b682d03925f8d3830c01ae1118dcb817e5c04addc1c60d` across 46 prediction-affecting files. Both evidence upper cutoffs remain enforced. Runtime model calls, input/output tokens and model cost are all zero; coding-assistant session usage is unavailable and is not estimated.

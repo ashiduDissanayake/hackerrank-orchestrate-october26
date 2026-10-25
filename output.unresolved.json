@@ -26,71 +26,257 @@
   }
  ],
  "certified": false,
+ "decision_inferences": {
+  "case_102": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_2056",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_12"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_143": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_17"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_144": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_6826",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_17"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_184": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_9620",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_185": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_186": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_282": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_9763",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_75"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_33": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_344": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_486",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_35"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_345": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_35"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_35": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_12"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_39": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_17"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_50": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_55": [
+   {
+    "assumption": "A present, checksum-verified archive with a storage path, drill history and unexpired retention is treated as a recreation risk unless restore blocking is evidenced. Permission itself is not observed.",
+    "certified": false,
+    "original_reason": "no_restore_flag_in_admissible_evidence",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "VIOLATION",
+    "resource_id": "backup_9287",
+    "rule": "recoverable_archive_risk",
+    "source_evidence_ids": [
+     "evidence_32"
+    ],
+    "system_id": "backup_service"
+   },
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_35"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_63": [
+   {
+    "assumption": "A later catalog association matching stable user_id and verified email outranks earlier contact fields with no competing stable owner. This does not merge the two people's identities.",
+    "certified": false,
+    "original_reason": "conflicting_identity_evidence",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "VIOLATION",
+    "resource_id": "marketing_001",
+    "rule": "later_catalog_owner",
+    "source_evidence_ids": [
+     "activity_4008",
+     "evidence_60"
+    ],
+    "system_id": "marketing_platform"
+   }
+  ]
+ },
  "plan_gap_cases": [
-  "case_33",
   "case_34",
-  "case_35",
-  "case_39",
-  "case_50",
-  "case_102",
-  "case_143",
-  "case_144",
-  "case_184",
-  "case_185",
-  "case_186",
-  "case_282",
-  "case_344",
   "case_526",
   "case_527",
   "case_528",
   "case_529",
   "case_531"
  ],
- "status_undetermined_cases": [
-  "case_55",
-  "case_63",
-  "case_345"
- ],
+ "status_undetermined_cases": [],
  "unresolved_cases": [
-  {
-   "case_id": "case_33",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_18",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "export_1842",
-     "system_id": "export_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "export_1842",
-     "system_id": "export_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "export_1842",
-     "system_id": "export_service"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-07-16T08:00:00Z and audit_at 2026-07-19T13:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_81, 2026-07-03T07:43:56Z) predates the request)",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
   {
    "case_id": "case_34",
    "emitted_steps": [
@@ -157,668 +343,6 @@
     }
    ],
    "validation_errors": []
-  },
-  {
-   "case_id": "case_35",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_09",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_428",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_428",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_428",
-     "system_id": "search_service"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-08-30T03:00:00Z and audit_at 2026-09-02T08:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_12, 2026-08-19T10:00:00Z) predates the request)",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_39",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_14",
-     "operation": "REPORT_ACTIVE_DATA_FLOW",
-     "phase": "FINDING",
-     "resource_id": "data_flow_1121",
-     "system_id": "integration_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DISABLE_DATA_FLOW",
-     "phase": "REMEDIATION",
-     "resource_id": "data_flow_1121",
-     "system_id": "integration_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_DATA_FLOW_DISABLED",
-     "phase": "VERIFICATION",
-     "resource_id": "data_flow_1121",
-     "system_id": "integration_service"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-08-05T05:00:00Z and audit_at 2026-08-08T10:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_17, 2026-07-25T15:00:00Z) predates the request)",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_50",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_19",
-     "operation": "REPORT_EXPOSED_PII",
-     "phase": "FINDING",
-     "resource_id": "analytics_7438",
-     "system_id": "analytics_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "ANONYMIZE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "analytics_7438",
-     "system_id": "analytics_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ANONYMIZED",
-     "phase": "VERIFICATION",
-     "resource_id": "analytics_7438",
-     "system_id": "analytics_platform"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-07-11T07:00:00Z and audit_at 2026-07-14T12:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_81, 2026-07-03T07:43:56Z) predates the request)",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_55",
-   "emitted_steps": [],
-   "internal_status": "UNDETERMINED",
-   "output_status": "INCOMPLETE",
-   "status_determined": false,
-   "unresolved": [
-    {
-     "category": "BACKUP_ARCHIVE",
-     "information_gap": "the restore permission of backup_9287 at audit_at 2026-04-30T11:00:00Z is not shown by any admissible evidence (screens that list the archive show no restore-allowed/blocked state; later logs and activity are after the cutoff)",
-     "reason": "no_restore_flag_in_admissible_evidence",
-     "resource_id": "backup_9287",
-     "system_id": "backup_service"
-    },
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-04-27T06:00:00Z and audit_at 2026-04-30T11:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_35, 2026-04-16T06:00:00Z) predates the request)",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": [
-    "INCOMPLETE must have at least one step"
-   ]
-  },
-  {
-   "case_id": "case_63",
-   "emitted_steps": [],
-   "internal_status": "UNDETERMINED",
-   "output_status": "INCOMPLETE",
-   "status_determined": false,
-   "unresolved": [
-    {
-     "category": "MARKETING_PROFILE",
-     "information_gap": "marketing_001: record shows email=sj.park@naver.com, phone=821058379451 but the data catalog ties the resource to the subject; neither source supersedes the other",
-     "reason": "conflicting_identity_evidence",
-     "resource_id": "marketing_001",
-     "system_id": "marketing_platform"
-    }
-   ],
-   "validation_errors": [
-    "INCOMPLETE must have at least one step"
-   ]
-  },
-  {
-   "case_id": "case_102",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_89",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_4586",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "evidence_89",
-     "operation": "REPORT_EXPOSED_PII",
-     "phase": "FINDING",
-     "resource_id": "support_345",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_4586",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "REDACT_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "support_345",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "account_2056",
-     "system_id": "account_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_4586",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_REDACTED",
-     "phase": "VERIFICATION",
-     "resource_id": "support_345",
-     "system_id": "support_platform"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "account_2056 has only an inferred ownership assignment and no sufficient post-request account state: the primary copy's latest supporting profile-table capture (evidence_12, 2026-08-19T10:00:00Z) predates the request",
-     "reason": "inferred_profile_state_not_established",
-     "resource_id": "account_2056",
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_143",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_86",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_6137",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "evidence_86",
-     "operation": "REPORT_EXPOSED_PII",
-     "phase": "FINDING",
-     "resource_id": "support_6560",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_6137",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "REDACT_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "support_6560",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_6137",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_REDACTED",
-     "phase": "VERIFICATION",
-     "resource_id": "support_6560",
-     "system_id": "support_platform"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-07-27T08:00:00Z and audit_at 2026-08-07T08:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_17, 2026-07-25T15:00:00Z) predates the request); 3 deletion-worker activity rows in the request window name account resources, but they are claims shared with other requests and carry no identifier, so none is linked to the subject",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_144",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_86",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "export_7992",
-     "system_id": "export_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "export_7992",
-     "system_id": "export_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "account_6826",
-     "system_id": "account_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "export_7992",
-     "system_id": "export_service"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "account_6826 has only an inferred ownership assignment and no sufficient post-request account state: the primary copy's latest supporting profile-table capture (evidence_17, 2026-07-25T15:00:00Z) predates the request",
-     "reason": "inferred_profile_state_not_established",
-     "resource_id": "account_6826",
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_184",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_83",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_8680",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "evidence_83",
-     "operation": "REPORT_EXPOSED_PII",
-     "phase": "FINDING",
-     "resource_id": "support_1892",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_8680",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "REDACT_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "support_1892",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "account_9620",
-     "system_id": "account_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_8680",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_REDACTED",
-     "phase": "VERIFICATION",
-     "resource_id": "support_1892",
-     "system_id": "support_platform"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "account_9620 has only an inferred ownership assignment and no sufficient post-request account state: the primary copy's latest supporting profile-table capture (evidence_81, 2026-07-03T07:43:56Z) predates the request",
-     "reason": "inferred_profile_state_not_established",
-     "resource_id": "account_9620",
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_185",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_83",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_8463",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "evidence_83",
-     "operation": "REPORT_EXPOSED_PII",
-     "phase": "FINDING",
-     "resource_id": "analytics_1950",
-     "system_id": "analytics_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_8463",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "ANONYMIZE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "analytics_1950",
-     "system_id": "analytics_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_8463",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ANONYMIZED",
-     "phase": "VERIFICATION",
-     "resource_id": "analytics_1950",
-     "system_id": "analytics_platform"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-07-05T11:00:00Z and audit_at 2026-07-18T11:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_81, 2026-07-03T07:43:56Z) predates the request); 3 deletion-worker activity rows in the request window name account resources, but they are claims shared with other requests and carry no identifier, so none is linked to the subject",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_186",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_83",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_4062",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "evidence_83",
-     "operation": "REPORT_ACTIVE_DATA_FLOW",
-     "phase": "FINDING",
-     "resource_id": "data_flow_7428",
-     "system_id": "integration_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DISABLE_DATA_FLOW",
-     "phase": "REMEDIATION",
-     "resource_id": "data_flow_7428",
-     "system_id": "integration_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_4062",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_4062",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_DATA_FLOW_DISABLED",
-     "phase": "VERIFICATION",
-     "resource_id": "data_flow_7428",
-     "system_id": "integration_service"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-07-04T11:00:00Z and audit_at 2026-07-18T11:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_81, 2026-07-03T07:43:56Z) predates the request); 3 deletion-worker activity rows in the request window name account resources, but they are claims shared with other requests and carry no identifier, so none is linked to the subject",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_282",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_77",
-     "operation": "REPORT_EXPOSED_PII",
-     "phase": "FINDING",
-     "resource_id": "support_8370",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "REDACT_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "support_8370",
-     "system_id": "support_platform"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "account_9763",
-     "system_id": "account_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_REDACTED",
-     "phase": "VERIFICATION",
-     "resource_id": "support_8370",
-     "system_id": "support_platform"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "account_9763 has only an inferred ownership assignment and no sufficient post-request account state: the primary copy's latest supporting profile-table capture (evidence_75, 2026-05-24T06:39:55Z) predates the request",
-     "reason": "inferred_profile_state_not_established",
-     "resource_id": "account_9763",
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_344",
-   "emitted_steps": [
-    {
-     "evidence_id": "evidence_71",
-     "operation": "REPORT_REMAINING_RECORD",
-     "phase": "FINDING",
-     "resource_id": "search_5267",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "evidence_71",
-     "operation": "REPORT_ACTIVE_DATA_FLOW",
-     "phase": "FINDING",
-     "resource_id": "data_flow_5544",
-     "system_id": "integration_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DISABLE_DATA_FLOW",
-     "phase": "REMEDIATION",
-     "resource_id": "data_flow_5544",
-     "system_id": "integration_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "DELETE_RECORD",
-     "phase": "REMEDIATION",
-     "resource_id": "search_5267",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "account_486",
-     "system_id": "account_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_ABSENT",
-     "phase": "VERIFICATION",
-     "resource_id": "search_5267",
-     "system_id": "search_service"
-    },
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_DATA_FLOW_DISABLED",
-     "phase": "VERIFICATION",
-     "resource_id": "data_flow_5544",
-     "system_id": "integration_service"
-    }
-   ],
-   "internal_status": "INCOMPLETE",
-   "output_status": "INCOMPLETE",
-   "status_determined": true,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "account_486 has only an inferred ownership assignment and no sufficient post-request account state: the primary copy's latest supporting profile-table capture (evidence_35, 2026-04-16T06:00:00Z) predates the request",
-     "reason": "inferred_profile_state_not_established",
-     "resource_id": "account_486",
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": []
-  },
-  {
-   "case_id": "case_345",
-   "emitted_steps": [
-    {
-     "evidence_id": "",
-     "operation": "VERIFY_RECORD_PRESENT",
-     "phase": "VERIFICATION",
-     "resource_id": "audit_record_454",
-     "system_id": "security_service"
-    }
-   ],
-   "internal_status": "UNDETERMINED",
-   "output_status": "INCOMPLETE",
-   "status_determined": false,
-   "unresolved": [
-    {
-     "category": "USER_PROFILE",
-     "information_gap": "no admissible capture of an account profile collection between requested_at 2026-04-16T09:00:00Z and audit_at 2026-04-29T09:00:00Z establishes whether a profile for the subject remains (proof status NO_COVERAGE: the primary copy's latest supporting profile-table capture (evidence_35, 2026-04-16T06:00:00Z) predates the request); 3 deletion-worker activity rows in the request window name account resources, but they are claims shared with other requests and carry no identifier, so none is linked to the subject",
-     "reason": "unresolved_link",
-     "resource_id": null,
-     "system_id": "account_service"
-    }
-   ],
-   "validation_errors": [
-    "INCOMPLETE must contain at least one FINDING step"
-   ]
   },
   {
    "case_id": "case_526",

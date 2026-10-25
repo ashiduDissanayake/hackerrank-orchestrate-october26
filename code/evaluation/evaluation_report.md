@@ -3,6 +3,26 @@
 This is the single authoritative copy (`code/evaluation/evaluation_report.md`); `scripts/package.py` generates the packaging copy.
 Numeric blocks between `AUTO` markers are regenerated from the actual evaluation by `python3 scripts/write_reports.py`, so they cannot drift from the code. Everything else is hand-written.
 
+## Current submission release
+
+The root CSV is produced by `candidate` using joint context-v3 attribution and `decision_policy=submission`. It contains 518 rows with **zero existing-validator errors**, 153 COMPLETE, 355 INCOMPLETE and 10 NOT_APPLICABLE. Fifteen cases use sixteen explicit decision assumptions; six established-INCOMPLETE cases still have unresolved plan facts. This is a prediction release, not proof that those assumptions or every plan match the hidden answers. The plain evidence-only audit and the previous strict workflow preview remain reproducible and unchanged in CSV bytes.
+
+The submission predictor scores 32/32 public statuses, 22/32 exact full answers, and 182/0/11 strict true-positive/false-positive/false-negative steps (precision 1.0000, recall 0.9430, F1 0.9707). The newly added assumptions change no public answer, so the public scores do not validate them. Earlier sections describing missing final outputs or larger unresolved sets document earlier strict runs and development history; the current candidate block and run manifest are authoritative for this release.
+
+For that same submission run, aligned state-field accuracy and evidence-ID field accuracy are both 1.0000, with alignment coverage 0.9430. Evidence accuracy over the gold steps that cite evidence is 0.9733. Exact sequence accuracy is 0.6875 (22/32) and mean normalized LCS is 0.9640. Aligned-field accuracy excludes missing steps; it is not whole-answer accuracy. These values come from the separately measured `Submission predictor` record in `runs/workflow_evaluation.json`.
+
+Three decision rules in `code/ghostaudit/prediction.py` replace abstention only for their stated conditions. A checksum-verified retained archive with a storage path and drill history predicts restore risk without inventing a restore-permission flag. A later catalog mapping matching stable user_id and verified email predicts ownership over earlier foreign contact fields when no foreign stable owner or newer contact evidence exists; this never creates an identity alias. A complete clean profile snapshot predicts continued absence when no admissible observation ever shows the subject's profile, retaining all completeness, copy and audit-cutoff guards. This last rule explicitly assumes persistence when the capture predates the request. All inputs, original unknown reasons and assumptions are recorded in both sidecars, and strict export rejects them even if configuration is falsified.
+
+The independent fictional scenarios in `code/tests/test_submission_policy.py` include:
+
+1. **Recovery metadata without permission:** backup_712 has a path, verified checksum, past drill and unexpired retention. Submission predicts a cited restore-risk finding plus blocking and verification; strict mode stays UNKNOWN. Removing capability fields, expiring retention, adding a blocking flag, or moving either timestamp after the audit prevents the inference.
+2. **Ownership versus contact details:** marketing_731 displays another person's contact email, then a catalog mapping names the subject's stable ID and verified email. Submission predicts the deletion obligation without merging people. A competing stable user ID, equally timed/late contact observation, future catalog event or competing latest owner preserves UNKNOWN; shared-attachment policy cannot be bypassed.
+3. **Old complete snapshot:** a pre-request complete primary profile capture contains only attributable unrelated rows and no subject profile has ever been observed. Submission predicts persistence without inventing an account ID; strict mode remains UNKNOWN. Incomplete/non-profile captures, anonymous rows, future captures, prior subject presence and populated replicas block the inference.
+
+Fifteen new tests cover these scenarios, case renaming, configuration spoofing and CLI failure on invalid candidates. All 22 suites and the unchanged 31 frozen fixtures pass under Python 3.12. These controls test the declared policy boundaries; they are not an independent measurement of real-world inference accuracy. No paid API call, post-audit evidence, peer output, organizer-only truth or case-specific prediction patch was used.
+
+Only three CSV rows change from the prior candidate: cases 55 and 63 acquire predicted findings/remediation/verification, while case_345 predicts COMPLETE with its retained audit-record verification. The other assumptions discharge internal gaps without changing emitted steps. Open facts remain for case_34 and cases 526, 527, 528, 529 and 531; no missing ID is invented. The eleven public residual steps remain documented in `code/docs/WORKFLOW_GAPS.md`.
+
 ## 1. What was measured, and what the numbers do and do not establish
 
 | data | labels | what it supports |
@@ -679,17 +699,17 @@ The run these numbers describe:
 | field | value |
 |---|---|
 | command | `python3 code/main.py candidate` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
-| producing commit (HEAD when the run was made) | `a4fad4354e31` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "decision_policy": "submission", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
+| producing commit (HEAD when the run was made) | `7f307e866962` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 1 |
-| output.csv sha256 | `9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce` |
-| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 3 |
+| output.csv sha256 | `8dc3ae5f75d4fb5a3237a1214f9896ded7c66ebe7da8dc26850c8e21afafaef1` |
+| code sha256 (46 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `5a7b08771c8bd95065b682d03925f8d3830c01ae1118dcb817e5c04addc1c60d` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
-| statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |
-| contract-valid | False (3 validation errors) |
-| UNDETERMINED cases | 3: case_55, case_63, case_345 |
+| statuses | {'COMPLETE': 153, 'INCOMPLETE': 355, 'NOT_APPLICABLE': 10} |
+| contract-valid | True (0 validation errors) |
+| UNDETERMINED cases | 0:  |
 | runtime model calls | 0 |
 | final (exported) | False |
 <!--/AUTO:manifest-->
@@ -707,12 +727,15 @@ Public samples are development data. The context features, weights and margin we
 | Anchor-only control | 32/32 | 15/32 | 166 / 0 / 27 | 1.0000 / 0.8601 / 0.9248 | 0 |
 | Previous context v2 | 32/32 | 19/32 | 178 / 0 / 15 | 1.0000 / 0.9223 / 0.9596 | 0 |
 | Previous workflow context | 32/32 | 17/32 | 172 / 0 / 21 | 1.0000 / 0.8912 / 0.9425 | 0 |
+| Submission predictor | 32/32 | 22/32 | 182 / 0 / 11 | 1.0000 / 0.9430 / 0.9707 | 0 |
 
 The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. Schema validity does not establish evidence validity. The evidence baseline remains the default.
 
 Default settings: 90 minutes before / 10 minutes after reported_at; a strictly positive counterfactual score margin (ties abstain); one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. A score margin is not a probability. The v2 context adds shared-file affinity (+1), a post-report-operation penalty (-2), independently compliant linked context (+2), and an anonymous-policy cadence feature (up to +2). A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature.
 
 Context v3 additionally gives +1 account affinity when independently linked context is compliant AND a current explicit absent observation exists with no known present copy. Three distinct independently linked resources add one further anchor-distance term. Missing, stale, future and inventory-only absence supplies no affinity. These interactions were selected using public development data; ownership remains inferred and strict export continues to refuse it.
+
+The submission predictor additionally applies explicit recoverable-archive risk, later stable catalog ownership and clean-snapshot persistence assumptions. Original unknown reasons, source IDs and assumptions are retained in decision_inferences; those are predictions rather than observed permissions or identity aliases. This policy is evaluated separately and never passes the strict evidence-only export gate.
 <!--/AUTO:workflow-->
 
 Details and at least three independent synthetic controls are recorded directly in `code/evaluation/workflow_report.md`; regenerate them with `python3 scripts/evaluate_workflow.py`.
@@ -722,7 +745,7 @@ The new inference experiment is opt-in and cannot pass strict export. Its develo
 ## 9. Requested prediction candidate and exact remaining requirements
 
 <!--AUTO:candidate-->
-The explicit `candidate` command writes repository-root `output.csv`, `output.manifest.json` and `output.unresolved.json`. The CSV contains 518 data rows and the required three columns. Its manifest records `kind=submission_candidate`, `certified=false`, 3 semantic validation errors, 3 undetermined statuses (case_55, case_63, case_345), and 18 established INCOMPLETE cases with unresolved plan items. No unknown obligation was turned into a finding to clear validation. This file is a disclosed candidate and is not fully contract-conforming while those errors remain. The certification label belongs to this implementation; it is not a HackerRank credential. `code/docs/WORKFLOW_GAPS.md` lists every remaining public-sample discrepancy and its exact evidence requirement.
+The explicit `candidate` command writes repository-root `output.csv`, `output.manifest.json` and `output.unresolved.json`. The CSV contains 518 data rows and the required three columns. Its manifest records `kind=submission_candidate`, `certified=false`, 0 semantic validation errors, 0 undetermined statuses (), and 6 established INCOMPLETE cases with unresolved plan items. The decision policy is `submission` with 16 explicitly recorded assumptions. The submission policy predicts recoverable-backup risk, later catalog ownership, and persistence of clean complete snapshots. These predictions retain their original unknowns and source IDs in decision_inferences; they are not observed facts or strict certification. Zero validator errors establishes the checked schema/invariants, not canonical correctness or that every plan is complete. The certification label belongs to this implementation; it is not a HackerRank credential. `code/docs/WORKFLOW_GAPS.md` lists every remaining public-sample discrepancy and its exact evidence requirement.
 <!--/AUTO:candidate-->
 
 Context v2 adds independent synthetic controls directly in `code/tests/test_workflow_context.py`: a scheduler whose period must be inferred as 17 seconds from three fictional operations; two subjects with distinct clock phases that distinguish anonymous policy records; same-clock ambiguity that must remain unresolved; and post-cutoff identity anchors that must remain invisible. A further artifact control verifies that `output.csv` retains all unresolved rows/errors and cannot overwrite an existing certified file. These cases supplement the earlier frozen fixtures; they do not use public labels.

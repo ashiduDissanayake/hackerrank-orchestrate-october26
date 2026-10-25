@@ -4,9 +4,9 @@
    "export_1260"
   ]
  },
- "cases_with_unresolved_obligations": 21,
+ "cases_with_unresolved_obligations": 6,
  "certified": false,
- "code_files": 45,
+ "code_files": 46,
  "code_files_sha256": {
   "code/ghostaudit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/account_proof.py": "a5530daf2d4c9958b5fdf9094c38025679165fe22e1772506def8f2a4711789a",
@@ -17,8 +17,8 @@
   "code/ghostaudit/coverage.py": "6d482df52a96c05ce13b32081ceddd077315c78859d875664f6b851f03f0f44e",
   "code/ghostaudit/coverage_rules.py": "2c59e417b29f8338ac53b38f52f0865de45e1aa653a40a473dd2dfb953829b38",
   "code/ghostaudit/data.py": "e7cf70d736a38ad43449a3b742ff2f9c9a365b29f563a4441c5f88da157fd490",
-  "code/ghostaudit/engine.py": "167e62f9eec890346568dcae204b0a0b93e75a1bf234d57c87a1cefd21696e0d",
-  "code/ghostaudit/export.py": "ba42fee98a17e94610054ebca59d51ee9d1c45a7ff180bda3009dd221960aa04",
+  "code/ghostaudit/engine.py": "92c6a44f94be6582006e158b6406c07b89cf16dfd4a7e779991dacdc96d8c414",
+  "code/ghostaudit/export.py": "ea0dc026f8ebb8f809db16edaf93e1185473053bb9499d5ab9b862c1cfc3a8be",
   "code/ghostaudit/extract/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/extract/common.py": "0c2be447605b1e4b4e836ed7698eb8d038c1e93106cc81bdd8fa252a559a145d",
   "code/ghostaudit/extract/handover.py": "94cc12179fd4e5777f60ea40f379e839cd7f60cd6b6f1652fa6313641f0a043b",
@@ -47,14 +47,15 @@
   "code/ghostaudit/observations.py": "e8515ccc49b50d89595870004c3fad48906a6ad5121ed3e03bb3f8c71c6bbd7b",
   "code/ghostaudit/pipeline.py": "eda03418e258db492c8cf97ed6ac01c0237c97d5464eeeda58c2c972d613a013",
   "code/ghostaudit/planner.py": "1accbecde883270117929163f14c5f23c763bcc6ba3eb26e53dd756137ae751b",
-  "code/ghostaudit/run.py": "8d1d5aa9342e413d7ac2854b3a8e2b30eb029b0f412e729ae68bb16c91329352",
+  "code/ghostaudit/prediction.py": "66464c5fa83debeaf3f60d04585d1161bf12fdfb6b7f9e886ed22efd7a041684",
+  "code/ghostaudit/run.py": "4284d638392623980f6df77caef979bb243acf1ccdc52c80e7035b4e8011ceb2",
   "code/ghostaudit/state.py": "9e299b66d28ecde76b762c287d0d8742f879028d5d43eae162f99c13a6b72185",
   "code/ghostaudit/validate.py": "674a4a05d7b5ade8102e79b2f308e6dc1d488f0a37468b754c0ef0fd4ba537b7",
   "code/ghostaudit/workflow.py": "710aa30487056bd9971f7809f03434e65af436ca212677550ffb30c0b6495d3e",
-  "code/main.py": "93dfc41c72ff853ac224a38be78306c0e3e3281feaa1eabbf77b1ec1324353bb",
+  "code/main.py": "4d81071ded3d22fa343d390696a9cbdc82a8eb85f53d767766ba428d1ead959d",
   "code/requirements.txt": "79ed88acaf42c1382d794ba1fc1e23fc4b9f21a513d7b6cbc40380378f5862f5"
  },
- "code_sha256": "bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92",
+ "code_sha256": "5a7b08771c8bd95065b682d03925f8d3830c01ae1118dcb817e5c04addc1c60d",
  "command": [
   "python3",
   "code/main.py",
@@ -69,6 +70,7 @@
    "weak_promotion": true
   },
   "data": "dataset",
+  "decision_policy": "submission",
   "png_extraction": "complete",
   "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)",
   "requests": "deletion_requests.csv",
@@ -81,15 +83,259 @@
   },
   "workflow_mode": "joint"
  },
- "contract_valid": false,
- "disclosure": "Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation.",
+ "contract_valid": true,
+ "decision_inference_count": 16,
+ "decision_inferences": {
+  "case_102": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_2056",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_12"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_143": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_17"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_144": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_6826",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_17"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_184": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_9620",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_185": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_186": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_282": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_9763",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_75"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_33": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_344": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "inferred_profile_state_not_established",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": "account_486",
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_35"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_345": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_35"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_35": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_12"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_39": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_17"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_50": [
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_81"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_55": [
+   {
+    "assumption": "A present, checksum-verified archive with a storage path, drill history and unexpired retention is treated as a recreation risk unless restore blocking is evidenced. Permission itself is not observed.",
+    "certified": false,
+    "original_reason": "no_restore_flag_in_admissible_evidence",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "VIOLATION",
+    "resource_id": "backup_9287",
+    "rule": "recoverable_archive_risk",
+    "source_evidence_ids": [
+     "evidence_32"
+    ],
+    "system_id": "backup_service"
+   },
+   {
+    "assumption": "A latest complete clean profile snapshot is assumed to persist to audit_at when no admissible observation ever shows this subject's profile. The capture may predate the request; no account ID is invented.",
+    "certified": false,
+    "original_reason": "unresolved_link",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "COMPLIANT",
+    "resource_id": null,
+    "rule": "clean_snapshot_persistence",
+    "source_evidence_ids": [
+     "evidence_35"
+    ],
+    "system_id": "account_service"
+   }
+  ],
+  "case_63": [
+   {
+    "assumption": "A later catalog association matching stable user_id and verified email outranks earlier contact fields with no competing stable owner. This does not merge the two people's identities.",
+    "certified": false,
+    "original_reason": "conflicting_identity_evidence",
+    "original_verdict": "UNKNOWN",
+    "predicted_verdict": "VIOLATION",
+    "resource_id": "marketing_001",
+    "rule": "later_catalog_owner",
+    "source_evidence_ids": [
+     "activity_4008",
+     "evidence_60"
+    ],
+    "system_id": "marketing_platform"
+   }
+  ]
+ },
+ "disclosure": "Prediction artifact, NOT a certified evidence-only result or a claim of hidden accuracy. decision_inferences lists explicit submission assumptions and their original unknowns; workflow_inferences lists ownership hypotheses. Remaining unknowns and every validator error are retained. Zero validator errors establishes format and checked invariants, not that every inference or plan matches the canonical answer.",
  "final": false,
  "git": {
-  "commit": "a4fad4354e310f3d30c7d8ac27e4f93d6fbca833",
+  "commit": "7f307e866962792d1997138539730454f027523e",
   "dirty": true,
   "dirty_code_files": [],
   "dirty_files": [
-   "log.txt"
+   "README.md",
+   "code/evaluation/usage_report.md",
+   "code/evaluation/workflow_report.md"
   ]
  },
  "inputs_sha256": {
@@ -198,21 +444,9 @@
   "user_identities.csv": "63940e0fdc74a85e44463de3a6f18e3b27ff144f08e9981c732dfcfdadece9e6"
  },
  "kind": "submission_candidate",
- "output_sha256": "9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce",
+ "output_sha256": "8dc3ae5f75d4fb5a3237a1214f9896ded7c66ebe7da8dc26850c8e21afafaef1",
  "plan_gap_cases": [
-  "case_33",
   "case_34",
-  "case_35",
-  "case_39",
-  "case_50",
-  "case_102",
-  "case_143",
-  "case_144",
-  "case_184",
-  "case_185",
-  "case_186",
-  "case_282",
-  "case_344",
   "case_526",
   "case_527",
   "case_528",
@@ -222,25 +456,17 @@
  "plan_gaps_accepted": false,
  "prompts": [],
  "python": "3.12.14",
- "register_sha256": "4d2a0ca8a7675c9203fe4e9479d6fcecf7b5aab40fddb1e45bc2b4b34bc78d50",
+ "register_sha256": "580f053d6004a551f8b4d4895977a1daa4642fd3e6680e455e663f2d38f847d0",
  "rows": 518,
  "runtime_model_calls": 0,
  "status_counts": {
-  "COMPLETE": 152,
-  "INCOMPLETE": 356,
+  "COMPLETE": 153,
+  "INCOMPLETE": 355,
   "NOT_APPLICABLE": 10
  },
- "undetermined_cases": [
-  "case_55",
-  "case_63",
-  "case_345"
- ],
- "validation_error_count": 3,
- "validation_errors": [
-  "case_55: INCOMPLETE must have at least one step",
-  "case_63: INCOMPLETE must have at least one step",
-  "case_345: INCOMPLETE must contain at least one FINDING step"
- ],
+ "undetermined_cases": [],
+ "validation_error_count": 0,
+ "validation_errors": [],
  "workflow_inferences": {
   "case_101": [
    {

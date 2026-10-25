@@ -6,7 +6,7 @@
  },
  "cases_with_unresolved_obligations": 26,
  "certified": false,
- "code_files": 45,
+ "code_files": 46,
  "code_files_sha256": {
   "code/ghostaudit/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/account_proof.py": "a5530daf2d4c9958b5fdf9094c38025679165fe22e1772506def8f2a4711789a",
@@ -17,8 +17,8 @@
   "code/ghostaudit/coverage.py": "6d482df52a96c05ce13b32081ceddd077315c78859d875664f6b851f03f0f44e",
   "code/ghostaudit/coverage_rules.py": "2c59e417b29f8338ac53b38f52f0865de45e1aa653a40a473dd2dfb953829b38",
   "code/ghostaudit/data.py": "e7cf70d736a38ad43449a3b742ff2f9c9a365b29f563a4441c5f88da157fd490",
-  "code/ghostaudit/engine.py": "167e62f9eec890346568dcae204b0a0b93e75a1bf234d57c87a1cefd21696e0d",
-  "code/ghostaudit/export.py": "ba42fee98a17e94610054ebca59d51ee9d1c45a7ff180bda3009dd221960aa04",
+  "code/ghostaudit/engine.py": "92c6a44f94be6582006e158b6406c07b89cf16dfd4a7e779991dacdc96d8c414",
+  "code/ghostaudit/export.py": "ea0dc026f8ebb8f809db16edaf93e1185473053bb9499d5ab9b862c1cfc3a8be",
   "code/ghostaudit/extract/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "code/ghostaudit/extract/common.py": "0c2be447605b1e4b4e836ed7698eb8d038c1e93106cc81bdd8fa252a559a145d",
   "code/ghostaudit/extract/handover.py": "94cc12179fd4e5777f60ea40f379e839cd7f60cd6b6f1652fa6313641f0a043b",
@@ -47,14 +47,15 @@
   "code/ghostaudit/observations.py": "e8515ccc49b50d89595870004c3fad48906a6ad5121ed3e03bb3f8c71c6bbd7b",
   "code/ghostaudit/pipeline.py": "eda03418e258db492c8cf97ed6ac01c0237c97d5464eeeda58c2c972d613a013",
   "code/ghostaudit/planner.py": "1accbecde883270117929163f14c5f23c763bcc6ba3eb26e53dd756137ae751b",
-  "code/ghostaudit/run.py": "8d1d5aa9342e413d7ac2854b3a8e2b30eb029b0f412e729ae68bb16c91329352",
+  "code/ghostaudit/prediction.py": "66464c5fa83debeaf3f60d04585d1161bf12fdfb6b7f9e886ed22efd7a041684",
+  "code/ghostaudit/run.py": "4284d638392623980f6df77caef979bb243acf1ccdc52c80e7035b4e8011ceb2",
   "code/ghostaudit/state.py": "9e299b66d28ecde76b762c287d0d8742f879028d5d43eae162f99c13a6b72185",
   "code/ghostaudit/validate.py": "674a4a05d7b5ade8102e79b2f308e6dc1d488f0a37468b754c0ef0fd4ba537b7",
   "code/ghostaudit/workflow.py": "710aa30487056bd9971f7809f03434e65af436ca212677550ffb30c0b6495d3e",
-  "code/main.py": "93dfc41c72ff853ac224a38be78306c0e3e3281feaa1eabbf77b1ec1324353bb",
+  "code/main.py": "4d81071ded3d22fa343d390696a9cbdc82a8eb85f53d767766ba428d1ead959d",
   "code/requirements.txt": "79ed88acaf42c1382d794ba1fc1e23fc4b9f21a513d7b6cbc40380378f5862f5"
  },
- "code_sha256": "bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92",
+ "code_sha256": "5a7b08771c8bd95065b682d03925f8d3830c01ae1118dcb817e5c04addc1c60d",
  "command": [
   "python3",
   "code/main.py",
@@ -69,6 +70,7 @@
    "weak_promotion": true
   },
   "data": "dataset",
+  "decision_policy": "strict",
   "png_extraction": "complete",
   "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)",
   "requests": "deletion_requests.csv",
@@ -82,14 +84,17 @@
   "workflow_mode": "evidence"
  },
  "contract_valid": false,
- "disclosure": "Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation.",
+ "decision_inference_count": 0,
+ "decision_inferences": {},
+ "disclosure": "Prediction artifact, NOT a certified evidence-only result or a claim of hidden accuracy. decision_inferences lists explicit submission assumptions and their original unknowns; workflow_inferences lists ownership hypotheses. Remaining unknowns and every validator error are retained. Zero validator errors establishes format and checked invariants, not that every inference or plan matches the canonical answer.",
  "final": false,
  "git": {
-  "commit": "a4fad4354e310f3d30c7d8ac27e4f93d6fbca833",
+  "commit": "7f307e866962792d1997138539730454f027523e",
   "dirty": true,
   "dirty_code_files": [],
   "dirty_files": [
-   "log.txt"
+   "README.md",
+   "code/evaluation/workflow_report.md"
   ]
  },
  "inputs_sha256": {
@@ -222,7 +227,7 @@
  "plan_gaps_accepted": false,
  "prompts": [],
  "python": "3.12.14",
- "register_sha256": "b3925d179a9ee1a69ccc97b4e04de4be635abb9ef18c74f69f46f37d54297d01",
+ "register_sha256": "6bb7c6b14b7fa4f3e61540d0af0a63ea1ab61282047abc7630e8298b2eb892e2",
  "rows": 518,
  "runtime_model_calls": 0,
  "status_counts": {

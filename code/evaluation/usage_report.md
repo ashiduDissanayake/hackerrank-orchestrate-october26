@@ -4,23 +4,23 @@ Single authoritative copy (`code/evaluation/usage_report.md`); `scripts/package.
 
 ## 1. The final full-dataset run
 
-The pipeline that produces the provisional predictions is deterministic code (Python standard library plus the poppler `pdftotext` command). No certified root `output.csv` exists. **It calls no language model at run time**: no provider, no API key, no network access. The optional workflow preview also makes zero model calls, uses zero API input/output tokens, and has $0.00 model cost over all 518 requests ($0.00 per request). Its CSV is explicitly uncertified.
+The final submission predictor is deterministic code (Python standard library plus the poppler `pdftotext` command). It produces repository-root `output.csv` using joint workflow attribution and the explicitly disclosed submission decision policy. **It calls no language model at run time**: no provider, no API key, no network access. The strict audit and workflow preview also make zero model calls, use zero API input/output tokens, and have $0.00 model cost over all 518 requests ($0.00 per request). Submission assumptions remain uncertified; that label is internal bookkeeping, not a contest requirement.
 
 <!--AUTO:manifest-->
 | field | value |
 |---|---|
 | command | `python3 code/main.py candidate` |
-| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
-| producing commit (HEAD when the run was made) | `a4fad4354e31` |
+| configuration | `{"account_proof": {"allow_weak": false, "episode_scoping": true, "pre_request_exclusion": true, "require_row": false, "weak_promotion": true}, "data": "dataset", "decision_policy": "submission", "png_extraction": "complete", "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)", "requests": "deletion_requests.csv", "unknown_policy": "not_certified", "workflow_config": {"after_seconds": 600, "before_seconds": 5400, "min_margin": 0.0, "scoring": "contextual_v3"}, "workflow_mode": "joint"}` |
+| producing commit (HEAD when the run was made) | `7f307e866962` |
 | prediction-affecting files differing from that commit | none (the code hash below identifies the exact code either way) |
-| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 1 |
-| output.csv sha256 | `9cf7a9c704dc0fa96e70ae0d0cf74ad21cb767614445a8744efa3a6ea5154fce` |
-| code sha256 (45 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `bed8e71e5d5ca98c5ab90a49de7a2e34a772215f050bc207815b516f03320a92` |
+| other uncommitted files at run time (reports, docs, tests, packaging; cannot change the output) | 3 |
+| output.csv sha256 | `8dc3ae5f75d4fb5a3237a1214f9896ded7c66ebe7da8dc26850c8e21afafaef1` |
+| code sha256 (46 files: all of code/ghostaudit incl. image transcriptions, main.py, requirements) | `5a7b08771c8bd95065b682d03925f8d3830c01ae1118dcb817e5c04addc1c60d` |
 | input files hashed | 103 (dataset csv + evidence); combined listing in the manifest |
 | rows | 518 |
-| statuses | {'COMPLETE': 152, 'INCOMPLETE': 356, 'NOT_APPLICABLE': 10} |
-| contract-valid | False (3 validation errors) |
-| UNDETERMINED cases | 3: case_55, case_63, case_345 |
+| statuses | {'COMPLETE': 153, 'INCOMPLETE': 355, 'NOT_APPLICABLE': 10} |
+| contract-valid | True (0 validation errors) |
+| UNDETERMINED cases | 0:  |
 | runtime model calls | 0 |
 | final (exported) | False |
 <!--/AUTO:manifest-->

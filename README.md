@@ -2,7 +2,19 @@
 
 For every request in `dataset/deletion_requests.csv` this program decides whether the person asked for deletion, reconstructs what each system held about them at the case's `audit_at`, applies `deletion_rules.csv`, and returns `COMPLETE`, `INCOMPLETE` or `NOT_APPLICABLE` with the findings, an ordered remediation plan and the verification checks that must pass.
 
-The design is **deterministic evidence code, not a model on the prediction path**. Nothing in `code/ghostaudit` calls a language model. A claim is only used as a claim; state comes from admissible evidence.
+The prediction path is deterministic Python and calls no language model. The evidence-only audit keeps unsupported facts UNKNOWN. The submission predictor adds explicit ownership, risk and persistence assumptions, recorded separately from observations in its manifest and uncertainty register.
+
+## Generate the submission
+
+```bash
+python3 code/main.py candidate
+python3 code/main.py verify output.manifest.json
+python3 scripts/package.py --verify
+```
+
+This writes repository-root `output.csv` (518 rows), its provenance/uncertainty sidecars, and `code.zip`. The current full run has zero validator errors. It includes 16 explicit decision assumptions across 15 cases, alongside the previously disclosed workflow assignments; six established-INCOMPLETE cases still have unresolved plan facts. The public development result is 32/32 statuses and 22/32 exact full answers. Validator success does not establish hidden-answer correctness. Submit `output.csv`, `code.zip`, and the separate authentic `log.txt` transcript.
+
+The default `candidate` configuration is `--workflow-mode joint --decision-policy submission`. To reproduce the previous strict decision preview, use `run --workflow-mode joint --decision-policy strict`. Plain `run` stays evidence-only. The submission policy predicts restore risk from a present verified archive with path/drill/retention evidence, gives a later stable catalog owner priority over earlier contact fields with no competing stable owner, and assumes a complete clean profile snapshot persists when the subject's profile is never observed. Each rule records its original unknown and sources; no permission flag, identity alias or account ID is invented. These assumptions remain unsuitable for strict certification.
 
 ## Setup
 
@@ -23,7 +35,7 @@ python3 code/main.py run                      # provisional output + manifest + 
 python3 code/main.py explain case_01 --data dataset --requests sample_deletion_requests.csv    # why a case came out as it did
 python3 code/main.py coverage                 # per-artifact extraction coverage report
 python3 code/main.py verify runs/provisional/output.manifest.json   # regenerate and compare: byte-identical output, unchanged inputs and code
-python3 code/main.py export                   # the ONLY writer of ./output.csv (see below); --accept-plan-gaps discloses unresolved plan items
+python3 code/main.py export                   # optional strict evidence-only certification; candidate is the submission predictor
 python3 code/main.py best-effort              # review artifact when export must refuse (see below); never writes output.csv
 ```
 
@@ -40,7 +52,7 @@ python3 code/main.py candidate
 python3 code/main.py verify output.manifest.json
 ```
 
-This explicit command writes `output.csv` with all 518 requests, plus `output.manifest.json` and `output.unresolved.json`. It defaults to the joint context-v3 predictor. Unresolved rows, semantic validation errors and inference assumptions remain visible in the sidecars; no finding is fabricated to clear validation. The file is a prediction candidate and remains incomplete while those errors exist. The `certified` flag is local bookkeeping, not a HackerRank submission credential. An existing certified output is protected from replacement.
+This explicit command writes `output.csv` with all 518 requests, plus `output.manifest.json` and `output.unresolved.json`. It defaults to joint context-v3 attribution and the submission decision policy described above. Unresolved facts, every validation error and all assumptions remain visible in the sidecars. The command exits non-zero if its CSV fails validation while preserving the files for review. The `certified` flag is local bookkeeping, not a HackerRank submission credential. An existing certified output is protected from replacement.
 
 The CSV writer quotes the JSON cell correctly. For illustration only, a tiny file would look like this (the real output has 518 rows and real dataset IDs):
 
