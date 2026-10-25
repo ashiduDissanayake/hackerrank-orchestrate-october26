@@ -39,6 +39,9 @@ def main():
               "- A source-reference cycle whose only identity root is rejected is removed by rooted reachability; a cycle with an independent valid root survives.",
               "- Evidence captured before an earlier request began cannot be assigned to that earlier request's investigation window.",
               "- The best-effort CLI accepts an artifact directory. Its fixture test uses a temporary directory and verifies that root prediction artifacts are unchanged.",
+              "- Context v2 learns a candidate policy cadence from at least three identity-linked resources, adds shared-capture and observed-compliance features, and penalizes operations after the workflow report. These are explicitly uncertain attribution features.",
+              "- The cadence feature is restricted to anonymous policy records; extending it to initial account operations produced wrong sample assignments and was rejected.",
+              "- Independent context tests use a different inferred period, retain same-clock ambiguity, exclude future anchors and verify candidate-file uncertainty and overwrite protections.",
               "", "All runtime variants make zero model API calls. Coding-session usage is not available here and is not estimated.", ""]
     report.write_text("\n".join(lines), encoding="utf-8")
     output = REPO / "runs/workflow_evaluation.json"

@@ -13,8 +13,9 @@ from .scoring import load_output, score
 VARIANTS = (
     ("Evidence baseline", "evidence", WorkflowConfig()),
     ("Joint preview (default margin)", "joint", WorkflowConfig()),
-    ("Joint preview (no positive margin floor)", "joint", WorkflowConfig(min_margin=0)),
-    ("Anchor-only control", "joint", WorkflowConfig(scoring="anchor")),
+    ("Joint preview (quarter-point floor)", "joint", WorkflowConfig(min_margin=0.25)),
+    ("Anchor-only control", "joint", WorkflowConfig(scoring="anchor", min_margin=0.25)),
+    ("Previous workflow context", "joint", WorkflowConfig(scoring="contextual", min_margin=0.25)),
 )
 
 
@@ -36,7 +37,7 @@ def measure(root):
 
 
 def markdown(records):
-    lines = ["Public samples are development data. The margin was selected after examining public development results. "
+    lines = ["Public samples are development data. The context features, weights and margin were selected after examining public development results. "
              "These figures do not establish hidden accuracy or calibrated confidence.", "",
              "| Variant | Status | Exact full answers | TP / FP / FN | Step P / R / F1 | Validation errors |",
              "|---|---:|---:|---|---|---:|"]
@@ -48,7 +49,11 @@ def markdown(records):
     lines += ["", "The joint mode proposes ownership from a partial maximum-weight assignment. It never uses workflow results as record-state proof. "
               "All such runs and their links are marked uncertified, retain alternative candidates and margins, and cannot pass `export`. "
               "Schema validity does not establish evidence validity. The evidence baseline remains the default.", "",
-              "Default settings: 90 minutes before / 10 minutes after reported_at; minimum counterfactual score margin 0.25; "
+              "Default settings: 90 minutes before / 10 minutes after reported_at; a strictly positive counterfactual score margin (ties abstain); "
               "one additional orphan per system/request and one request per orphan within a competing component. These are modelling assumptions, not supplied guarantees. "
-              "A score margin is not a probability."]
+              "A score margin is not a probability. The v2 context adds shared-file affinity (+1), a post-report-operation penalty (-2), "
+              "independently compliant linked context (+2), and an anonymous-policy cadence feature (up to +2). "
+              "A cadence is estimated from at least three distinct identity-linked policy resources; no period or case family is supplied. "
+              "The largest period fitting the observed timestamps within one second is a modelling choice and may be aliased. "
+              "These features rank hypotheses and never supply record-state evidence. Initial account deletions do not receive the cadence feature."]
     return "\n".join(lines)

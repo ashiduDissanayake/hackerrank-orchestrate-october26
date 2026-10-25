@@ -1,7 +1,8 @@
 """Ghost Data audit CLI (M2 stage: extraction + coverage; the audit pipeline lands in M3).
 
   python3 code/main.py run [--data dataset] [--requests deletion_requests.csv] [--out runs/provisional/output.csv]   (provisional, never the submission path)
-  python3 code/main.py export [--data dataset] [--allow-dirty] [--accept-plan-gaps]    (the ONLY writer of repo-root output.csv; refuses unless every gate passes)
+  python3 code/main.py export [--data dataset] [--allow-dirty] [--accept-plan-gaps]    (strict export; refuses unless every gate passes)
+  python3 code/main.py candidate [--data dataset] [--artifact-dir DIR] (explicit uncertified output.csv + validation/uncertainty sidecars)
   python3 code/main.py best-effort [--data dataset]               (review artifact output_best_effort.* at the repo root; certified=false; never writes output.csv)
   python3 code/main.py verify MANIFEST.json                       (regenerates from a manifest and compares the output hash)
   python3 code/main.py explain CASE_ID [--data dataset] [--requests deletion_requests.csv]
@@ -45,7 +46,7 @@ def manifest_commands(a):
             print("  files that differ from the producing run:", ", ".join(diff[:10]))
         return 0 if (same_out and same_in and same_code) else 1
     if a.cmd == "run" and os.path.realpath(a.out) == os.path.realpath(os.path.join(REPO, "output.csv")):
-        print("REFUSED: run writes provisional artifacts; only export may write repo-root output.csv.", file=sys.stderr)
+        print("REFUSED: run writes provisional artifacts; only export (strict) or candidate (uncertified) may write repo-root output.csv.", file=sys.stderr)
         return 2
     from ghostaudit.workflow import WorkflowConfig
     workflow_config = WorkflowConfig(min_margin=a.workflow_min_margin, scoring=a.workflow_scoring)
@@ -58,16 +59,22 @@ def manifest_commands(a):
            "png_extraction": "complete" if all(r.status == "ok" for r in pngs) else "pending",
            "png_method": "hand-authored visual transcription bound by sha256, cross-checked against local OCR (code/ghostaudit/image_transcriptions)"}
     out = a.out if a.cmd == "run" else os.path.join(REPO, "runs", "export_candidate", "output.csv")
-    if a.cmd == "best-effort":
+    if a.cmd in ("best-effort", "candidate"):
         out = os.path.join(REPO, "runs", "best_effort", "output.csv")
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     runner.write_output(results, out)
     errs = ex.validate_output(ds, out)
     manifest = ex.build_manifest(["python3", "code/main.py"] + sys.argv[1:], cfg, ds, results, out, errs)
-    if a.cmd == "best-effort":
+    if a.cmd in ("best-effort", "candidate"):
         os.makedirs(a.artifact_dir, exist_ok=True)
-        paths, reg = ex.write_best_effort(ds, results, errs, manifest, a.artifact_dir)
-        print("BEST-EFFORT REVIEW ARTIFACT (certified=false; not a submission, root output.csv untouched):")
+        writer = ex.write_candidate if a.cmd == "candidate" else ex.write_best_effort
+        try:
+            paths, reg = writer(ds, results, errs, manifest, a.artifact_dir)
+        except ValueError as error:
+            print(f"REFUSED: {error}", file=sys.stderr)
+            return 2
+        print("UNCERTIFIED output.csv CANDIDATE (all unresolved rows and validation errors preserved):" if a.cmd == "candidate" else
+              "BEST-EFFORT REVIEW ARTIFACT (certified=false; not a submission, root output.csv untouched):")
         for p_ in paths.values():
             print("  ", os.path.relpath(p_, REPO))
         print(f"rows={len(results)}  contract_valid={manifest['contract_valid']} ({len(errs)} validation errors)  unresolved-register cases={len(reg)}")
@@ -103,10 +110,10 @@ def manifest_commands(a):
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("coverage", "dump", "run", "explain", "export", "verify", "best-effort"):
+    for name in ("coverage", "dump", "run", "explain", "export", "verify", "best-effort", "candidate"):
         p = sub.add_parser(name)
         p.add_argument("--data", default=os.path.join(REPO, "dataset"))
-        if name in ("run", "explain", "export", "best-effort"):
+        if name in ("run", "explain", "export", "best-effort", "candidate"):
             p.add_argument("--requests", default="deletion_requests.csv")
     r = sub.choices["run"]
     r.add_argument("--out", default=os.path.join(REPO, "runs", "provisional", "output.csv"))
@@ -117,23 +124,26 @@ def main():
     ex.add_argument("--skip-tests", action="store_true", help="NOT allowed for a final export; for debugging the gate only")
     sub.choices["best-effort"].add_argument("--artifact-dir", default=REPO,
                                          help="directory for the three uncertified artifacts (use a temporary directory when testing fixtures)")
+    sub.choices["candidate"].add_argument("--artifact-dir", default=REPO,
+                                        help="directory for output.csv and its explicit validation/uncertainty sidecars")
     sub.choices["verify"].add_argument("manifest")
     sub.choices["explain"].add_argument("case_id")
-    for name in ("run", "explain", "export", "best-effort"):
+    for name in ("run", "explain", "export", "best-effort", "candidate"):
         sub.choices[name].add_argument("--unknown-policy", default="not_certified", choices=["not_certified", "certify_established"],
                                        help="status for cases with unresolved obligations (open decision P3)")
         sub.choices[name].add_argument("--workflow-mode", default="evidence", choices=["evidence", "joint"],
                                        help="joint: opt-in inference preview; never certifiable or exportable")
-        sub.choices[name].add_argument("--workflow-min-margin", type=float, default=0.25,
+        sub.choices[name].add_argument("--workflow-min-margin", type=float, default=0.0,
                                        help="minimum counterfactual assignment-score margin (not a probability)")
-        sub.choices[name].add_argument("--workflow-scoring", default="contextual", choices=["contextual", "anchor"],
-                                       help="anchor omits reported-outcome agreement as a sensitivity control")
+        sub.choices[name].add_argument("--workflow-scoring", default="contextual_v2", choices=["contextual", "contextual_v2", "anchor"],
+                                       help="contextual keeps the previous preview; anchor omits reported-outcome agreement")
+    sub.choices["candidate"].set_defaults(workflow_mode="joint")
     d = sub.choices["dump"]
     d.add_argument("--audit-at")
     d.add_argument("--resource")
     d.add_argument("--limit", type=int, default=50)
     a = ap.parse_args()
-    if a.cmd in ("run", "export", "verify", "best-effort"):
+    if a.cmd in ("run", "export", "verify", "best-effort", "candidate"):
         sys.exit(manifest_commands(a))
     if a.cmd in ("run", "explain"):
         import json

@@ -8,6 +8,7 @@ For each missing or extra step it reports, from participant files only:
   * whether each occurrence is admissible at the case's audit_at (artifact time and record time)
   python3 scripts/diagnose_sample_differences.py [--out runs/analysis/sample_differences.json]
 """
+import argparse
 import csv
 import json
 import os
@@ -58,8 +59,17 @@ def occurrences(rid):
 
 
 def main():
-    out_path = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.join(REPO, "runs", "analysis", "sample_differences.json")
-    ds, store, results = runner.run_dataset(DS, "sample_deletion_requests.csv")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", default=os.path.join(REPO, "runs", "analysis", "sample_differences.json"))
+    parser.add_argument("--markdown")
+    parser.add_argument("--workflow-mode", choices=["evidence", "joint"], default="evidence")
+    parser.add_argument("--workflow-scoring", choices=["contextual", "contextual_v2", "anchor"], default="contextual_v2")
+    parser.add_argument("--workflow-min-margin", type=float, default=0.0)
+    args = parser.parse_args()
+    out_path = args.out
+    from ghostaudit.workflow import WorkflowConfig
+    ds, store, results = runner.run_dataset(DS, "sample_deletion_requests.csv", workflow_mode=args.workflow_mode,
+                                           workflow_config=WorkflowConfig(scoring=args.workflow_scoring, min_margin=args.workflow_min_margin))
     gold = scoring.load_output(os.path.join(DS, "sample_output.csv"))
     pred = {r.case_id: {"status": r.status, "steps": r.steps} for r in results}
     m = scoring.score(gold, pred)
@@ -82,7 +92,11 @@ def main():
                 occ = occurrences(rid)
                 for o in occ:
                     o["admissible_at_audit"] = o["captured_at"] <= q.audit_at
+                admissible = [o for o in occ if o["admissible_at_audit"]]
+                cause = ("NO_PARTICIPANT_OCCURRENCE" if not occ else "CAPTURED_AFTER_AUDIT" if not admissible
+                         else "OWNERSHIP_UNRESOLVED" if ln is None else "STATE_OR_PLAN_DIFFERENCE")
                 entry[kind].append({
+                    "resource_id": rid, "cause": cause,
                     "step": f"{s['phase']} {s['system_id']} {rid} {s['operation']} {s['evidence_id'] or '-'}",
                     "production_link": [(ch.kind, ch.evidence_id, ch.locator, ch.time) for ch in ln.chains] if ln else None,
                     "obligation": f"{ob.verdict}:{ob.reason}:{ob.evidence_id}" if ob else None,
@@ -90,6 +104,29 @@ def main():
         rep[cid] = entry
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     json.dump(rep, open(out_path, "w", encoding="utf-8"), indent=1, sort_keys=True, ensure_ascii=False)
+    if args.markdown:
+        from collections import Counter
+        counts = Counter(s["cause"] for e in rep.values() for s in e["missing"])
+        exact = sum(c["exact"] for c in m["per_case"].values())
+        lines = ["# Remaining public sample differences and evidence requirements", "",
+                 "Diagnosis only: labels identify the expected resource to search for after predictions are complete. "
+                 "Neither this report nor the labels feed predictions. These are public development results, not a hidden-set score.", "",
+                 f"Mode `{args.workflow_mode}`, scoring `{args.workflow_scoring}`, margin floor `{args.workflow_min_margin}`: "
+                 f"{exact}/32 exact full answers; {len(rep)} differing rows; {m['step_strict']['fn']} missing steps; {m['step_strict']['fp']} extra steps.", "",
+                 "| Case | Expected resource | Cause | Participant occurrences | Audit cutoff |", "|---|---|---|---|---|"]
+        for cid, e in rep.items():
+            for s in e["missing"]:
+                hits = "; ".join(f"{o['file_id']} @ {o['captured_at']}" for o in s["raw_occurrences"])
+                lines.append(f"| {cid} | {s['resource_id']} | {s['cause']} | {hits or 'none'} | {e['audit_at']} |")
+        lines += ["", "Counts by missing-step cause: " + ", ".join(f"{k}={v}" for k,v in sorted(counts.items())) + ".", "",
+                  "Required input to close these differences:", "",
+                  "- For an ID with no participant occurrence: a participant-visible record or activity naming the ID and connecting it to the subject, available by audit_at.",
+                  "- For later-captured evidence: an admissible earlier capture, or explicit organizer clarification changing the stated time contract. A later capture cannot be used under the current rule.",
+                  "- For unresolved ownership: a request/subject correlation key, source reference or other grounded association that distinguishes the competing workflows. Request-number ordering does not prove ownership.",
+                  "", "The output schema itself is clear. These requirements concern facts needed to reproduce specific canonical steps without inserting labels into prediction code.", ""]
+        os.makedirs(os.path.dirname(os.path.abspath(args.markdown)), exist_ok=True)
+        with open(args.markdown, "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
     for cid, e in rep.items():
         print(f"== {cid} request {e['requested_at']} audit {e['audit_at']} {e['user_id']}")
         for kind in ("missing", "extra"):

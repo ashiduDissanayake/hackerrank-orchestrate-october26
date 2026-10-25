@@ -34,7 +34,7 @@ def run_dataset(root, requests_file="deletion_requests.csv", unknown_policy="not
         from .workflow import WorkflowAttributor
         history = {q.case_id: q for q in load_request_history(ds.root)}
         history.update({q.case_id: q for q in ds.requests})
-        attributor = WorkflowAttributor(store, ident, list(history.values()), workflow_config)
+        attributor = WorkflowAttributor(store, ident, list(history.values()), workflow_config, ds.rules)
     results = []
     for r in ds.requests:
         extra = ({"workflow_inferences": attributor.proposals(r), "workflow_decisions": attributor.decisions(r)} if attributor else {})

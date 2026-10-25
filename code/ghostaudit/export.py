@@ -259,11 +259,30 @@ def carried_over_register(results):
 
 def write_best_effort(ds, results, errors, manifest, out_dir):
     """Writes the three best-effort files into out_dir and returns their paths. Marks the manifest certified=false."""
+    return _write_review_artifact(ds, results, errors, manifest, out_dir, BEST_EFFORT_NAMES, "best_effort")
+
+
+def write_candidate(ds, results, errors, manifest, out_dir):
+    """Write the requested output.csv filename without presenting uncertainty as a certificate.
+
+    This explicit candidate path preserves every unresolved row and validation error.
+    It does not alter decisions, fabricate findings, or call the strict export gate.
+    """
+    path = os.path.join(out_dir, "output.manifest.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            if json.load(f).get("certified") is True:
+                raise ValueError("candidate cannot overwrite an existing certified output")
+    return _write_review_artifact(ds, results, errors, manifest, out_dir,
+                                  ("output.csv", "output.unresolved.json", "output.manifest.json"), "submission_candidate")
+
+
+def _write_review_artifact(ds, results, errors, manifest, out_dir, names, kind):
     from . import run as runner
-    paths = {n: os.path.join(out_dir, n) for n in BEST_EFFORT_NAMES}
-    runner.write_output(results, paths[BEST_EFFORT_NAMES[0]])
+    paths = {n: os.path.join(out_dir, n) for n in names}
+    runner.write_output(results, paths[names[0]])
     reg = unresolved_register(ds, results, errors)
-    with open(paths[BEST_EFFORT_NAMES[1]], "w", encoding="utf-8") as f:
+    with open(paths[names[1]], "w", encoding="utf-8") as f:
         json.dump({"certified": False,
                    "status_undetermined_cases": [e["case_id"] for e in reg if not e["status_determined"]],
                    "plan_gap_cases": [e["case_id"] for e in reg if e["status_determined"]],
@@ -271,13 +290,13 @@ def write_best_effort(ds, results, errors, manifest, out_dir):
         f.write("\n")
     manifest = dict(manifest)
     manifest.update({
-        "kind": "best_effort", "certified": False, "final": False,
-        "output_sha256": sha256_file(paths[BEST_EFFORT_NAMES[0]]),
+        "kind": kind, "certified": False, "final": False,
+        "output_sha256": sha256_file(paths[names[0]]),
         "validation_errors": errors,
-        "register_sha256": sha256_file(paths[BEST_EFFORT_NAMES[1]]),
+        "register_sha256": sha256_file(paths[names[1]]),
         "disclosure": ("Review artifact, NOT a certified or contract-conforming submission. Cases listed in `undetermined_cases` rest on an "
                        "unresolved obligation: the non-certifying policy maps them to INCOMPLETE with only the steps the evidence supports, "
                        "which the contract validator rejects (INCOMPLETE needs a FINDING). No finding was fabricated to pass validation."),
     })
-    write_manifest(manifest, paths[BEST_EFFORT_NAMES[2]])
+    write_manifest(manifest, paths[names[2]])
     return paths, reg

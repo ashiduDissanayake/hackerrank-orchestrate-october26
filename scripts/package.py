@@ -116,6 +116,8 @@ def verify():
                  ("workflow preview", [sys.executable, "code/main.py", "run", "--workflow-mode", "joint",
                                        "--out", "runs/workflow_preview/output.csv", "--diagnostics", "runs/workflow_preview/diagnostics.json"]),
                  ("verify workflow manifest", [sys.executable, "code/main.py", "verify", "runs/workflow_preview/output.manifest.json"]),
+                 ("submission candidate", [sys.executable, "code/main.py", "candidate", "--artifact-dir", "runs/candidate_release"]),
+                 ("verify candidate manifest", [sys.executable, "code/main.py", "verify", "runs/candidate_release/output.manifest.json"]),
                  ("best-effort review artifact", [sys.executable, "code/main.py", "best-effort"])]
         for label, cmd in steps:
             r = subprocess.run(cmd, cwd=tmp, capture_output=True, text=True, env=env)
@@ -131,6 +133,8 @@ def verify():
         assert preview["certified"] is False and preview["final"] is False
         assert preview["workflow_inferred_link_count"] > 0, "preview must exercise workflow attribution"
         assert preview["output_sha256"] == preview_sha, "packaged workflow preview differs from the repository run"
+        candidate = json.load(open(os.path.join(tmp, "runs", "candidate_release", "output.manifest.json")))
+        assert candidate["output_sha256"] == preview_sha and candidate["certified"] is False and candidate["final"] is False
         print(f"  workflow preview sha256 matches repository: {preview_sha[:16]}...")
         # The extracted best-effort run must be uncertified and must never have produced the submission file.
         be = json.load(open(os.path.join(tmp, "output_best_effort.manifest.json")))

@@ -31,6 +31,7 @@ from ghostaudit import run as runner  # noqa: E402
 EVAL = os.path.join(CODE, "evaluation", "evaluation_report.md")
 USAGE = os.path.join(CODE, "evaluation", "usage_report.md")
 MANIFEST = os.path.join(REPO, "runs", "provisional", "output.manifest.json")
+CANDIDATE_MANIFEST = os.path.join(REPO, "output.manifest.json")
 REGISTER = os.path.join(REPO, "output_best_effort.unresolved.json")
 FX = labeled.FX
 
@@ -91,7 +92,7 @@ def block_eval():
             for o in r.obligations:
                 if o.verdict == "UNKNOWN":
                     unresolved.setdefault(o.reason, []).append(r.case_id)
-    lines = [f"Output statuses on the {len(results)} evaluation requests (a diagnostic, NOT accuracy: there are no labels): "
+    lines = [f"Evidence-only default statuses on the {len(results)} evaluation requests (a diagnostic, NOT accuracy: there are no labels): "
              + ", ".join(f"{k} {v}" for k, v in sorted(c.items())) + ".",
              f"Internal states: " + ", ".join(f"{k} {v}" for k, v in sorted(i.items())) + ".", "",
              "Obligation verdicts by reason (counts of obligations, all cases):", "", "| reason | count |", "|---|---|"]
@@ -103,7 +104,8 @@ def block_eval():
 
 
 def block_manifest():
-    m = json.load(open(MANIFEST))
+    path = CANDIDATE_MANIFEST if os.path.exists(CANDIDATE_MANIFEST) else MANIFEST
+    m = json.load(open(path))
     g = m["git"]
     return "\n".join([
         "| field | value |", "|---|---|",
@@ -119,6 +121,17 @@ def block_manifest():
         f"| contract-valid | {m['contract_valid']} ({m['validation_error_count']} validation errors) |",
         f"| UNDETERMINED cases | {len(m['undetermined_cases'])}: {', '.join(m['undetermined_cases'])} |",
         f"| runtime model calls | {m.get('runtime_model_calls', 'n/a')} |", f"| final (exported) | {m['final']} |"])
+
+
+def block_candidate():
+    m = json.load(open(CANDIDATE_MANIFEST))
+    return (f"The explicit `candidate` command writes repository-root `output.csv`, `output.manifest.json` and `output.unresolved.json`. "
+            f"The CSV contains {m['rows']} data rows and the required three columns. Its manifest records `kind=submission_candidate`, "
+            f"`certified=false`, {m['validation_error_count']} semantic validation errors, {len(m['undetermined_cases'])} undetermined statuses "
+            f"({', '.join(m['undetermined_cases'])}), and {len(m['plan_gap_cases'])} established INCOMPLETE cases with unresolved plan items. "
+            "No unknown obligation was turned into a finding to clear validation. This file is a disclosed candidate and is not fully contract-conforming while those errors remain. "
+            "The certification label belongs to this implementation; it is not a HackerRank credential. "
+            "`code/docs/WORKFLOW_GAPS.md` lists every remaining public-sample discrepancy and its exact evidence requirement.")
 
 
 def block_samples_validity():
@@ -186,7 +199,7 @@ def block_fixture_cases():
     return "\n".join(out)
 
 
-BLOCKS = {"fixtures": block_fixtures, "samples": block_samples, "workflow": block_workflow, "samples_validity": block_samples_validity, "eval": block_eval,
+BLOCKS = {"fixtures": block_fixtures, "samples": block_samples, "workflow": block_workflow, "candidate": block_candidate, "samples_validity": block_samples_validity, "eval": block_eval,
           "manifest": block_manifest, "best_effort": block_best_effort, "proof_stats": block_proof_stats, "sensitivity": block_sensitivity, "fixture_cases": block_fixture_cases}
 
 
@@ -204,8 +217,9 @@ def manifest_stale():
     """True if the cached provisional manifest does not describe the current code and inputs."""
     if not os.path.exists(MANIFEST) or not os.path.exists(REGISTER):
         return True
-    m = json.load(open(MANIFEST))
-    return m.get("code_sha256") != ex.code_hash() or m.get("inputs_sha256") != ex.input_hashes(os.path.join(REPO, "dataset"))
+    paths = [MANIFEST, CANDIDATE_MANIFEST]
+    code, inputs = ex.code_hash(), ex.input_hashes(os.path.join(REPO, "dataset"))
+    return any(not os.path.exists(path) or (lambda m: m.get("code_sha256") != code or m.get("inputs_sha256") != inputs)(json.load(open(path))) for path in paths)
 
 
 def main():
@@ -214,7 +228,7 @@ def main():
         print("STALE: runs/provisional/output.manifest.json (or the best-effort register) does not describe the current code/inputs; run python3 scripts/write_reports.py")
         sys.exit(1)
     if not check:    # the reports must describe the run that produced the CSV: always regenerate it
-        for cmd in ("run", "best-effort"):
+        for cmd in ("run", "best-effort", "candidate"):
             subprocess.check_call([sys.executable, os.path.join(CODE, "main.py"), cmd], cwd=REPO, stdout=subprocess.DEVNULL)
     blocks = {k: f() for k, f in BLOCKS.items()}
     stale = []
